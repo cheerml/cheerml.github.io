@@ -35,8 +35,8 @@ paginate: 20
 #### Site
 title : Cheer ML
 tagline: the essence of machine leaerning
-assets: /assets
-baseurl: /
+assets: /cheerml/assets
+baseurl: /cheerml
 
 #### Language
 language: en    ## blog site languages: en, zh-CN, zh-TW
