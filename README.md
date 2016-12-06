@@ -9,6 +9,9 @@ Click [here](https://cheerml.github.io/cheerml/) to view the blog.
 ## Contribute
 If you also want to contribute your idea or your thinking, please follow the steps listed in the [contributing post](https://cheerml.github.io/cheerml/contributing).
 Or just send e-mail to
+
 jun.lu.locky@gmail.com
+
 huyixuanhyx@gmail.com
+
 We will do what we can when we had the time.
