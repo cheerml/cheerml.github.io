@@ -1,0 +1,628 @@
+
+
+ <!DOCTYPE HTML>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+    
+    
+    
+    
+    <title>Contributing an article | Cheer ML</title>
+    
+
+    <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
+    
+    <meta name="author" content="Jun Lu, Yixuan Hu">
+    
+
+    
+    <!--<%- open_graph({twitter_id: theme.author.twitter, google_plus: theme.author.google_plus}) %>-->
+    
+    <meta name="description" content="page.description">
+    
+    <meta property="og:type" content="article">
+    
+    <meta property="og:title" content="Contributing an article">
+    <meta property="og:url" content="/cheerml/contributing">
+    <meta property="og:site_name" content="Cheer ML">
+    <meta property="og:description" content="">
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Contributing an article">
+    <meta name="twitter:description" content="page.description">
+    <meta name="twitter:creator" content="@">
+    <link rel="publisher" href="">
+
+    
+    <link rel="alternative" href="/atom.xml" title="Cheer ML" type="application/atom+xml">
+    
+    
+    <link rel="icon" href="/cheerml/assets/img/favicon.ico">
+    
+    
+    <link rel="apple-touch-icon" href="/cheerml/assets/img/jacman.jpg">
+    <link rel="apple-touch-icon-precomposed" href="/cheerml/assets/img/jacman.jpg">
+    
+
+    <link rel="stylesheet" href="/cheerml/assets/css/style.css" type="text/css">
+    <link rel="stylesheet" href="/cheerml/assets/css/highlight.css" type="text/css">
+</head>
+
+  <body>
+    <header>
+        <div>
+		    
+			<div id="imglogo">
+				<a href="/cheerml/"><img src="/cheerml/assets/img/logo.png" alt="Cheer ML" title="Cheer ML"/></a>
+			</div>
+			
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/cheerml/" title="Cheer ML">Cheer ML</a></h1>
+				<!-- <h2 class="blog-motto">the essence of machine leaerning</h2> -->
+				<h2 class="blog-motto">the essence of ma<font color="black">ch</font>ine l<font color="black">e</font>a<font color="black">er</font>ning</h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="menu">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					<ul>
+					 
+						<li><a href="/cheerml/">Home</a></li>
+					
+						<li><a href="/cheerml/archives">Archives</a></li>
+					
+						<li><a href="/cheerml/about">About</a></li>
+					
+					<li>
+ 					
+					<form class="search" action="//google.com/search" method="get" accept-charset="utf-8">
+						<label>Search</label>
+						<input type="search" id="search" name="q" autocomplete="off" maxlength="20" placeholder="Search" />
+						<input type="hidden" name="q" value="site:/cheerml">
+					</form>
+					
+					</li>
+				</ul>
+			</nav>	
+</div>
+    </header>
+    <div id="container">
+      
+
+
+
+<div id="main" class="post" itemscope itemprop="blogPost">
+  
+	<article itemprop="articleBody"> 
+	<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/cheerml/contributing" title="Contributing an article" itemprop="url">Contributing an article</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/cheerml/about" title="Jun Lu, Yixuan Hu" target="_blank" itemprop="author">Jun Lu</a>
+		
+  <p class="article-time">
+    <time datetime="2016-12-06 00:00:00 +0100" itemprop="datePublished"> Published 2016-12-06</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		<div id="toc" class="toc-article toc-content" style="display: none;">
+		
+			<!--<%- toc(item.content) %>-->
+		
+		</div>
+		
+		<p>If you’re writing an article for this blog, please follow these guidelines.</p>
+
+<p>One of the rewards of switching my website to <a href="http://jekyllrb.com/">Jekyll</a> is the <br>
+ability to support <strong>MathJax</strong>, which means I can write LaTeX-like equations that get <br>
+nicely displayed in a web browser, like this one \( \sqrt{\frac{n!}{k!(n-k)!}} \) or <br>
+this one \( x^2 + y^2 = r^2 \).</p>
+
+<!--more-->
+
+<p><img class="centered" src="http://gastonsanchez.com/images/blog/mathjax_logo.png" /></p>
+
+<h3 id="what-39-s-mathjax">What&#39;s MathJax?</h3>
+
+<p>If you check MathJax website <a href="http://www.mathjax.org/">(www.mathjax.org)</a> you&#39;ll see <br>
+that it <em>is an open source JavaScript display engine for mathematics that works in all <br>
+browsers</em>. </p>
+
+<h3 id="how-to-implement-mathjax-with-jekyll">How to implement MathJax with Jekyll</h3>
+
+<p>I followed the instructions described by Dason Kurkiewicz for <br>
+<a href="http://dasonk.github.io/blog/2012/10/09/Using-Jekyll-and-Mathjax/">using Jekyll and Mathjax</a>. </p>
+
+<p>Here are some important details. I had to modify the Ruby library for Markdown in <br>
+my <code>_config.yml</code> file. Now I&#39;m using redcarpet so the corresponding line in the <br>
+configuration file is: <code>markdown: redcarpet</code></p>
+
+<p>To load the MathJax javascript, I added the following lines in my layout <code>page.html</code> <br>
+(located in my folder <code>_layouts</code>)</p>
+
+<figure class="highlight"><pre><code class="language-r" data-lang="r"><span class="o">&lt;</span><span class="n">script</span><span class="w"> </span><span class="n">type</span><span class="o">=</span><span class="s2">"text/javascript"</span><span class="w">
+    </span><span class="n">src</span><span class="o">=</span><span class="s2">"http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"</span><span class="o">&gt;</span><span class="w">
+</span><span class="o">&lt;/</span><span class="n">script</span><span class="o">&gt;</span></code></pre></figure>
+
+<p>Of course you can choose a different file location in your jekyll layouts.</p>
+
+<h3 id="a-couple-of-examples">A Couple of Examples</h3>
+
+<p>Here&#39;s a short list of examples. To know more about the details behind MathJax, you can <br>
+always checked the provided documentation available at <br>
+<a href="http://docs.mathjax.org/en/latest/">http://docs.mathjax.org/en/latest/</a></p>
+
+<p>I&#39;m assuming you are familiar with LaTeX. However, you should know that MathJax does not <br>
+have the exactly same behavior as LaTeX. By default, the <strong>tex2jax</strong> preprocessor defines the <br>
+LaTeX math delimiters, which are <code>\\(...\\)</code> for in-line math, and <code>\\[...\\]</code> for <br>
+displayed equations. It also defines the TeX delimiters <code>$$...$$</code> for displayed <br>
+equations, but it does not define <code>$...$</code> as in-line math delimiters. Fortunately, <br>
+you can change these predefined specifications if you want to do so.</p>
+
+<p>Let&#39;s try a first example. Here&#39;s a dummy equation:</p>
+
+<p>$$a^2 + b^2 = c^2$$</p>
+
+<p>How do you write such expression? Very simple: using <strong>double dollar</strong> signs</p>
+
+<figure class="highlight"><pre><code class="language-r" data-lang="r"><span class="o">$$</span><span class="n">a</span><span class="o">^</span><span class="m">2</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">b</span><span class="o">^</span><span class="m">2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">c</span><span class="o">^</span><span class="m">2</span><span class="o">$$</span></code></pre></figure>
+
+<p>To display inline math use <code>\\( ... \\)</code> like this <code>\\( sin(x^2) \\)</code> which gets <br>
+rendered as \( sin(x^2) \)</p>
+
+<p>Here&#39;s another example using type <code>\mathsf</code></p>
+
+<figure class="highlight"><pre><code class="language-r" data-lang="r"><span class="o">$$</span><span class="w"> </span><span class="err">\</span><span class="n">mathsf</span><span class="p">{</span><span class="n">Data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">PCs</span><span class="p">}</span><span class="w"> </span><span class="err">\</span><span class="n">times</span><span class="w"> </span><span class="err">\</span><span class="n">mathsf</span><span class="p">{</span><span class="n">Loadings</span><span class="p">}</span><span class="w"> </span><span class="o">$$</span></code></pre></figure>
+
+<p>which gets displayed as </p>
+
+<p>$$ \mathsf{Data = PCs} \times \mathsf{Loadings} $$</p>
+
+<p>Or even better:</p>
+
+<figure class="highlight"><pre><code class="language-r" data-lang="r"><span class="err">\\</span><span class="p">[</span><span class="w"> </span><span class="err">\</span><span class="n">mathbf</span><span class="p">{</span><span class="n">X</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="err">\</span><span class="n">mathbf</span><span class="p">{</span><span class="n">Z</span><span class="p">}</span><span class="w"> </span><span class="err">\</span><span class="n">mathbf</span><span class="p">{</span><span class="n">P</span><span class="o">^</span><span class="err">\</span><span class="n">mathsf</span><span class="p">{</span><span class="nb">T</span><span class="p">}}</span><span class="w"> </span><span class="err">\\</span><span class="p">]</span></code></pre></figure>
+
+<p>is displayed as</p>
+
+<p>\[ \mathbf{X} = \mathbf{Z} \mathbf{P^\mathsf{T}} \]</p>
+
+<p>If you want to use subscripts like this \( \mathbf{X}_{n,p} \) you need to scape the <br>
+underscores with a backslash like so <code>\mathbf{X}\_{n,p}</code>:</p>
+
+<figure class="highlight"><pre><code class="language-r" data-lang="r"><span class="o">$$</span><span class="w"> </span><span class="err">\</span><span class="n">mathbf</span><span class="p">{</span><span class="n">X</span><span class="p">}</span><span class="err">\_</span><span class="p">{</span><span class="n">n</span><span class="p">,</span><span class="n">p</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="err">\</span><span class="n">mathbf</span><span class="p">{</span><span class="n">A</span><span class="p">}</span><span class="err">\_</span><span class="p">{</span><span class="n">n</span><span class="p">,</span><span class="n">k</span><span class="p">}</span><span class="w"> </span><span class="err">\</span><span class="n">mathbf</span><span class="p">{</span><span class="n">B</span><span class="p">}</span><span class="err">\_</span><span class="p">{</span><span class="n">k</span><span class="p">,</span><span class="n">p</span><span class="p">}</span><span class="w"> </span><span class="o">$$</span></code></pre></figure>
+
+<p>will be displayed as</p>
+
+<p>\[ \mathbf{X}_{n,p} = \mathbf{A}_{n,k} \mathbf{B}_{k,p} \]</p>
+  
+	</div>
+	<footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <!--
+  <%- list_categories(item.categories, {
+      show_count: false,
+      class: 'article-category',
+      style: 'none',
+      separator: '►'
+  }) %>
+  -->
+  
+  <a class="article-category-link" href="/cheerml/categories/#opinion">opinion</a>
+  
+</div>
+
+
+  <div class="article-tags">
+  <!--
+  <% var tags = [];
+    item.tags.forEach(function(tag){
+      tags.push('<a href="' + config.root + tag.path + '">' + tag.name + '</a>');
+    }); %>-->
+  <span></span> <!--<%- tags.join('') %>-->
+  
+  
+  <a href="/cheerml/tags/#resources">resources</a>
+  
+  <a href="/cheerml/tags/#jekyll">jekyll</a>
+  
+  </div>
+
+</div>
+
+
+
+	<div class="article-share" id="share">
+	
+	  <div data-url="http://localhost:4000/cheerml/contributing" data-title="Contributing an article | Cheer ML" data-tsina="" class="share clearfix">
+	  </div>
+	
+	</div>
+
+
+</footer>   
+	</article>
+	
+	
+
+</div>  
+
+      
+      
+      <div class="openaside"><a class="navbutton" href="#" title="Show Sidebar"></a></div>
+
+  <div id="toc" class="toc-aside toc-content">
+ 
+ <!--<%- toc(item.content) %>-->
+ 
+  </div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="Hide Sidebar"></a></div>
+<aside class="clearfix">
+
+
+  
+<div class="categorieslist">
+	<p class="asidetitle">Categories</p>
+		<ul>
+		
+		  
+			<li><a href="/cheerml/categories/#opinion" title="opinion">opinion<sup>1</sup></a></li>
+		  
+		
+		</ul>
+</div>
+
+
+  
+<div class="tagslist">
+	<p class="asidetitle">Tags</p>
+		<ul class="clearfix">
+		
+			
+				<li><a href="/cheerml/tags/#resources" title="resources">resources<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/cheerml/tags/#jekyll" title="jekyll">jekyll<sup>1</sup></a></li>
+			
+		
+		</ul>
+</div>
+
+
+  <div class="linkslist">
+  <p class="asidetitle">Links</p>
+    <ul>
+        
+          <li>
+            <a href="http://www.junlulocky.com" target="_blank" title="Jun Lu's website">Jun Lu's website</a>
+          </li>
+        
+          <li>
+            <a href="http://yeephycho.github.io/" target="_blank" title="Jark's Blog">Jark's Blog</a>
+          </li>
+        
+    </ul>
+</div>
+
+  
+
+
+  <div class="rsspart">
+	<a href="/atom.xml" target="_blank" title="rss">RSS</a>
+</div>
+
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer" >
+	
+	<div class="line">
+		<span></span>
+		<div class="author"></div>
+	</div>
+	
+	
+	<section class="info">
+		<p> Hello, we are machine learning lovers. <br/>
+			This is our blog,believe it or not.</p>
+	</section>
+	 
+	<div class="social-font" class="clearfix">
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+	</div>
+	<!--
+			<%  Array.prototype.S=String.fromCharCode(2);
+			  Array.prototype.in_array=function(e){
+    			var r=new RegExp(this.S+e+this.S);
+    			return (r.test(this.S+this.join(this.S)+this.S));
+				};
+				var cc = new Array('by','by-nc','by-nc-nd','by-nc-sa','by-nd','by-sa','zero'); %>
+		<% if (cc.in_array(theme.creative_commons) ) { %>
+				<div class="cc-license">
+          <a href="http://creativecommons.org/licenses/<%= theme.creative_commons %>/4.0" class="cc-opacity" target="_blank">
+            <img src="<%- config.root %>img/cc-<%= theme.creative_commons %>.svg" alt="Creative Commons" />
+          </a>
+        </div>
+    <% } %>
+				-->
+
+		<p class="copyright">
+		Powered by <a href="http://jekyllrb.com" target="_blank" title="jekyll">jekyll</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Jacman">Jacman</a> © 2015 
+		
+		<a href="about" target="_blank" title="Jun Lu, Yixuan Hu">Jun Lu, Yixuan Hu</a>
+		
+		
+		</p>
+</div>
+</footer>
+    <script src="/cheerml/assets/js/jquery-2.0.3.min.js"></script>
+<script src="/cheerml/assets/js/jquery.imagesloaded.min.js"></script>
+<script src="/cheerml/assets/js/gallery.js"></script>
+<script src="/cheerml/assets/js/jquery.qrcode-0.12.0.min.js"></script>
+<script src="/cheerml/assets/js/toc.js"></script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+  
+  
+  
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else{
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
+      
+    }
+  });
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('#toc.toc-aside').toc({
+    title: "Contents",
+    showEffect: "none"
+  });
+  $('#toc.toc-article').toc({
+    title: "Contents",
+    showEffect: "show",
+    showSpeed: 0
+  });
+});
+</script>
+
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  c.click(function(){
+    ta.css('display', 'block').addClass('fadeIn');
+  });
+  o.click(function(){
+    ta.css('display', 'none');
+  });
+  $(window).scroll(function(){
+    ta.css("top",Math.max(140,320-$(this).scrollTop()));
+  });
+});
+</script>
+
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina'),
+      description = $this.attr('description');
+  var html = [
+  '<div class="hoverqrcode clearfix"></div>',
+  '<a class="overlay" id="qrcode"></a>',
+  '<div class="qrcode clearfix"><span>扫描二维码分享到微信朋友圈</span><a class="qrclose" href="#nothing"></a><strong>Loading...Please wait</strong><img id="qrcode-pic" data-src="http://s.jiathis.com/qrcode.php?url=' + encodedUrl + '"/></div>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="微信"></a>',
+  '<a href="http://widget.renren.com/dialog/share?resourceUrl=' + encodedUrl + '&srcUrl=' + encodedUrl + '&title=' + title +'" class="article-share-renren" target="_blank" title="人人"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="微博"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+  
+  $('.article-share-qrcode').click(function(){
+    var imgSrc = $('#qrcode-pic').attr('data-src');
+    $('#qrcode-pic').attr('src', imgSrc);
+    $('#qrcode-pic').load(function(){
+        $('.qrcode strong').text(' ');
+    });
+  });
+/*
+  $('.hoverqrcode').hide();
+
+  var myWidth = 0;
+  function updatehoverqrcode(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+    var qrsize = myWidth > 1024 ? 200:100;
+    var options = {render: 'image', size: qrsize, fill: '#2ca6cb', text: url, radius: 0.5, quiet: 1};
+    var p = $('.article-share-qrcode').position();
+    $('.hoverqrcode').empty().css('width', qrsize).css('height', qrsize)
+                          .css('left', p.left-qrsize/2+20).css('top', p.top-qrsize-10)
+                          .qrcode(options);
+  };
+  $(window).resize(function(){
+    $('.hoverqrcode').hide();
+  });
+  $('.article-share-qrcode').click(function(){
+    updatehoverqrcode();
+    $('.hoverqrcode').toggle();
+  });
+  $('.article-share-qrcode').hover(function(){}, function(){
+      //$('.hoverqrcode').hide();
+  });
+  */
+});   
+</script>
+
+
+
+
+
+<!--
+
+-->
+
+
+
+
+<link rel="stylesheet" href="/cheerml/assets/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/cheerml/assets/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.article-content').each(function(i){
+    $(this).find('img').each(function(){
+      if ($(this).parent().hasClass('fancybox')) return;
+      if ($(this).hasClass('emoji')) return;
+      var alt = this.alt;
+      if (alt) $(this).after('<span class="caption">' + alt + '</span>');
+      $(this).wrap('<a href="' + this.src + '" title="' + alt + '" class="fancybox"></a>');
+    });
+    $(this).find('.fancybox').each(function(){
+      $(this).attr('rel', 'article' + i);
+    });
+  });
+  if($.fancybox){
+    $('.fancybox').fancybox();
+  }
+}); 
+</script>
+
+
+<!-- Analytics Begin -->
+
+
+
+
+
+<!-- Analytics End -->
+
+<!-- Totop Begin -->
+
+	<div id="totop">
+	<a title="Back to Top"><img src="/cheerml/assets/img/scrollup.png"/></a>
+	</div>
+	<script src="/cheerml/assets/js/totop.js"></script>
+
+<!-- Totop End -->
+
+<!-- MathJax Begin -->
+<!-- mathjax config similar to math.stackexchange -->
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+      processEscapes: true
+    }
+  });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+      }
+    });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for(i=0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+</script>
+
+<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+
+<!-- MathJax End -->
+
+<!-- Tiny_search Begin -->
+
+<!-- Tiny_search End -->
+  </body>
+</html>
+
