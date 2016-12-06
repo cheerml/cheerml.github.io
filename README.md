@@ -15,3 +15,6 @@ jun.lu.locky@gmail.com
 huyixuanhyx@gmail.com
 
 We will do what we can when we had the time.
+
+## LICENSE
+Apache 2.0
