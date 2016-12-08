@@ -3,7 +3,7 @@ layout: post
 title: "Contributing an article"
 permalink: /contributing
 date: 2016-12-06
-categories: opinion
+categories: Announcement
 author: Jun Lu
 tags: [resources, jekyll]
 image: http://gastonsanchez.com/images/blog/mathjax_logo.png

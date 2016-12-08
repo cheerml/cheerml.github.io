@@ -99,7 +99,7 @@
 	
 	<section class="info">
 		<p> Hello, we are machine learning lovers. <br/>
-			This is our blog,believe it or not.</p>
+			This is our blog, believe it or not.</p>
 	</section>
 	 
 	<div class="social-font" class="clearfix">
@@ -131,7 +131,7 @@
 				-->
 
 		<p class="copyright">
-		Powered by <a href="http://jekyllrb.com" target="_blank" title="jekyll">jekyll</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Jacman">Jacman</a> © 2015 
+		Powered by <a href="http://jekyllrb.com" target="_blank" title="jekyll">jekyll</a> and Theme by <a href="#" target="_blank" title="Jacman">Jacman</a> © 2016
 		
 		<a href="about" target="_blank" title="Jun Lu, Yixuan Hu">Jun Lu, Yixuan Hu</a>
 		
@@ -250,7 +250,24 @@ $(document).ready(function(){
 
 <!-- MathJax Begin -->
 
-<script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    extensions: ["tex2jax.js"],
+    jax: ["input/TeX", "output/HTML-CSS"],
+    tex2jax: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+      displayMath: [ ['$$','$$'], ["\[","\]"], ["\\[","\\]"] ],
+      processEscapes: true
+    },
+    messageStyle: "none",
+    "HTML-CSS": { availableFonts: ["TeX"] }
+  });
+</script>
+<!--<script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script> -->
+<script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js">
+</script> 
+
 <!-- MathJax End -->
 
 <!-- Tiny_search Begin -->
@@ -260,5 +277,3 @@ $(document).ready(function(){
    </html>
 
 
-<!-- mathjax -->
-    <script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>

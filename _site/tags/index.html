@@ -134,6 +134,11 @@ if (page.archive){
     <span class="archive-list-count">1</span>
     </li>
     
+    <li class="archive-list-item">
+    <a class="archive-list-link" href="#Learning theory">Learning theory</a>
+    <span class="archive-list-count">1</span>
+    </li>
+    
  </div>
  </ul>
  
@@ -141,6 +146,24 @@ if (page.archive){
 </div>
 <div id="main" class="archive-part clearfix">
   <div id="archive-page">
+  
+  
+  
+  
+<section class="post Learning theory " itemscope itemprop="blogPost">
+
+
+  
+    <a href="/bias-variance" title="Bias-variance decomposition in a nutshell" itemprop="url">
+  
+
+    <time datetime="2016-12-08 00:00:00 +0100" itemprop="datePublished">Dec 2016</time>
+
+
+    <h1 itemprop="name">Bias-variance decomposition in a nutshell</h1>
+
+  </a>
+</section>
   
   
   
@@ -184,7 +207,7 @@ if (page.archive){
 	
 	<section class="info">
 		<p> Hello, we are machine learning lovers. <br/>
-			This is our blog,believe it or not.</p>
+			This is our blog, believe it or not.</p>
 	</section>
 	 
 	<div class="social-font" class="clearfix">
@@ -216,7 +239,7 @@ if (page.archive){
 				-->
 
 		<p class="copyright">
-		Powered by <a href="http://jekyllrb.com" target="_blank" title="jekyll">jekyll</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Jacman">Jacman</a> © 2015 
+		Powered by <a href="http://jekyllrb.com" target="_blank" title="jekyll">jekyll</a> and Theme by <a href="#" target="_blank" title="Jacman">Jacman</a> © 2016
 		
 		<a href="about" target="_blank" title="Jun Lu, Yixuan Hu">Jun Lu, Yixuan Hu</a>
 		
@@ -373,7 +396,24 @@ $(document).ready(function(){
 
 <!-- MathJax Begin -->
 
-<script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    extensions: ["tex2jax.js"],
+    jax: ["input/TeX", "output/HTML-CSS"],
+    tex2jax: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+      displayMath: [ ['$$','$$'], ["\[","\]"], ["\\[","\\]"] ],
+      processEscapes: true
+    },
+    messageStyle: "none",
+    "HTML-CSS": { availableFonts: ["TeX"] }
+  });
+</script>
+<!--<script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script> -->
+<script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js">
+</script> 
+
 <!-- MathJax End -->
 
 <!-- Tiny_search Begin -->
@@ -383,5 +423,3 @@ $(document).ready(function(){
    </html>
 
 
-<!-- mathjax -->
-    <script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
