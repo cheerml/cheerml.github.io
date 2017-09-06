@@ -5,8 +5,8 @@
         <description>Cheer ML - Jun Lu, Yixuan Hu</description>
         <link></link>
         <atom:link href="" rel="self" type="application/rss+xml" />
-        <lastBuildDate>Thu, 08 Dec 2016 23:02:54 +0100</lastBuildDate>
-        <pubDate>Thu, 08 Dec 2016 23:02:54 +0100</pubDate>
+        <lastBuildDate>Wed, 06 Sep 2017 22:46:37 +0800</lastBuildDate>
+        <pubDate>Wed, 06 Sep 2017 22:46:37 +0800</pubDate>
         <ttl>60</ttl>
 
 
@@ -64,7 +64,7 @@
 </description>
                 <link>/bias-variance</link>
                 <guid>/biasvariance</guid>
-                <pubDate>Thu, 08 Dec 2016 00:00:00 +0100</pubDate>
+                <pubDate>Thu, 08 Dec 2016 00:00:00 +0800</pubDate>
         </item>
 
         <item>
@@ -155,7 +155,7 @@ underscores with a backslash like so &lt;code&gt;\mathbf{X}\_{n,p}&lt;/code&gt;:
 </description>
                 <link>/contributing</link>
                 <guid>/contribute</guid>
-                <pubDate>Tue, 06 Dec 2016 00:00:00 +0100</pubDate>
+                <pubDate>Tue, 06 Dec 2016 00:00:00 +0800</pubDate>
         </item>
 
 
