@@ -9,7 +9,7 @@ authorlink: http://www.tlin.me
 tags: [Systems]
 ---
 
-A short summary and comparison of different platforms. From [this blog](http://muratbuffalo.blogspot.ch/2017/07/a-comparison-of-distributed-machine.html) and [this paper](https://www.cse.buffalo.edu/~demirbas/publications/DistMLplat.pdf).
+A short summary and comparison of different platforms. Based on [this blog](http://muratbuffalo.blogspot.ch/2017/07/a-comparison-of-distributed-machine.html) and [this paper](https://www.cse.buffalo.edu/~demirbas/publications/DistMLplat.pdf).
 
 <!-- more -->
 
@@ -142,3 +142,16 @@ MXNet supports basic fault tolerance through checkpointing, and provides save an
 
 # Evaluations
 Please check the [paper](https://www.cse.buffalo.edu/~demirbas/publications/DistMLplat.pdf) for more details.
+
+
+# Reference
+The post is used for study purpose only. The bibtex of the paper can be found below:
+```
+@inproceedings{zhang2017a,
+  title={A Comparison of Distributed Machine Learning Platforms},
+  author={Zhang, Kuo and Alqahtani, Salem and Demirbas, Murat},
+  booktitle={Computer Communication and Networks (ICCCN), 2017 26th International Conference on},
+  year={2017},
+  organization={IEEE}
+}
+```

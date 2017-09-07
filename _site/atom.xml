@@ -4,7 +4,7 @@
  <title>Cheer ML</title>
  <link href="" rel="self"/>
  <link href=""/>
- <updated>2017-09-07T11:04:45+02:00</updated>
+ <updated>2017-09-07T17:37:30+02:00</updated>
  <id></id>
  <author>
    <name>Jun Lu, Yixuan Hu</name>
@@ -17,7 +17,7 @@
    <link href="/comparison-distributed-ml-platform"/>
    <updated>2017-09-07T00:00:00+02:00</updated>
    <id>/a-comparison-of-distributed-machine-learning-platform</id>
-   <content type="html">&lt;p&gt;A short summary and comparison of different platforms. From &lt;a href=&quot;http://muratbuffalo.blogspot.ch/2017/07/a-comparison-of-distributed-machine.html&quot;&gt;this blog&lt;/a&gt; and &lt;a href=&quot;https://www.cse.buffalo.edu/%7Edemirbas/publications/DistMLplat.pdf&quot;&gt;this paper&lt;/a&gt;.&lt;/p&gt;
+   <content type="html">&lt;p&gt;A short summary and comparison of different platforms. Based on &lt;a href=&quot;http://muratbuffalo.blogspot.ch/2017/07/a-comparison-of-distributed-machine.html&quot;&gt;this blog&lt;/a&gt; and &lt;a href=&quot;https://www.cse.buffalo.edu/%7Edemirbas/publications/DistMLplat.pdf&quot;&gt;this paper&lt;/a&gt;.&lt;/p&gt;
 
 &lt;!-- more --&gt;
 
@@ -189,7 +189,18 @@ MXNet allows both synchronous and asynchronous training.&lt;/p&gt;
 &lt;h1 id=&quot;evaluations&quot;&gt;Evaluations&lt;/h1&gt;
 
 &lt;p&gt;Please check the &lt;a href=&quot;https://www.cse.buffalo.edu/%7Edemirbas/publications/DistMLplat.pdf&quot;&gt;paper&lt;/a&gt; for more details.&lt;/p&gt;
-</content>
+
+&lt;h1 id=&quot;reference&quot;&gt;Reference&lt;/h1&gt;
+
+&lt;p&gt;The post is used for study purpose only. The bibtex of the paper can be found below:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;@inproceedings{zhang2017a,
+  title={A Comparison of Distributed Machine Learning Platforms},
+  author={Zhang, Kuo and Alqahtani, Salem and Demirbas, Murat},
+  booktitle={Computer Communication and Networks (ICCCN), 2017 26th International Conference on},
+  year={2017},
+  organization={IEEE}
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;</content>
  </entry>
  
  <entry>
