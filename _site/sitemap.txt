@@ -1,14 +1,15 @@
 
 /404
 /atom.xml
+/archives/
+/categories/
 /about/
 /search/
 /tags/
-/categories/
 /
-/archives/
 /rss.xml
 /sitemap.txt
 
+/comparison-distributed-ml-platform
 /bias-variance
 /contributing
