@@ -104,7 +104,7 @@
 		<a href="http://www.junlulocky.com" title="Jun Lu, Yixuan Hu" target="_blank" itemprop="author">Jun Lu</a>
 		
   <p class="article-time">
-    <time datetime="2016-12-08 00:00:00 +0100" itemprop="datePublished"> Published 2016-12-08</time>
+    <time datetime="2016-12-08 00:00:00 +0800" itemprop="datePublished"> Published 2016-12-08</time>
     
   </p>
 </header>
@@ -117,8 +117,7 @@
 		</div>
 		
 		<h2 id="basic-setting">basic setting</h2>
-
-<p>We will show four key results using Bias-variance decomposition. </p>
+<p>We will show four key results using Bias-variance decomposition.</p>
 
 <p>Let us assume $f_{true}(x_n)$ is the true model, and the observations are given by:</p>
 
@@ -126,14 +125,13 @@
 
 <p>where $\epsilon_n$ are i.i.d. with zero mean and variance $\sigma^2$. Note that $f_{true}$ can be nonlinear and $\epsilon_n$ does not have to be Gaussian.</p>
 
-<p>We denote the least-square estimation by </p>
+<p>We denote the least-square estimation by</p>
 
-<p>\[f_{lse}(x_{\ast}) = \tilde{x}_{\ast}^T w_{lse} \] </p>
+<p>\[f_{lse}(x_{\ast}) = \tilde{x}_{\ast}^T w_{lse} \]</p>
 
-<p>Where the tilde symbol means there is a constant 1 feature added to the raw data. For this derivation, we will assume that $x_{\ast}$ is fixed, although it is straightforward to generalize this.  </p>
+<p>Where the tilde symbol means there is a constant 1 feature added to the raw data. For this derivation, we will assume that $x_{\ast}$ is fixed, although it is straightforward to generalize this.</p>
 
 <h2 id="expected-test-error">Expected Test Error</h2>
-
 <p>Bias-variance comes directly out of the test error:</p>
 
 <p>\[ \overline{teErr} = \mathbb{E}[(observation - prediction)^2] \qquad (2.1) \]</p>
@@ -153,18 +151,17 @@
 <p>(I am sorry, I did not find the equation alignment in MathJax.) Where equation (2.2) is the expectation over training data and testing data; and the second term in equation (2.7) is called <strong>predict variance</strong>, and the third term of it is called the square of <strong>predict bias</strong>. Thus comes the name bias-variance decomposition.</p>
 
 <h2 id="where-does-the-bias-come-from-model-bias-and-estimation-bias">Where does the bias come from? model bias and estimation bias</h2>
-
 <p>As illustrated in the following figure, bias comes from model bias and estimation bias. Model bias comes from the model itself; and estimation bias comes from dataset (mainly). And bear in mind that ridge regression increases estimation bias while reducing variance(you may need to find other papers to get this idea)</p>
 
-<p><img src="/assets/imgblog/bias-variance.png" alt="Where does bias come from?"></p>
+<p><img src="/assets/imgblog/bias-variance.png" alt="Where does bias come from?" /></p>
 
 <h2 id="references">References</h2>
-
 <ul>
-<li>Kevin, Murphy. &quot;Machine Learning: a probabilistic perspective.&quot; (2012).</li>
-<li>Bishop, Christopher M. &quot;Pattern recognition.&quot; Machine Learning 128 (2006).</li>
-<li>Emtiyaz Khan&#39;s lecture notes on PCML, 2015</li>
+  <li>Kevin, Murphy. “Machine Learning: a probabilistic perspective.” (2012).</li>
+  <li>Bishop, Christopher M. “Pattern recognition.” Machine Learning 128 (2006).</li>
+  <li>Emtiyaz Khan’s lecture notes on PCML, 2015</li>
 </ul>
+
   
 	</div>
 	<footer class="article-footer clearfix">
@@ -217,10 +214,10 @@
 <nav class="article-nav clearfix">
  
  <div class="prev" >
- <a href="/contributing" title="Contributing an article">
+ <a href="/saddle-points" title="On Saddle Points: a painless tutorial">
   <strong>Prev: </strong><br/>
   <span>
-  Contributing an article</span>
+  On Saddle Points: a painless tutorial</span>
 </a>
 </div>
 
@@ -264,7 +261,7 @@
 		  
 		
 		  
-			<li><a href="/categories/#Machine-Learning" title="Machine-Learning">Machine-Learning<sup>2</sup></a></li>
+			<li><a href="/categories/#Machine-Learning" title="Machine-Learning">Machine-Learning<sup>3</sup></a></li>
 		  
 		
 		  
@@ -289,7 +286,7 @@
 			
 		
 			
-				<li><a href="/tags/#Learning theory" title="Learning theory">Learning theory<sup>1</sup></a></li>
+				<li><a href="/tags/#Learning theory" title="Learning theory">Learning theory<sup>2</sup></a></li>
 			
 		
 			

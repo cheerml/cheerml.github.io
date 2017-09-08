@@ -2,7 +2,7 @@
 layout: post
 title: "Contributing an article"
 permalink: /contributing
-date: 2016-12-06
+date: 2016-09-06
 categories: Announcement
 author: Jun Lu
 tags: [resources, jekyll]

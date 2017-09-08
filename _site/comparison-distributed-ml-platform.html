@@ -104,7 +104,7 @@
 		<a href="http://www.tlin.me" title="Jun Lu, Yixuan Hu" target="_blank" itemprop="author">Tao LIN</a>
 		
   <p class="article-time">
-    <time datetime="2017-09-07 00:00:00 +0200" itemprop="datePublished"> Published 2017-09-07</time>
+    <time datetime="2017-09-07 00:00:00 +0800" itemprop="datePublished"> Published 2017-09-07</time>
     
   </p>
 </header>
@@ -116,190 +116,150 @@
 		
 		</div>
 		
-		<p>A short summary and comparison of different platforms. Based on <a href="http://muratbuffalo.blogspot.ch/2017/07/a-comparison-of-distributed-machine.html">this blog</a> and <a href="https://www.cse.buffalo.edu/%7Edemirbas/publications/DistMLplat.pdf">this paper</a>.</p>
+		<p>A short summary and comparison of different platforms. Based on <a href="http://muratbuffalo.blogspot.ch/2017/07/a-comparison-of-distributed-machine.html">this blog</a> and (Zhang et al., 2017).</p>
 
 <!-- more -->
 
-<p>We categorize the distributed ML platforms under 3 basic design approaches:</p>
+<p>We categorize the distributed ML platforms under 3 basic design approaches:
+1. basic dataflow
+2. parameter-server model
+3. advanced dataflow.</p>
 
-<ol>
-<li>basic dataflow</li>
-<li>parameter-server model</li>
-<li>advanced dataflow.</li>
-</ol>
-
-<p>We talk about each approach in brief:</p>
-
-<ul>
-<li>using Apache Spark as an example of the basic dataflow approach</li>
-<li>PMLS (Petuum) as an example of the parameter-server model</li>
-<li>TensorFlow and MXNet as examples of the advanced dataflow model.</li>
-</ul>
+<p>We talk about each approach in brief:
+* using Apache Spark as an example of the basic dataflow approach
+* PMLS (Petuum) as an example of the parameter-server model
+* TensorFlow and MXNet as examples of the advanced dataflow model.</p>
 
 <h1 id="spark">Spark</h1>
-
 <p>Spark enables in-memory caching of frequently used data and avoids the overhead of writing a lot of intermediate data to disk. For this Spark leverages on Resilient Distributed Datasets (RDD), read-only, partitioned collection of records distributed across a set of machines. RDDs are the collection of objects divided into logical partitions that are stored and processed as in-memory, with shuffle/overflow to disk.</p>
 
 <p>In Spark, a computation is modeled as a directed acyclic graph (DAG), where each vertex denotes an RDD and each edge denotes an operation on RDD. On a DAG, an edge E from vertex A to vertex B implies that RDD B is a result of performing operation E on RDD A. There are two kinds of operations: transformations and actions. A transformation (e.g., map, filter, join) performs an operation on an RDD and produces a new RDD.</p>
 
 <p>A typical Spark job performs a couple of transformations on a sequence of RDDs and then applies an action to the latest RDD in the lineage of the whole computation. A Spark application runs multiple jobs in sequence or in parallel.</p>
 
-<p><img src="https://4.bp.blogspot.com/-cN_-PWvDGCs/WX6pgpqlTSI/AAAAAAAAGbw/vp4ttIiQ5jAGmjllTEyMrFq200uDWyalQCK4BGAYYCw/s400/sparkArch.png" alt=""></p>
+<p><img src="https://4.bp.blogspot.com/-cN_-PWvDGCs/WX6pgpqlTSI/AAAAAAAAGbw/vp4ttIiQ5jAGmjllTEyMrFq200uDWyalQCK4BGAYYCw/s400/sparkArch.png" alt="" /></p>
 
 <p>A Spark cluster comprises of a master and multiple workers. A master is responsible for negotiating resource requests made by the Spark driver program corresponding to the submitted Spark application. Worker processes hold Spark executors (each of which is a JVM instance) that are responsible for executing Spark tasks. The driver contains two scheduler components, the DAG scheduler, and the task scheduler. The DAG scheduler is responsible for stage-oriented scheduling, and the task scheduler is responsible for submitting tasks produced by the DAG scheduler to the Spark executors.</p>
 
 <p>The Spark user models the computation as a DAG which transforms &amp; runs actions on RDDs. The DAG is compiled into stages. Unlike the MapReduce framework that consists of only two computational stages, map and reduce, a Spark job may consist of a DAG of multiple stages. The stages are run in topological order. A stage contains a set of independent tasks which perform computation on partitions of RDDs. These tasks can be executed either in parallel or as pipelined.</p>
 
-<p><img src="https://4.bp.blogspot.com/-_KxjkVBsznQ/WX6pcFQ7C5I/AAAAAAAAGbo/GYdLBgVqY78ZEllZ971WoHmBAbnDRayAgCK4BGAYYCw/s400/apache.png" alt=""></p>
+<p><img src="https://4.bp.blogspot.com/-_KxjkVBsznQ/WX6pcFQ7C5I/AAAAAAAAGbo/GYdLBgVqY78ZEllZ971WoHmBAbnDRayAgCK4BGAYYCw/s400/apache.png" alt="" /></p>
 
-<p>Spark defines two types of dependency relation that can capture data dependency among a set of RDDs:</p>
-
-<ul>
-<li>Narrow dependency. Narrow dependency means each partition of the parent RDD is used by at most one partition of the child RDD.</li>
-<li>Shuffle dependency (wide dependency). Wide dependency means multiple child partitions of RDD may depend on a single parent RDD partition.</li>
-</ul>
+<p>Spark defines two types of dependency relation that can capture data dependency among a set of RDDs:
+* Narrow dependency. Narrow dependency means each partition of the parent RDD is used by at most one partition of the child RDD.
+* Shuffle dependency (wide dependency). Wide dependency means multiple child partitions of RDD may depend on a single parent RDD partition.</p>
 
 <p>Narrow dependencies are good for efficient execution, whereas wide dependencies introduce bottlenecks since they disrupt pipelining and require communication intensive shuffle operations.</p>
 
 <h2 id="fault-tolerance">Fault tolerance</h2>
-
 <p>Spark uses the DAG to track the lineage of operations on RDDs. For shuffle dependency, the intermediate records from one stage are materialized on the machines holding parent partitions. This intermediate data is used for simplifying failure recovery. If a task fails, the task will be retried as long as its stage’s parents are still accessible. If some stages that are required are no longer available, the missing partitions will be re-computed in parallel.</p>
 
 <p>Spark is unable to tolerate a scheduler failure of the driver, but this can be addressed by replicating the metadata of the scheduler. The task scheduler monitors the state of running tasks and retries failed tasks. Sometimes, a slow straggler task may drag the progress of a Spark job.</p>
 
 <h2 id="machine-learning-on-spark">Machine learning on Spark</h2>
-
 <p>Spark was designed for general data processing, and not specifically for machine learning. However, using the MLlib for Spark, it is possible to do ML on Spark. In the basic setup, Spark stores the model parameters in the driver node, and the workers communicate with the driver to update the parameters after each iteration. For large scale deployments, the model parameters may not fit into the driver and would be maintained as an RDD. This introduces a lot of <strong>overhead</strong> because a new RDD will need to be created in each iteration to hold the updated model parameters. Updating the model involves shuffling data across machines/disks, this limits the scalability of Spark. This is where the basic dataflow model (the DAG) in Spark falls short. Spark does not support iterations needed in ML well.</p>
 
 <h1 id="pmls">PMLS</h1>
-
 <p>PMLS was designed specifically for ML with a clean slate. It introduced the parameter-server (PS) abstraction for serving the iteration-intensive ML training process.</p>
 
-<p>In PMLS, a worker process/thread is responsible for requesting up to date model parameters and carrying out computation over a partition of data, and a parameter-server thread is responsible for storing and updating<br>
+<p>In PMLS, a worker process/thread is responsible for requesting up to date model parameters and carrying out computation over a partition of data, and a parameter-server thread is responsible for storing and updating
 model parameters and making response to the request from workers.</p>
 
-<p>Figure below shows the architecture of PMLS.<br>
-<img src="https://3.bp.blogspot.com/-cFL80lqWCCo/WX6pk2jzcdI/AAAAAAAAGb4/XFYSzGWsD6UPhrewWEll5w61g-vbYAYYwCK4BGAYYCw/s400/pmlsArch.png" alt=""></p>
+<p>Figure below shows the architecture of PMLS.
+<img src="https://3.bp.blogspot.com/-cFL80lqWCCo/WX6pk2jzcdI/AAAAAAAAGb4/XFYSzGWsD6UPhrewWEll5w61g-vbYAYYwCK4BGAYYCw/s400/pmlsArch.png" alt="" /></p>
 
 <ul>
-<li>The parameter server is implemented as distributed tables. All model parameters are stored via these tables. A PMLS application can register more than one table. These tables are maintained by server threads. Each table consists of multiple rows. Each cell in a row is identified by a column ID and typically stores one parameter. The rows of the tables can be stored across multiple servers on different machines.</li>
-<li>Workers are responsible for performing computation defined by a user on partitioned dataset in each iteration and need to request up to date parameters for its computation. Each worker may contain multiple working threads. There is no communication across workers. Instead, workers only communicate with servers.</li>
-<li>&#39;&#39;worker&#39;&#39; and &#39;&#39;server&#39;&#39; are not necessarily separated physically. In fact server threads co-locate with the worker processes/threads in PMLS.</li>
+  <li>The parameter server is implemented as distributed tables. All model parameters are stored via these tables. A PMLS application can register more than one table. These tables are maintained by server threads. Each table consists of multiple rows. Each cell in a row is identified by a column ID and typically stores one parameter. The rows of the tables can be stored across multiple servers on different machines.</li>
+  <li>Workers are responsible for performing computation defined by a user on partitioned dataset in each iteration and need to request up to date parameters for its computation. Each worker may contain multiple working threads. There is no communication across workers. Instead, workers only communicate with servers.</li>
+  <li>'’worker’’ and ‘‘server’’ are not necessarily separated physically. In fact server threads co-locate with the worker processes/threads in PMLS.</li>
 </ul>
 
 <h2 id="error-tolerance-of-ml-algorithm">Error tolerance of ML algorithm.</h2>
-
 <p>PMLS exploits the error-tolerant property of many machine learning algorithms to make a trade-off between efficiency and consistency.</p>
 
-<p>In order to leverage such error-tolerant property, PMLS follows Staleness Synchronous Parallel (SSP) model.  In SSP model, worker threads can proceed without waiting for slow threads.</p>
-
-<blockquote>
-<p>Fast threads may carry out computation using stale model parameters.  Performing computation on stale version of model parameter does cause errors, however these errors are bounded.</p>
-</blockquote>
+<p>In order to leverage such error-tolerant property, PMLS follows Staleness Synchronous Parallel (SSP) model.  In SSP model, worker threads can proceed without waiting for slow threads.
+&gt;  Fast threads may carry out computation using stale model parameters.  Performing computation on stale version of model parameter does cause errors, however these errors are bounded.</p>
 
 <p>The communication protocol between workers and servers can guarantee that the model parameters that a working thread reads from its local cache is of bounded staleness.</p>
 
-<h2 id="fault-tolerance">Fault tolerance</h2>
-
+<h2 id="fault-tolerance-1">Fault tolerance</h2>
 <p>Fault tolerance in PMLS is achieved by checkpointing the model parameters in the parameter server periodically. To resume from a failure, the whole system restarts from the last checkpoint.</p>
 
 <h2 id="programing-interface">Programing interface</h2>
-
 <p>PMLS is written in C++.</p>
 
 <p>While PMLS has very little overhead, on the negative side, the users of PMLS need to know how to handle computation using relatively low-level APIs.</p>
 
 <h1 id="tensorflow">TensorFlow</h1>
-
-<p>Tensorflow is the first generation distributed parameter-server system.<br>
+<p>Tensorflow is the first generation distributed parameter-server system.
 In TensorFlow the computation is abstracted and represented by a directed graph. But unlike traditional dataflow systems, TensorFlow allows nodes to represent computations that own or update mutable state.</p>
 
 <ul>
-<li>Variable: a stateful operations, owns mutable buffer, and can be used to store model parameters that need to be updated at each iteration.</li>
-<li>Node: represents operations, and some operations are control flow operations.</li>
-<li>Tensors: values that flow along the directed edges in the TensorFlow graph, with arbitrary dimensionality matrices.
-
-<ul>
-<li>An operation can take in one or more tensors and produce a result tensor.</li>
-</ul></li>
-<li>Edge: special edges called control dependencies can be added into TensorFlow’s dataflow graph with no data flowing along such edges.</li>
+  <li>Variable: a stateful operations, owns mutable buffer, and can be used to store model parameters that need to be updated at each iteration.</li>
+  <li>Node: represents operations, and some operations are control flow operations.</li>
+  <li>Tensors: values that flow along the directed edges in the TensorFlow graph, with arbitrary dimensionality matrices.
+    <ul>
+      <li>An operation can take in one or more tensors and produce a result tensor.</li>
+    </ul>
+  </li>
+  <li>Edge: special edges called control dependencies can be added into TensorFlow’s dataflow graph with no data flowing along such edges.</li>
 </ul>
 
 <p>In summary, TensorFlow is a dataflow system that offers mutable state and allows cyclic computation graph, and as such enables training a machine learning algorithm with parameter-server model.</p>
 
 <h2 id="architecture">Architecture</h2>
-
 <p>The Tensorflow runtime consists of three main components: client, master, worker.</p>
 
 <ul>
-<li>client:  is responsible for holding a session where a user can define computational graph to run. When a client requests the evaluation of a Tensorflow graph via a session object, the request is sent to master service.</li>
-<li>master: schedules the job over one or more workers and coordinates the execution of the computational graph.</li>
-<li>worker:  Each worker handles requests from the master and schedules the execution of the kernels (The implementation of an operation on a particular device is called a kernel) in the computational graph. The dataflow executor in a worker dispatches the kernels to local devices and runs the kernels in parallel when possible.</li>
+  <li>client:  is responsible for holding a session where a user can define computational graph to run. When a client requests the evaluation of a Tensorflow graph via a session object, the request is sent to master service.</li>
+  <li>master: schedules the job over one or more workers and coordinates the execution of the computational graph.</li>
+  <li>worker:  Each worker handles requests from the master and schedules the execution of the kernels (The implementation of an operation on a particular device is called a kernel) in the computational graph. The dataflow executor in a worker dispatches the kernels to local devices and runs the kernels in parallel when possible.</li>
 </ul>
 
 <h2 id="characteristics">Characteristics</h2>
-
-<h3 id="node-placement">Node Placement</h3>
-
-<p>If multiple devices are involved in computation, a procedure called node placement is executed in a Tensorflow<br>
+<p>### Node Placement
+If multiple devices are involved in computation, a procedure called node placement is executed in a Tensorflow
 runtime. Tensorflow uses a cost model to estimate the cost of executing an operation on all available devices (such as CPUs and GPUs) and assigns an operation to a suitable device to execute, subject to implicit or explicit device constraints in the graph.</p>
 
 <h3 id="sub-graph-execution">Sub-graph execution</h3>
-
 <p>TensorFlow supports sub-graph execution. A single round of executing a graph/sub-graph is called a step.</p>
 
-<p>A training application contains two type of jobs: parameter server (ps) job and worker job. Like data parallelism in PMLS, TensorFlow&#39;s data parallelism training involves multiple tasks in a worker job training the same model on different minibatches of data, updating shared parameters hosted in a one or more tasks in a ps job.</p>
+<p>A training application contains two type of jobs: parameter server (ps) job and worker job. Like data parallelism in PMLS, TensorFlow’s data parallelism training involves multiple tasks in a worker job training the same model on different minibatches of data, updating shared parameters hosted in a one or more tasks in a ps job.</p>
 
 <h3 id="a-typical-replicated-training-structure-between-graph-replication">A typical replicated training structure: between-graph replication</h3>
-
-<p><img src="https://1.bp.blogspot.com/-LToYY4Kj2YE/WX6pod_r5pI/AAAAAAAAGcA/Ls-ZWfTebYk_sc3l2pCHRAWv9e6U_eT_gCK4BGAYYCw/s400/tf.png" alt=""></p>
+<p><img src="https://1.bp.blogspot.com/-LToYY4Kj2YE/WX6pod_r5pI/AAAAAAAAGcA/Ls-ZWfTebYk_sc3l2pCHRAWv9e6U_eT_gCK4BGAYYCw/s400/tf.png" alt="" /></p>
 
 <p>There is a separate client for each worker task, typically in the same process as the worker task. Each client builds a similar graph containing the parameters (pinned to ps) and a single copy of the compute-intensive part of the computational graph that is pinned to the local task in the worker job.</p>
 
 <p>For example, a compute-intensive part is to compute gradient during each iteration of stochastic gradient descent algorithm.</p>
 
-<p>Users can also specify the consistency model in the betweengraph replicated training as either synchronous training or asynchronous training:</p>
+<p>Users can also specify the consistency model in the betweengraph replicated training as either synchronous training or asynchronous training:
+*  In asynchronous mode, each replica of the graph has an independent training loop that executes without coordination.
+* In synchronous mode, all of the replicas read the same values for the current parameters, compute gradients in parallel, and then apply them to a stateful accumulators which act as barriers for updating variables.</p>
 
-<ul>
-<li> In asynchronous mode, each replica of the graph has an independent training loop that executes without coordination.</li>
-<li>In synchronous mode, all of the replicas read the same values for the current parameters, compute gradients in parallel, and then apply them to a stateful accumulators which act as barriers for updating variables.</li>
-</ul>
-
-<h2 id="fault-tolerance">Fault tolerance</h2>
-
-<p>TensorFlow provides user-controllable checkpointing for fault tolerance via primitive operations: <em>save</em> writes tensors to checkpoint file, and <em>restore</em> reads tensors from a checkpointing file.<br>
+<h2 id="fault-tolerance-2">Fault tolerance</h2>
+<p>TensorFlow provides user-controllable checkpointing for fault tolerance via primitive operations: <em>save</em> writes tensors to checkpoint file, and <em>restore</em> reads tensors from a checkpointing file.
 TensorFlow allows customized fault tolerance mechanism through its primitive operations, which provides users the ability to make a balance between reliability and checkpointing overhead.</p>
 
 <h1 id="mxnet">MXNET</h1>
-
-<p>Similar to TensorFlow, MXNet is a dataflow system that allows cyclic computation graphs with mutable states, and supports training with parameter server model. Similar to TensorFlow, MXNet provides good support for data-parallelism on multiple CPU/GPU, and also allows model-parallelism to be implemented.<br>
+<p>Similar to TensorFlow, MXNet is a dataflow system that allows cyclic computation graphs with mutable states, and supports training with parameter server model. Similar to TensorFlow, MXNet provides good support for data-parallelism on multiple CPU/GPU, and also allows model-parallelism to be implemented.
 MXNet allows both synchronous and asynchronous training.</p>
 
-<h2 id="characteristics">Characteristics</h2>
-
+<h2 id="characteristics-1">Characteristics</h2>
 <p>Figure below illustrates main components of MXNet. The runtime dependency engine analyzes the dependencies in computation processes and parallelizes the computations that are not dependent. On top of runtime dependency engine, MXNet has a middle layer for graph and memory optimization.</p>
 
-<p><img src="https://raw.githubusercontent.com/dmlc/dmlc.github.io/master/img/mxnet/system/overview.png" alt=""></p>
+<p><img src="https://raw.githubusercontent.com/dmlc/dmlc.github.io/master/img/mxnet/system/overview.png" alt="" /></p>
 
-<h2 id="fault-tolerance">Fault tolerance</h2>
-
+<h2 id="fault-tolerance-3">Fault tolerance</h2>
 <p>MXNet supports basic fault tolerance through checkpointing, and provides save and load model operations. The save operaton writes the model parameters to the checkpoint file and the load operation reads model parameters from the checkpoint file.</p>
 
-<h1 id="evaluations">Evaluations</h1>
-
-<p>Please check the <a href="https://www.cse.buffalo.edu/%7Edemirbas/publications/DistMLplat.pdf">paper</a> for more details.</p>
-
 <h1 id="reference">Reference</h1>
+<ul>
+  <li>Zhang, Kuo and Alqahtani, Salem and Demirbas, Murat, ‘A Comparison of Distributed Machine Learning Platforms’, ICCCN, 2017.
+The post is used for study purpose only.</li>
+</ul>
 
-<p>The post is used for study purpose only. The bibtex of the paper can be found below:</p>
-<div class="highlight"><pre><code class="language-" data-lang="">@inproceedings{zhang2017a,
-  title={A Comparison of Distributed Machine Learning Platforms},
-  author={Zhang, Kuo and Alqahtani, Salem and Demirbas, Murat},
-  booktitle={Computer Communication and Networks (ICCCN), 2017 26th International Conference on},
-  year={2017},
-  organization={IEEE}
-}
-</code></pre></div>  
+  
 	</div>
 	<footer class="article-footer clearfix">
 <div class="article-catetags">
@@ -392,7 +352,7 @@ MXNet allows both synchronous and asynchronous training.</p>
 		  
 		
 		  
-			<li><a href="/categories/#Machine-Learning" title="Machine-Learning">Machine-Learning<sup>2</sup></a></li>
+			<li><a href="/categories/#Machine-Learning" title="Machine-Learning">Machine-Learning<sup>3</sup></a></li>
 		  
 		
 		  
@@ -417,7 +377,7 @@ MXNet allows both synchronous and asynchronous training.</p>
 			
 		
 			
-				<li><a href="/tags/#Learning theory" title="Learning theory">Learning theory<sup>1</sup></a></li>
+				<li><a href="/tags/#Learning theory" title="Learning theory">Learning theory<sup>2</sup></a></li>
 			
 		
 			

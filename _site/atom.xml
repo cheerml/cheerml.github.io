@@ -4,7 +4,7 @@
  <title>Cheer ML</title>
  <link href="" rel="self"/>
  <link href=""/>
- <updated>2017-09-07T17:37:30+02:00</updated>
+ <updated>2017-09-08T22:29:02+08:00</updated>
  <id></id>
  <author>
    <name>Jun Lu, Yixuan Hu</name>
@@ -15,202 +15,161 @@
  <entry>
    <title>A comparison of distributed machine learning platform</title>
    <link href="/comparison-distributed-ml-platform"/>
-   <updated>2017-09-07T00:00:00+02:00</updated>
+   <updated>2017-09-07T00:00:00+08:00</updated>
    <id>/a-comparison-of-distributed-machine-learning-platform</id>
-   <content type="html">&lt;p&gt;A short summary and comparison of different platforms. Based on &lt;a href=&quot;http://muratbuffalo.blogspot.ch/2017/07/a-comparison-of-distributed-machine.html&quot;&gt;this blog&lt;/a&gt; and &lt;a href=&quot;https://www.cse.buffalo.edu/%7Edemirbas/publications/DistMLplat.pdf&quot;&gt;this paper&lt;/a&gt;.&lt;/p&gt;
+   <content type="html">&lt;p&gt;A short summary and comparison of different platforms. Based on &lt;a href=&quot;http://muratbuffalo.blogspot.ch/2017/07/a-comparison-of-distributed-machine.html&quot;&gt;this blog&lt;/a&gt; and (Zhang et al., 2017).&lt;/p&gt;
 
 &lt;!-- more --&gt;
 
-&lt;p&gt;We categorize the distributed ML platforms under 3 basic design approaches:&lt;/p&gt;
+&lt;p&gt;We categorize the distributed ML platforms under 3 basic design approaches:
+1. basic dataflow
+2. parameter-server model
+3. advanced dataflow.&lt;/p&gt;
 
-&lt;ol&gt;
-&lt;li&gt;basic dataflow&lt;/li&gt;
-&lt;li&gt;parameter-server model&lt;/li&gt;
-&lt;li&gt;advanced dataflow.&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;p&gt;We talk about each approach in brief:&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;using Apache Spark as an example of the basic dataflow approach&lt;/li&gt;
-&lt;li&gt;PMLS (Petuum) as an example of the parameter-server model&lt;/li&gt;
-&lt;li&gt;TensorFlow and MXNet as examples of the advanced dataflow model.&lt;/li&gt;
-&lt;/ul&gt;
+&lt;p&gt;We talk about each approach in brief:
+* using Apache Spark as an example of the basic dataflow approach
+* PMLS (Petuum) as an example of the parameter-server model
+* TensorFlow and MXNet as examples of the advanced dataflow model.&lt;/p&gt;
 
 &lt;h1 id=&quot;spark&quot;&gt;Spark&lt;/h1&gt;
-
 &lt;p&gt;Spark enables in-memory caching of frequently used data and avoids the overhead of writing a lot of intermediate data to disk. For this Spark leverages on Resilient Distributed Datasets (RDD), read-only, partitioned collection of records distributed across a set of machines. RDDs are the collection of objects divided into logical partitions that are stored and processed as in-memory, with shuffle/overflow to disk.&lt;/p&gt;
 
 &lt;p&gt;In Spark, a computation is modeled as a directed acyclic graph (DAG), where each vertex denotes an RDD and each edge denotes an operation on RDD. On a DAG, an edge E from vertex A to vertex B implies that RDD B is a result of performing operation E on RDD A. There are two kinds of operations: transformations and actions. A transformation (e.g., map, filter, join) performs an operation on an RDD and produces a new RDD.&lt;/p&gt;
 
 &lt;p&gt;A typical Spark job performs a couple of transformations on a sequence of RDDs and then applies an action to the latest RDD in the lineage of the whole computation. A Spark application runs multiple jobs in sequence or in parallel.&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&quot;https://4.bp.blogspot.com/-cN_-PWvDGCs/WX6pgpqlTSI/AAAAAAAAGbw/vp4ttIiQ5jAGmjllTEyMrFq200uDWyalQCK4BGAYYCw/s400/sparkArch.png&quot; alt=&quot;&quot;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;https://4.bp.blogspot.com/-cN_-PWvDGCs/WX6pgpqlTSI/AAAAAAAAGbw/vp4ttIiQ5jAGmjllTEyMrFq200uDWyalQCK4BGAYYCw/s400/sparkArch.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
 
 &lt;p&gt;A Spark cluster comprises of a master and multiple workers. A master is responsible for negotiating resource requests made by the Spark driver program corresponding to the submitted Spark application. Worker processes hold Spark executors (each of which is a JVM instance) that are responsible for executing Spark tasks. The driver contains two scheduler components, the DAG scheduler, and the task scheduler. The DAG scheduler is responsible for stage-oriented scheduling, and the task scheduler is responsible for submitting tasks produced by the DAG scheduler to the Spark executors.&lt;/p&gt;
 
 &lt;p&gt;The Spark user models the computation as a DAG which transforms &amp;amp; runs actions on RDDs. The DAG is compiled into stages. Unlike the MapReduce framework that consists of only two computational stages, map and reduce, a Spark job may consist of a DAG of multiple stages. The stages are run in topological order. A stage contains a set of independent tasks which perform computation on partitions of RDDs. These tasks can be executed either in parallel or as pipelined.&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&quot;https://4.bp.blogspot.com/-_KxjkVBsznQ/WX6pcFQ7C5I/AAAAAAAAGbo/GYdLBgVqY78ZEllZ971WoHmBAbnDRayAgCK4BGAYYCw/s400/apache.png&quot; alt=&quot;&quot;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;https://4.bp.blogspot.com/-_KxjkVBsznQ/WX6pcFQ7C5I/AAAAAAAAGbo/GYdLBgVqY78ZEllZ971WoHmBAbnDRayAgCK4BGAYYCw/s400/apache.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
 
-&lt;p&gt;Spark defines two types of dependency relation that can capture data dependency among a set of RDDs:&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Narrow dependency. Narrow dependency means each partition of the parent RDD is used by at most one partition of the child RDD.&lt;/li&gt;
-&lt;li&gt;Shuffle dependency (wide dependency). Wide dependency means multiple child partitions of RDD may depend on a single parent RDD partition.&lt;/li&gt;
-&lt;/ul&gt;
+&lt;p&gt;Spark defines two types of dependency relation that can capture data dependency among a set of RDDs:
+* Narrow dependency. Narrow dependency means each partition of the parent RDD is used by at most one partition of the child RDD.
+* Shuffle dependency (wide dependency). Wide dependency means multiple child partitions of RDD may depend on a single parent RDD partition.&lt;/p&gt;
 
 &lt;p&gt;Narrow dependencies are good for efficient execution, whereas wide dependencies introduce bottlenecks since they disrupt pipelining and require communication intensive shuffle operations.&lt;/p&gt;
 
 &lt;h2 id=&quot;fault-tolerance&quot;&gt;Fault tolerance&lt;/h2&gt;
-
 &lt;p&gt;Spark uses the DAG to track the lineage of operations on RDDs. For shuffle dependency, the intermediate records from one stage are materialized on the machines holding parent partitions. This intermediate data is used for simplifying failure recovery. If a task fails, the task will be retried as long as its stage’s parents are still accessible. If some stages that are required are no longer available, the missing partitions will be re-computed in parallel.&lt;/p&gt;
 
 &lt;p&gt;Spark is unable to tolerate a scheduler failure of the driver, but this can be addressed by replicating the metadata of the scheduler. The task scheduler monitors the state of running tasks and retries failed tasks. Sometimes, a slow straggler task may drag the progress of a Spark job.&lt;/p&gt;
 
 &lt;h2 id=&quot;machine-learning-on-spark&quot;&gt;Machine learning on Spark&lt;/h2&gt;
-
 &lt;p&gt;Spark was designed for general data processing, and not specifically for machine learning. However, using the MLlib for Spark, it is possible to do ML on Spark. In the basic setup, Spark stores the model parameters in the driver node, and the workers communicate with the driver to update the parameters after each iteration. For large scale deployments, the model parameters may not fit into the driver and would be maintained as an RDD. This introduces a lot of &lt;strong&gt;overhead&lt;/strong&gt; because a new RDD will need to be created in each iteration to hold the updated model parameters. Updating the model involves shuffling data across machines/disks, this limits the scalability of Spark. This is where the basic dataflow model (the DAG) in Spark falls short. Spark does not support iterations needed in ML well.&lt;/p&gt;
 
 &lt;h1 id=&quot;pmls&quot;&gt;PMLS&lt;/h1&gt;
-
 &lt;p&gt;PMLS was designed specifically for ML with a clean slate. It introduced the parameter-server (PS) abstraction for serving the iteration-intensive ML training process.&lt;/p&gt;
 
-&lt;p&gt;In PMLS, a worker process/thread is responsible for requesting up to date model parameters and carrying out computation over a partition of data, and a parameter-server thread is responsible for storing and updating&lt;br&gt;
+&lt;p&gt;In PMLS, a worker process/thread is responsible for requesting up to date model parameters and carrying out computation over a partition of data, and a parameter-server thread is responsible for storing and updating
 model parameters and making response to the request from workers.&lt;/p&gt;
 
-&lt;p&gt;Figure below shows the architecture of PMLS.&lt;br&gt;
-&lt;img src=&quot;https://3.bp.blogspot.com/-cFL80lqWCCo/WX6pk2jzcdI/AAAAAAAAGb4/XFYSzGWsD6UPhrewWEll5w61g-vbYAYYwCK4BGAYYCw/s400/pmlsArch.png&quot; alt=&quot;&quot;&gt;&lt;/p&gt;
+&lt;p&gt;Figure below shows the architecture of PMLS.
+&lt;img src=&quot;https://3.bp.blogspot.com/-cFL80lqWCCo/WX6pk2jzcdI/AAAAAAAAGb4/XFYSzGWsD6UPhrewWEll5w61g-vbYAYYwCK4BGAYYCw/s400/pmlsArch.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
 
 &lt;ul&gt;
-&lt;li&gt;The parameter server is implemented as distributed tables. All model parameters are stored via these tables. A PMLS application can register more than one table. These tables are maintained by server threads. Each table consists of multiple rows. Each cell in a row is identified by a column ID and typically stores one parameter. The rows of the tables can be stored across multiple servers on different machines.&lt;/li&gt;
-&lt;li&gt;Workers are responsible for performing computation defined by a user on partitioned dataset in each iteration and need to request up to date parameters for its computation. Each worker may contain multiple working threads. There is no communication across workers. Instead, workers only communicate with servers.&lt;/li&gt;
-&lt;li&gt;&amp;#39;&amp;#39;worker&amp;#39;&amp;#39; and &amp;#39;&amp;#39;server&amp;#39;&amp;#39; are not necessarily separated physically. In fact server threads co-locate with the worker processes/threads in PMLS.&lt;/li&gt;
+  &lt;li&gt;The parameter server is implemented as distributed tables. All model parameters are stored via these tables. A PMLS application can register more than one table. These tables are maintained by server threads. Each table consists of multiple rows. Each cell in a row is identified by a column ID and typically stores one parameter. The rows of the tables can be stored across multiple servers on different machines.&lt;/li&gt;
+  &lt;li&gt;Workers are responsible for performing computation defined by a user on partitioned dataset in each iteration and need to request up to date parameters for its computation. Each worker may contain multiple working threads. There is no communication across workers. Instead, workers only communicate with servers.&lt;/li&gt;
+  &lt;li&gt;'’worker’’ and ‘‘server’’ are not necessarily separated physically. In fact server threads co-locate with the worker processes/threads in PMLS.&lt;/li&gt;
 &lt;/ul&gt;
 
 &lt;h2 id=&quot;error-tolerance-of-ml-algorithm&quot;&gt;Error tolerance of ML algorithm.&lt;/h2&gt;
-
 &lt;p&gt;PMLS exploits the error-tolerant property of many machine learning algorithms to make a trade-off between efficiency and consistency.&lt;/p&gt;
 
-&lt;p&gt;In order to leverage such error-tolerant property, PMLS follows Staleness Synchronous Parallel (SSP) model.  In SSP model, worker threads can proceed without waiting for slow threads.&lt;/p&gt;
-
-&lt;blockquote&gt;
-&lt;p&gt;Fast threads may carry out computation using stale model parameters.  Performing computation on stale version of model parameter does cause errors, however these errors are bounded.&lt;/p&gt;
-&lt;/blockquote&gt;
+&lt;p&gt;In order to leverage such error-tolerant property, PMLS follows Staleness Synchronous Parallel (SSP) model.  In SSP model, worker threads can proceed without waiting for slow threads.
+&amp;gt;  Fast threads may carry out computation using stale model parameters.  Performing computation on stale version of model parameter does cause errors, however these errors are bounded.&lt;/p&gt;
 
 &lt;p&gt;The communication protocol between workers and servers can guarantee that the model parameters that a working thread reads from its local cache is of bounded staleness.&lt;/p&gt;
 
-&lt;h2 id=&quot;fault-tolerance&quot;&gt;Fault tolerance&lt;/h2&gt;
-
+&lt;h2 id=&quot;fault-tolerance-1&quot;&gt;Fault tolerance&lt;/h2&gt;
 &lt;p&gt;Fault tolerance in PMLS is achieved by checkpointing the model parameters in the parameter server periodically. To resume from a failure, the whole system restarts from the last checkpoint.&lt;/p&gt;
 
 &lt;h2 id=&quot;programing-interface&quot;&gt;Programing interface&lt;/h2&gt;
-
 &lt;p&gt;PMLS is written in C++.&lt;/p&gt;
 
 &lt;p&gt;While PMLS has very little overhead, on the negative side, the users of PMLS need to know how to handle computation using relatively low-level APIs.&lt;/p&gt;
 
 &lt;h1 id=&quot;tensorflow&quot;&gt;TensorFlow&lt;/h1&gt;
-
-&lt;p&gt;Tensorflow is the first generation distributed parameter-server system.&lt;br&gt;
+&lt;p&gt;Tensorflow is the first generation distributed parameter-server system.
 In TensorFlow the computation is abstracted and represented by a directed graph. But unlike traditional dataflow systems, TensorFlow allows nodes to represent computations that own or update mutable state.&lt;/p&gt;
 
 &lt;ul&gt;
-&lt;li&gt;Variable: a stateful operations, owns mutable buffer, and can be used to store model parameters that need to be updated at each iteration.&lt;/li&gt;
-&lt;li&gt;Node: represents operations, and some operations are control flow operations.&lt;/li&gt;
-&lt;li&gt;Tensors: values that flow along the directed edges in the TensorFlow graph, with arbitrary dimensionality matrices.
-
-&lt;ul&gt;
-&lt;li&gt;An operation can take in one or more tensors and produce a result tensor.&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;Edge: special edges called control dependencies can be added into TensorFlow’s dataflow graph with no data flowing along such edges.&lt;/li&gt;
+  &lt;li&gt;Variable: a stateful operations, owns mutable buffer, and can be used to store model parameters that need to be updated at each iteration.&lt;/li&gt;
+  &lt;li&gt;Node: represents operations, and some operations are control flow operations.&lt;/li&gt;
+  &lt;li&gt;Tensors: values that flow along the directed edges in the TensorFlow graph, with arbitrary dimensionality matrices.
+    &lt;ul&gt;
+      &lt;li&gt;An operation can take in one or more tensors and produce a result tensor.&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;Edge: special edges called control dependencies can be added into TensorFlow’s dataflow graph with no data flowing along such edges.&lt;/li&gt;
 &lt;/ul&gt;
 
 &lt;p&gt;In summary, TensorFlow is a dataflow system that offers mutable state and allows cyclic computation graph, and as such enables training a machine learning algorithm with parameter-server model.&lt;/p&gt;
 
 &lt;h2 id=&quot;architecture&quot;&gt;Architecture&lt;/h2&gt;
-
 &lt;p&gt;The Tensorflow runtime consists of three main components: client, master, worker.&lt;/p&gt;
 
 &lt;ul&gt;
-&lt;li&gt;client:  is responsible for holding a session where a user can define computational graph to run. When a client requests the evaluation of a Tensorflow graph via a session object, the request is sent to master service.&lt;/li&gt;
-&lt;li&gt;master: schedules the job over one or more workers and coordinates the execution of the computational graph.&lt;/li&gt;
-&lt;li&gt;worker:  Each worker handles requests from the master and schedules the execution of the kernels (The implementation of an operation on a particular device is called a kernel) in the computational graph. The dataflow executor in a worker dispatches the kernels to local devices and runs the kernels in parallel when possible.&lt;/li&gt;
+  &lt;li&gt;client:  is responsible for holding a session where a user can define computational graph to run. When a client requests the evaluation of a Tensorflow graph via a session object, the request is sent to master service.&lt;/li&gt;
+  &lt;li&gt;master: schedules the job over one or more workers and coordinates the execution of the computational graph.&lt;/li&gt;
+  &lt;li&gt;worker:  Each worker handles requests from the master and schedules the execution of the kernels (The implementation of an operation on a particular device is called a kernel) in the computational graph. The dataflow executor in a worker dispatches the kernels to local devices and runs the kernels in parallel when possible.&lt;/li&gt;
 &lt;/ul&gt;
 
 &lt;h2 id=&quot;characteristics&quot;&gt;Characteristics&lt;/h2&gt;
-
-&lt;h3 id=&quot;node-placement&quot;&gt;Node Placement&lt;/h3&gt;
-
-&lt;p&gt;If multiple devices are involved in computation, a procedure called node placement is executed in a Tensorflow&lt;br&gt;
+&lt;p&gt;### Node Placement
+If multiple devices are involved in computation, a procedure called node placement is executed in a Tensorflow
 runtime. Tensorflow uses a cost model to estimate the cost of executing an operation on all available devices (such as CPUs and GPUs) and assigns an operation to a suitable device to execute, subject to implicit or explicit device constraints in the graph.&lt;/p&gt;
 
 &lt;h3 id=&quot;sub-graph-execution&quot;&gt;Sub-graph execution&lt;/h3&gt;
-
 &lt;p&gt;TensorFlow supports sub-graph execution. A single round of executing a graph/sub-graph is called a step.&lt;/p&gt;
 
-&lt;p&gt;A training application contains two type of jobs: parameter server (ps) job and worker job. Like data parallelism in PMLS, TensorFlow&amp;#39;s data parallelism training involves multiple tasks in a worker job training the same model on different minibatches of data, updating shared parameters hosted in a one or more tasks in a ps job.&lt;/p&gt;
+&lt;p&gt;A training application contains two type of jobs: parameter server (ps) job and worker job. Like data parallelism in PMLS, TensorFlow’s data parallelism training involves multiple tasks in a worker job training the same model on different minibatches of data, updating shared parameters hosted in a one or more tasks in a ps job.&lt;/p&gt;
 
 &lt;h3 id=&quot;a-typical-replicated-training-structure-between-graph-replication&quot;&gt;A typical replicated training structure: between-graph replication&lt;/h3&gt;
-
-&lt;p&gt;&lt;img src=&quot;https://1.bp.blogspot.com/-LToYY4Kj2YE/WX6pod_r5pI/AAAAAAAAGcA/Ls-ZWfTebYk_sc3l2pCHRAWv9e6U_eT_gCK4BGAYYCw/s400/tf.png&quot; alt=&quot;&quot;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;https://1.bp.blogspot.com/-LToYY4Kj2YE/WX6pod_r5pI/AAAAAAAAGcA/Ls-ZWfTebYk_sc3l2pCHRAWv9e6U_eT_gCK4BGAYYCw/s400/tf.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
 
 &lt;p&gt;There is a separate client for each worker task, typically in the same process as the worker task. Each client builds a similar graph containing the parameters (pinned to ps) and a single copy of the compute-intensive part of the computational graph that is pinned to the local task in the worker job.&lt;/p&gt;
 
 &lt;p&gt;For example, a compute-intensive part is to compute gradient during each iteration of stochastic gradient descent algorithm.&lt;/p&gt;
 
-&lt;p&gt;Users can also specify the consistency model in the betweengraph replicated training as either synchronous training or asynchronous training:&lt;/p&gt;
+&lt;p&gt;Users can also specify the consistency model in the betweengraph replicated training as either synchronous training or asynchronous training:
+*  In asynchronous mode, each replica of the graph has an independent training loop that executes without coordination.
+* In synchronous mode, all of the replicas read the same values for the current parameters, compute gradients in parallel, and then apply them to a stateful accumulators which act as barriers for updating variables.&lt;/p&gt;
 
-&lt;ul&gt;
-&lt;li&gt; In asynchronous mode, each replica of the graph has an independent training loop that executes without coordination.&lt;/li&gt;
-&lt;li&gt;In synchronous mode, all of the replicas read the same values for the current parameters, compute gradients in parallel, and then apply them to a stateful accumulators which act as barriers for updating variables.&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2 id=&quot;fault-tolerance&quot;&gt;Fault tolerance&lt;/h2&gt;
-
-&lt;p&gt;TensorFlow provides user-controllable checkpointing for fault tolerance via primitive operations: &lt;em&gt;save&lt;/em&gt; writes tensors to checkpoint file, and &lt;em&gt;restore&lt;/em&gt; reads tensors from a checkpointing file.&lt;br&gt;
+&lt;h2 id=&quot;fault-tolerance-2&quot;&gt;Fault tolerance&lt;/h2&gt;
+&lt;p&gt;TensorFlow provides user-controllable checkpointing for fault tolerance via primitive operations: &lt;em&gt;save&lt;/em&gt; writes tensors to checkpoint file, and &lt;em&gt;restore&lt;/em&gt; reads tensors from a checkpointing file.
 TensorFlow allows customized fault tolerance mechanism through its primitive operations, which provides users the ability to make a balance between reliability and checkpointing overhead.&lt;/p&gt;
 
 &lt;h1 id=&quot;mxnet&quot;&gt;MXNET&lt;/h1&gt;
-
-&lt;p&gt;Similar to TensorFlow, MXNet is a dataflow system that allows cyclic computation graphs with mutable states, and supports training with parameter server model. Similar to TensorFlow, MXNet provides good support for data-parallelism on multiple CPU/GPU, and also allows model-parallelism to be implemented.&lt;br&gt;
+&lt;p&gt;Similar to TensorFlow, MXNet is a dataflow system that allows cyclic computation graphs with mutable states, and supports training with parameter server model. Similar to TensorFlow, MXNet provides good support for data-parallelism on multiple CPU/GPU, and also allows model-parallelism to be implemented.
 MXNet allows both synchronous and asynchronous training.&lt;/p&gt;
 
-&lt;h2 id=&quot;characteristics&quot;&gt;Characteristics&lt;/h2&gt;
-
+&lt;h2 id=&quot;characteristics-1&quot;&gt;Characteristics&lt;/h2&gt;
 &lt;p&gt;Figure below illustrates main components of MXNet. The runtime dependency engine analyzes the dependencies in computation processes and parallelizes the computations that are not dependent. On top of runtime dependency engine, MXNet has a middle layer for graph and memory optimization.&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&quot;https://raw.githubusercontent.com/dmlc/dmlc.github.io/master/img/mxnet/system/overview.png&quot; alt=&quot;&quot;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;https://raw.githubusercontent.com/dmlc/dmlc.github.io/master/img/mxnet/system/overview.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
 
-&lt;h2 id=&quot;fault-tolerance&quot;&gt;Fault tolerance&lt;/h2&gt;
-
+&lt;h2 id=&quot;fault-tolerance-3&quot;&gt;Fault tolerance&lt;/h2&gt;
 &lt;p&gt;MXNet supports basic fault tolerance through checkpointing, and provides save and load model operations. The save operaton writes the model parameters to the checkpoint file and the load operation reads model parameters from the checkpoint file.&lt;/p&gt;
 
-&lt;h1 id=&quot;evaluations&quot;&gt;Evaluations&lt;/h1&gt;
-
-&lt;p&gt;Please check the &lt;a href=&quot;https://www.cse.buffalo.edu/%7Edemirbas/publications/DistMLplat.pdf&quot;&gt;paper&lt;/a&gt; for more details.&lt;/p&gt;
-
 &lt;h1 id=&quot;reference&quot;&gt;Reference&lt;/h1&gt;
+&lt;ul&gt;
+  &lt;li&gt;Zhang, Kuo and Alqahtani, Salem and Demirbas, Murat, ‘A Comparison of Distributed Machine Learning Platforms’, ICCCN, 2017.
+The post is used for study purpose only.&lt;/li&gt;
+&lt;/ul&gt;
 
-&lt;p&gt;The post is used for study purpose only. The bibtex of the paper can be found below:&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;@inproceedings{zhang2017a,
-  title={A Comparison of Distributed Machine Learning Platforms},
-  author={Zhang, Kuo and Alqahtani, Salem and Demirbas, Murat},
-  booktitle={Computer Communication and Networks (ICCCN), 2017 26th International Conference on},
-  year={2017},
-  organization={IEEE}
-}
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;</content>
+</content>
  </entry>
  
  <entry>
    <title>Bias-variance decomposition in a nutshell</title>
    <link href="/bias-variance"/>
-   <updated>2016-12-08T00:00:00+01:00</updated>
+   <updated>2016-12-08T00:00:00+08:00</updated>
    <id>/biasvariance</id>
    <content type="html">&lt;h2 id=&quot;basic-setting&quot;&gt;basic setting&lt;/h2&gt;
-
-&lt;p&gt;We will show four key results using Bias-variance decomposition. &lt;/p&gt;
+&lt;p&gt;We will show four key results using Bias-variance decomposition.&lt;/p&gt;
 
 &lt;p&gt;Let us assume $f_{true}(x_n)$ is the true model, and the observations are given by:&lt;/p&gt;
 
@@ -218,14 +177,13 @@ MXNet allows both synchronous and asynchronous training.&lt;/p&gt;
 
 &lt;p&gt;where $\epsilon_n$ are i.i.d. with zero mean and variance $\sigma^2$. Note that $f_{true}$ can be nonlinear and $\epsilon_n$ does not have to be Gaussian.&lt;/p&gt;
 
-&lt;p&gt;We denote the least-square estimation by &lt;/p&gt;
+&lt;p&gt;We denote the least-square estimation by&lt;/p&gt;
 
-&lt;p&gt;\[f_{lse}(x_{\ast}) = \tilde{x}_{\ast}^T w_{lse} \] &lt;/p&gt;
+&lt;p&gt;\[f_{lse}(x_{\ast}) = \tilde{x}_{\ast}^T w_{lse} \]&lt;/p&gt;
 
-&lt;p&gt;Where the tilde symbol means there is a constant 1 feature added to the raw data. For this derivation, we will assume that $x_{\ast}$ is fixed, although it is straightforward to generalize this.  &lt;/p&gt;
+&lt;p&gt;Where the tilde symbol means there is a constant 1 feature added to the raw data. For this derivation, we will assume that $x_{\ast}$ is fixed, although it is straightforward to generalize this.&lt;/p&gt;
 
 &lt;h2 id=&quot;expected-test-error&quot;&gt;Expected Test Error&lt;/h2&gt;
-
 &lt;p&gt;Bias-variance comes directly out of the test error:&lt;/p&gt;
 
 &lt;p&gt;\[ \overline{teErr} = \mathbb{E}[(observation - prediction)^2] \qquad (2.1) \]&lt;/p&gt;
@@ -245,54 +203,151 @@ MXNet allows both synchronous and asynchronous training.&lt;/p&gt;
 &lt;p&gt;(I am sorry, I did not find the equation alignment in MathJax.) Where equation (2.2) is the expectation over training data and testing data; and the second term in equation (2.7) is called &lt;strong&gt;predict variance&lt;/strong&gt;, and the third term of it is called the square of &lt;strong&gt;predict bias&lt;/strong&gt;. Thus comes the name bias-variance decomposition.&lt;/p&gt;
 
 &lt;h2 id=&quot;where-does-the-bias-come-from-model-bias-and-estimation-bias&quot;&gt;Where does the bias come from? model bias and estimation bias&lt;/h2&gt;
-
 &lt;p&gt;As illustrated in the following figure, bias comes from model bias and estimation bias. Model bias comes from the model itself; and estimation bias comes from dataset (mainly). And bear in mind that ridge regression increases estimation bias while reducing variance(you may need to find other papers to get this idea)&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&quot;/assets/imgblog/bias-variance.png&quot; alt=&quot;Where does bias come from?&quot;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;/assets/imgblog/bias-variance.png&quot; alt=&quot;Where does bias come from?&quot; /&gt;&lt;/p&gt;
 
 &lt;h2 id=&quot;references&quot;&gt;References&lt;/h2&gt;
+&lt;ul&gt;
+  &lt;li&gt;Kevin, Murphy. “Machine Learning: a probabilistic perspective.” (2012).&lt;/li&gt;
+  &lt;li&gt;Bishop, Christopher M. “Pattern recognition.” Machine Learning 128 (2006).&lt;/li&gt;
+  &lt;li&gt;Emtiyaz Khan’s lecture notes on PCML, 2015&lt;/li&gt;
+&lt;/ul&gt;
+
+</content>
+ </entry>
+ 
+ <entry>
+   <title>On Saddle Points: a painless tutorial</title>
+   <link href="/saddle-points"/>
+   <updated>2016-09-07T00:00:00+08:00</updated>
+   <id>/SaddlePoints</id>
+   <content type="html">&lt;p&gt;Are we really stuck in the local minima rather than anything else?&lt;/p&gt;
+
+&lt;h2 id=&quot;different-types-of-critical-points&quot;&gt;Different types of critical points&lt;/h2&gt;
+&lt;hr /&gt;
+
+&lt;div class=&quot;fig figcenter fighighlight&quot;&gt;
+  &lt;img src=&quot;/assets/blog/updatemethods/minmaxsaddle.png&quot; width=&quot;100%&quot; /&gt;
+  &lt;div class=&quot;figcaption&quot;&gt;
+    Various Types of Critical Points. Source: Rong Ge's blog.
+  &lt;/div&gt;
+&lt;/div&gt;
+&lt;hr /&gt;
+
+&lt;p&gt;To minimize the function \(f:\mathbb{R}^n\to \mathbb{R}\), the most popular approach is to follow the opposite direction of the gradient \(\nabla f(x)\) (for simplicity, all functions we talk about are infinitely differentiable), that is,&lt;/p&gt;
+
+&lt;script type=&quot;math/tex; mode=display&quot;&gt;y = x - \eta \nabla f(x),&lt;/script&gt;
+
+&lt;p&gt;Here \(\eta\) is a small step size. This is the &lt;em&gt;gradient descent&lt;/em&gt; algorithm.&lt;/p&gt;
+
+&lt;p&gt;Whenever the gradient \(\nabla f(x)\) is nonzero, as long as we choose a small enough \(\eta\), the algorithm is guaranteed to make &lt;em&gt;local&lt;/em&gt; progress. When the gradient \(\nabla f(x)\) is equal to \(\vec{0}\), the point is called a &lt;strong&gt;critical point&lt;/strong&gt;, and gradient descent algorithm will get stuck. For (strongly) convex functions, there is a unique &lt;em&gt;critical point&lt;/em&gt; that is also the &lt;em&gt;global minimum&lt;/em&gt;.&lt;/p&gt;
+
+&lt;p&gt;However, this is not always this case. All critical points of \( f(x) \) can be further characterized by the curvature of the function in its vicinity, especially described by it’s eigenvalues of the Hessian matrix. Here I describe three possibilities as the figure above shown:&lt;/p&gt;
 
 &lt;ul&gt;
-&lt;li&gt;Kevin, Murphy. &amp;quot;Machine Learning: a probabilistic perspective.&amp;quot; (2012).&lt;/li&gt;
-&lt;li&gt;Bishop, Christopher M. &amp;quot;Pattern recognition.&amp;quot; Machine Learning 128 (2006).&lt;/li&gt;
-&lt;li&gt;Emtiyaz Khan&amp;#39;s lecture notes on PCML, 2015&lt;/li&gt;
+  &lt;li&gt;If all eigenvalues are non-zero and positive, then the critical point is a local minimum.&lt;/li&gt;
+  &lt;li&gt;If all eigenvalues are non-zero and negative, then the critical point is a local maximum.&lt;/li&gt;
+  &lt;li&gt;If the eigenvalues are non-zero, and both positive and negative eigenvalues exist, then the critical point is a saddle point.&lt;/li&gt;
 &lt;/ul&gt;
+
+&lt;p&gt;The proof of the above three possibilities can be shown from the reparametrization of the space of Hessian matrix. The Taylor expansion is given by(first order derivative vanishes):&lt;/p&gt;
+
+&lt;script type=&quot;math/tex; mode=display&quot;&gt;f(x+\Delta x) = f(x) + \frac{1}{2} (\Delta x)^T \mathbf{H} \Delta x \,\,\,\, -----  \,\,\,(1)&lt;/script&gt;
+
+&lt;p&gt;And assume \(\mathbf{e_1}, \mathbf{e_2}, …, \mathbf{e_n}\) are the eigenvectors and \(\lambda_1, \lambda_2, …, \lambda_n\) are the eigenvalues correspondingly. We can make the reparametrization of the space by:&lt;/p&gt;
+
+&lt;script type=&quot;math/tex; mode=display&quot;&gt;\Delta v = \frac{1}{2} \begin{bmatrix} \mathbf{e_1}^T\\ ... \\ \mathbf{e_n}^T \end{bmatrix} \Delta x&lt;/script&gt;
+
+&lt;p&gt;Then combined with Taylor expansion, we can get the following equation:&lt;/p&gt;
+
+&lt;script type=&quot;math/tex; mode=display&quot;&gt;f(x+ \Delta x) = f(x)+\frac{1}{2} \sum_{i=1}^n \lambda_i(\mathbf{e_i}^T \Delta x)^2 = f(x) + \sum_{i=1}^n \lambda_i \Delta \mathbf{v_i}^2&lt;/script&gt;
+
+&lt;p&gt;For the proof of the above equation, you may need to look at &lt;a href=&quot;https://inst.eecs.berkeley.edu/~ee127a/book/login/l_sym_sed.html&quot;&gt;Spectrum Theorem&lt;/a&gt;, which is related to the eigenvalues and eigenvectors of symmetric matrices.&lt;/p&gt;
+
+&lt;p&gt;From this equation, all the three scenarios for critical points are self-explained.&lt;/p&gt;
+
+&lt;h2 id=&quot;first-order-method-to-escape-from-saddle-point&quot;&gt;First order method to escape from saddle point&lt;/h2&gt;
+&lt;p&gt;A &lt;a href=&quot;http://www.offconvex.org/2016/03/22/saddlepoints/&quot;&gt;post&lt;/a&gt; by Rong Ge introduced a first order method to escape from saddle point. He claimed that saddle points are very &lt;em&gt;unstable&lt;/em&gt;: if we put a ball on a saddle point, then slightly perturb it, the ball is likely to fall to a local minimum, especially when the second order term \(\frac{1}{2} (\Delta x)^T \mathbf{H} \Delta x\) is significantly smaller than 0(there is a steep direction where the function value decrease, and assume we are looking for local minimum), which is called a &lt;em&gt;Strict Saddle Function&lt;/em&gt; in Rong Ge’s post. In this case we can use &lt;em&gt;noisy gradient descent&lt;/em&gt;:&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;\(y = x - \eta \nabla f(x) + \epsilon.\)&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;where \(\epsilon\)  is a noise vector that has mean \(\mathbf{0}\). Actually, it is the basic idea of &lt;em&gt;stochastic gradient descent&lt;/em&gt;, which uses the gradient of a mini batch rather than the true gradient. However, the drawback of the stochastic gradient descent is not the direction, but the size of the step along each eigenvector. The step, along any direction \(\mathbf{e_i}\), is given by \(-\lambda_i \Delta \mathbf{v_i}\), when the steps taken in the direction with small absolute value of eigenvalues, the step is small. To be more concrete, an example that the curvature of the error surface may not be the same in all directions. If there is a long and narrow valley in the error surface, the component of the gradient in the direction that points along base of the valley is very small while the component perpendicular to the valley walls is quite large even though we have to move a long distance along the base and a small distance perpendicular to the walls. This phenomenon can be seen as the following figure:&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;div class=&quot;fig figcenter fighighlight&quot;&gt;
+  &lt;img src=&quot;/assets/blog/updatemethods/without_momentum.png&quot; width=&quot;70%&quot; /&gt;
+  &lt;div class=&quot;figcaption&quot;&gt;
+    SGD optimization routes
+  &lt;/div&gt;
+&lt;/div&gt;
+&lt;hr /&gt;
+
+&lt;p&gt;We normally move by making a step that is some constant times the negative gradient rather than a step of constant length in the direction of the negative gradient. This means that in steep regions (where we have to be careful not to make our steps too large), we move quickly, and in shallow regions (where we need to move in big steps), we move slowly.&lt;/p&gt;
+
+&lt;h2 id=&quot;newton-methods&quot;&gt;Newton methods&lt;/h2&gt;
+&lt;p&gt;To look at the detail of newton methods, you can follow the proof shown in (Sam Roweis’s) in the reference list. The newton method solves the slowness problem by rescaling the gradients in each direction with the inverse of the corresponding eigenvalue, yielding the step \(-\Delta \mathbf{v_i}\)(because \(\frac{1}{\lambda_i}\mathbf{e_i} = \mathbf{H}^{-1}\mathbf{e_i}  \) ). However, this approach can result in moving in the wrong direction when the eigenvalue is negative. The newton step moves along the eigenvector in a direction &lt;strong&gt;opposite&lt;/strong&gt; to the gradient descent step, thus increase the error.&lt;/p&gt;
+
+&lt;p&gt;From the idea of Levenberg gradient descent method, we can use damping, in which case we remove negative curvature by adding a constant \(\alpha\) to its diagonal. Informally, \(x^{k+1} = x^{k} - (\mathbf{H}+\alpha \mathbf{I})^{-1} \mathbf{g_k}\). We can view \(\alpha\) as the tradeoff between newton methods and gradient descent. When \(\alpha\) is small, it is closer to newton method, when \(\alpha\) is large, it is closer to gradient descent. In this case, we get the step \(-\frac{\lambda_i}{\lambda_i + \alpha}\Delta \mathbf{v_i}\). Therefore, obviously, the drawback of damping newton method is that it potentially has small step size in many eigen-directions incurred by large damping factor \(\alpha\).&lt;/p&gt;
+
+&lt;h2 id=&quot;saddle-free-newton-method&quot;&gt;Saddle free newton method&lt;/h2&gt;
+&lt;p&gt;(Dauphin et al., 2014) introduced a method called saddle free newton method, which is a modified version of trust region approach. It minimizes first-order Taylor expansion constraint by the distance between first-order Taylor expansion and second-order Taylor expansion. By this constraint, unlike gradient descent, it can move further in the directions of low curvature; and move less in the directions of high curvature. I recommend you to read this paper throughly.&lt;/p&gt;
+
+&lt;h2 id=&quot;future-post&quot;&gt;Future post&lt;/h2&gt;
+&lt;p&gt;I have talked about degenerate critical point in this post， where there are only positive and zero eigenvalues in the Hessian matrix.&lt;/p&gt;
+
+&lt;h2 id=&quot;marks&quot;&gt;Marks&lt;/h2&gt;
+
+&lt;p&gt;The slides for the talk of this blog can be found at &lt;a href=&quot;http://www.junlulocky.com/assets/talks/2016onsaddlepoints.pdf&quot;&gt;Link&lt;/a&gt;. Contact me if the link is not working.&lt;/p&gt;
+
+&lt;h2 id=&quot;references&quot;&gt;References&lt;/h2&gt;
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;https://inst.eecs.berkeley.edu/~ee127a/book/login/l_sym_sed.html&quot;&gt;Berkeley Optimization Models: Spectral Theorem&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;Dauphin, Yann N., et al. &lt;em&gt;Identifying and attacking the saddle point problem in high-dimensional non-convex optimization.&lt;/em&gt; Advances in neural information processing systems. 2014.&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://www.cs.nyu.edu/~roweis/notes/lm.pdf&quot;&gt;Sam Roweis’s note on Levenberg-Marquardt Optimization&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;Rong Ge, &lt;em&gt;Escaping from Saddle Points&lt;/em&gt;, Off the convex path blog, 2016&lt;/li&gt;
+  &lt;li&gt;Benjamin Recht, &lt;em&gt;Saddles Again&lt;/em&gt;, Off the convex path blog, 2016&lt;/li&gt;
+&lt;/ul&gt;
+
 </content>
  </entry>
  
  <entry>
    <title>Contributing an article</title>
    <link href="/contributing"/>
-   <updated>2016-12-06T00:00:00+01:00</updated>
+   <updated>2016-09-06T00:00:00+08:00</updated>
    <id>/contribute</id>
    <content type="html">&lt;p&gt;If you’re writing an article for this blog, please follow these guidelines.&lt;/p&gt;
 
-&lt;p&gt;One of the rewards of switching my website to &lt;a href=&quot;http://jekyllrb.com/&quot;&gt;Jekyll&lt;/a&gt; is the &lt;br&gt;
-ability to support &lt;strong&gt;MathJax&lt;/strong&gt;, which means I can write LaTeX-like equations that get &lt;br&gt;
-nicely displayed in a web browser, like this one \( \sqrt{\frac{n!}{k!(n-k)!}} \) or &lt;br&gt;
+&lt;p&gt;One of the rewards of switching my website to &lt;a href=&quot;http://jekyllrb.com/&quot;&gt;Jekyll&lt;/a&gt; is the 
+ability to support &lt;strong&gt;MathJax&lt;/strong&gt;, which means I can write LaTeX-like equations that get 
+nicely displayed in a web browser, like this one \( \sqrt{\frac{n!}{k!(n-k)!}} \) or 
 this one \( x^2 + y^2 = r^2 \).&lt;/p&gt;
 
 &lt;!--more--&gt;
 
 &lt;p&gt;&lt;img class=&quot;centered&quot; src=&quot;http://gastonsanchez.com/images/blog/mathjax_logo.png&quot; /&gt;&lt;/p&gt;
 
-&lt;h3 id=&quot;what-39-s-mathjax&quot;&gt;What&amp;#39;s MathJax?&lt;/h3&gt;
+&lt;h3 id=&quot;whats-mathjax&quot;&gt;What’s MathJax?&lt;/h3&gt;
 
-&lt;p&gt;If you check MathJax website &lt;a href=&quot;http://www.mathjax.org/&quot;&gt;(www.mathjax.org)&lt;/a&gt; you&amp;#39;ll see &lt;br&gt;
-that it &lt;em&gt;is an open source JavaScript display engine for mathematics that works in all &lt;br&gt;
-browsers&lt;/em&gt;. &lt;/p&gt;
+&lt;p&gt;If you check MathJax website &lt;a href=&quot;http://www.mathjax.org/&quot;&gt;(www.mathjax.org)&lt;/a&gt; you’ll see 
+that it &lt;em&gt;is an open source JavaScript display engine for mathematics that works in all 
+browsers&lt;/em&gt;.&lt;/p&gt;
 
 &lt;h3 id=&quot;how-to-implement-mathjax-with-jekyll&quot;&gt;How to implement MathJax with Jekyll&lt;/h3&gt;
 
-&lt;p&gt;I followed the instructions described by Dason Kurkiewicz for &lt;br&gt;
-&lt;a href=&quot;http://dasonk.github.io/blog/2012/10/09/Using-Jekyll-and-Mathjax/&quot;&gt;using Jekyll and Mathjax&lt;/a&gt;. &lt;/p&gt;
+&lt;p&gt;I followed the instructions described by Dason Kurkiewicz for 
+&lt;a href=&quot;http://dasonk.github.io/blog/2012/10/09/Using-Jekyll-and-Mathjax/&quot;&gt;using Jekyll and Mathjax&lt;/a&gt;.&lt;/p&gt;
 
-&lt;p&gt;Here are some important details. I had to modify the Ruby library for Markdown in &lt;br&gt;
-my &lt;code&gt;_config.yml&lt;/code&gt; file. Now I&amp;#39;m using redcarpet so the corresponding line in the &lt;br&gt;
-configuration file is: &lt;code&gt;markdown: redcarpet&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;Here are some important details. I had to modify the Ruby library for Markdown in 
+my &lt;code class=&quot;highlighter-rouge&quot;&gt;_config.yml&lt;/code&gt; file. Now I’m using redcarpet so the corresponding line in the 
+configuration file is: &lt;code class=&quot;highlighter-rouge&quot;&gt;markdown: redcarpet&lt;/code&gt;&lt;/p&gt;
 
-&lt;p&gt;To load the MathJax javascript, I added the following lines in my layout &lt;code&gt;page.html&lt;/code&gt; &lt;br&gt;
-(located in my folder &lt;code&gt;_layouts&lt;/code&gt;)&lt;/p&gt;
+&lt;p&gt;To load the MathJax javascript, I added the following lines in my layout &lt;code class=&quot;highlighter-rouge&quot;&gt;page.html&lt;/code&gt; 
+(located in my folder &lt;code class=&quot;highlighter-rouge&quot;&gt;_layouts&lt;/code&gt;)&lt;/p&gt;
 
 &lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-r&quot; data-lang=&quot;r&quot;&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;script&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;type&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;text/javascript&quot;&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
     &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;src&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
@@ -302,35 +357,35 @@ configuration file is: &lt;code&gt;markdown: redcarpet&lt;/code&gt;&lt;/p&gt;
 
 &lt;h3 id=&quot;a-couple-of-examples&quot;&gt;A Couple of Examples&lt;/h3&gt;
 
-&lt;p&gt;Here&amp;#39;s a short list of examples. To know more about the details behind MathJax, you can &lt;br&gt;
-always checked the provided documentation available at &lt;br&gt;
+&lt;p&gt;Here’s a short list of examples. To know more about the details behind MathJax, you can 
+always checked the provided documentation available at 
 &lt;a href=&quot;http://docs.mathjax.org/en/latest/&quot;&gt;http://docs.mathjax.org/en/latest/&lt;/a&gt;&lt;/p&gt;
 
-&lt;p&gt;I&amp;#39;m assuming you are familiar with LaTeX. However, you should know that MathJax does not &lt;br&gt;
-have the exactly same behavior as LaTeX. By default, the &lt;strong&gt;tex2jax&lt;/strong&gt; preprocessor defines the &lt;br&gt;
-LaTeX math delimiters, which are &lt;code&gt;\\(...\\)&lt;/code&gt; for in-line math, and &lt;code&gt;\\[...\\]&lt;/code&gt; for &lt;br&gt;
-displayed equations. It also defines the TeX delimiters &lt;code&gt;$$...$$&lt;/code&gt; for displayed &lt;br&gt;
-equations, but it does not define &lt;code&gt;$...$&lt;/code&gt; as in-line math delimiters. Fortunately, &lt;br&gt;
+&lt;p&gt;I’m assuming you are familiar with LaTeX. However, you should know that MathJax does not 
+have the exactly same behavior as LaTeX. By default, the &lt;strong&gt;tex2jax&lt;/strong&gt; preprocessor defines the 
+LaTeX math delimiters, which are &lt;code class=&quot;highlighter-rouge&quot;&gt;\\(...\\)&lt;/code&gt; for in-line math, and &lt;code class=&quot;highlighter-rouge&quot;&gt;\\[...\\]&lt;/code&gt; for 
+displayed equations. It also defines the TeX delimiters &lt;code class=&quot;highlighter-rouge&quot;&gt;$$...$$&lt;/code&gt; for displayed 
+equations, but it does not define &lt;code class=&quot;highlighter-rouge&quot;&gt;$...$&lt;/code&gt; as in-line math delimiters. Fortunately, 
 you can change these predefined specifications if you want to do so.&lt;/p&gt;
 
-&lt;p&gt;Let&amp;#39;s try a first example. Here&amp;#39;s a dummy equation:&lt;/p&gt;
+&lt;p&gt;Let’s try a first example. Here’s a dummy equation:&lt;/p&gt;
 
-&lt;p&gt;$$a^2 + b^2 = c^2$$&lt;/p&gt;
+&lt;script type=&quot;math/tex; mode=display&quot;&gt;a^2 + b^2 = c^2&lt;/script&gt;
 
 &lt;p&gt;How do you write such expression? Very simple: using &lt;strong&gt;double dollar&lt;/strong&gt; signs&lt;/p&gt;
 
 &lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-r&quot; data-lang=&quot;r&quot;&gt;&lt;span class=&quot;o&quot;&gt;$$&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;a&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;^&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;+&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;b&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;^&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;c&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;^&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;$$&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
 
-&lt;p&gt;To display inline math use &lt;code&gt;\\( ... \\)&lt;/code&gt; like this &lt;code&gt;\\( sin(x^2) \\)&lt;/code&gt; which gets &lt;br&gt;
+&lt;p&gt;To display inline math use &lt;code class=&quot;highlighter-rouge&quot;&gt;\\( ... \\)&lt;/code&gt; like this &lt;code class=&quot;highlighter-rouge&quot;&gt;\\( sin(x^2) \\)&lt;/code&gt; which gets 
 rendered as \( sin(x^2) \)&lt;/p&gt;
 
-&lt;p&gt;Here&amp;#39;s another example using type &lt;code&gt;\mathsf&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;Here’s another example using type &lt;code class=&quot;highlighter-rouge&quot;&gt;\mathsf&lt;/code&gt;&lt;/p&gt;
 
 &lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-r&quot; data-lang=&quot;r&quot;&gt;&lt;span class=&quot;o&quot;&gt;$$&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;err&quot;&gt;\&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;mathsf&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Data&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;PCs&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;err&quot;&gt;\&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;times&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;err&quot;&gt;\&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;mathsf&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Loadings&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;$$&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
 
-&lt;p&gt;which gets displayed as &lt;/p&gt;
+&lt;p&gt;which gets displayed as&lt;/p&gt;
 
-&lt;p&gt;$$ \mathsf{Data = PCs} \times \mathsf{Loadings} $$&lt;/p&gt;
+&lt;script type=&quot;math/tex; mode=display&quot;&gt;\mathsf{Data = PCs} \times \mathsf{Loadings}&lt;/script&gt;
 
 &lt;p&gt;Or even better:&lt;/p&gt;
 
@@ -340,14 +395,15 @@ rendered as \( sin(x^2) \)&lt;/p&gt;
 
 &lt;p&gt;\[ \mathbf{X} = \mathbf{Z} \mathbf{P^\mathsf{T}} \]&lt;/p&gt;
 
-&lt;p&gt;If you want to use subscripts like this \( \mathbf{X}_{n,p} \) you need to scape the &lt;br&gt;
-underscores with a backslash like so &lt;code&gt;\mathbf{X}\_{n,p}&lt;/code&gt;:&lt;/p&gt;
+&lt;p&gt;If you want to use subscripts like this \( \mathbf{X}_{n,p} \) you need to scape the 
+underscores with a backslash like so &lt;code class=&quot;highlighter-rouge&quot;&gt;\mathbf{X}\_{n,p}&lt;/code&gt;:&lt;/p&gt;
 
 &lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-r&quot; data-lang=&quot;r&quot;&gt;&lt;span class=&quot;o&quot;&gt;$$&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;err&quot;&gt;\&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;mathbf&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;X&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;\_&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;n&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;p&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;err&quot;&gt;\&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;mathbf&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;A&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;\_&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;n&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;k&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;err&quot;&gt;\&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;mathbf&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;B&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;\_&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;k&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;p&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;$$&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
 
 &lt;p&gt;will be displayed as&lt;/p&gt;
 
 &lt;p&gt;\[ \mathbf{X}_{n,p} = \mathbf{A}_{n,k} \mathbf{B}_{k,p} \]&lt;/p&gt;
+
 </content>
  </entry>
  

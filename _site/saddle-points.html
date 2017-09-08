@@ -8,7 +8,7 @@
     
     
     
-    <title>Contributing an article | Cheer ML</title>
+    <title>On Saddle Points: a painless tutorial | Cheer ML</title>
     
 
     <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
@@ -23,12 +23,12 @@
     
     <meta property="og:type" content="article">
     
-    <meta property="og:title" content="Contributing an article">
-    <meta property="og:url" content="/contributing">
+    <meta property="og:title" content="On Saddle Points: a painless tutorial">
+    <meta property="og:url" content="/saddle-points">
     <meta property="og:site_name" content="Cheer ML">
     <meta property="og:description" content="">
     <meta name="twitter:card" content="summary">
-    <meta name="twitter:title" content="Contributing an article">
+    <meta name="twitter:title" content="On Saddle Points: a painless tutorial">
     <meta name="twitter:description" content="page.description">
     <meta name="twitter:creator" content="@">
     <link rel="publisher" href="">
@@ -97,14 +97,14 @@
 	<header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/contributing" title="Contributing an article" itemprop="url">Contributing an article</a>
+      <a href="/saddle-points" title="On Saddle Points: a painless tutorial" itemprop="url">On Saddle Points: a painless tutorial</a>
   </h1>
   <p class="article-author">By
     
-		<a href="" title="Jun Lu, Yixuan Hu" target="_blank" itemprop="author">Jun Lu</a>
+		<a href="http://www.junlulocky.com" title="Jun Lu, Yixuan Hu" target="_blank" itemprop="author">Jun Lu</a>
 		
   <p class="article-time">
-    <time datetime="2016-09-06 00:00:00 +0800" itemprop="datePublished"> Published 2016-09-06</time>
+    <time datetime="2016-09-07 00:00:00 +0800" itemprop="datePublished"> Published 2016-09-07</time>
     
   </p>
 </header>
@@ -116,89 +116,95 @@
 		
 		</div>
 		
-		<p>If you’re writing an article for this blog, please follow these guidelines.</p>
+		<p>Are we really stuck in the local minima rather than anything else?</p>
 
-<p>One of the rewards of switching my website to <a href="http://jekyllrb.com/">Jekyll</a> is the 
-ability to support <strong>MathJax</strong>, which means I can write LaTeX-like equations that get 
-nicely displayed in a web browser, like this one \( \sqrt{\frac{n!}{k!(n-k)!}} \) or 
-this one \( x^2 + y^2 = r^2 \).</p>
+<h2 id="different-types-of-critical-points">Different types of critical points</h2>
+<hr />
 
-<!--more-->
+<div class="fig figcenter fighighlight">
+  <img src="/assets/blog/updatemethods/minmaxsaddle.png" width="100%" />
+  <div class="figcaption">
+    Various Types of Critical Points. Source: Rong Ge's blog.
+  </div>
+</div>
+<hr />
 
-<p><img class="centered" src="http://gastonsanchez.com/images/blog/mathjax_logo.png" /></p>
+<p>To minimize the function \(f:\mathbb{R}^n\to \mathbb{R}\), the most popular approach is to follow the opposite direction of the gradient \(\nabla f(x)\) (for simplicity, all functions we talk about are infinitely differentiable), that is,</p>
 
-<h3 id="whats-mathjax">What’s MathJax?</h3>
+<script type="math/tex; mode=display">y = x - \eta \nabla f(x),</script>
 
-<p>If you check MathJax website <a href="http://www.mathjax.org/">(www.mathjax.org)</a> you’ll see 
-that it <em>is an open source JavaScript display engine for mathematics that works in all 
-browsers</em>.</p>
+<p>Here \(\eta\) is a small step size. This is the <em>gradient descent</em> algorithm.</p>
 
-<h3 id="how-to-implement-mathjax-with-jekyll">How to implement MathJax with Jekyll</h3>
+<p>Whenever the gradient \(\nabla f(x)\) is nonzero, as long as we choose a small enough \(\eta\), the algorithm is guaranteed to make <em>local</em> progress. When the gradient \(\nabla f(x)\) is equal to \(\vec{0}\), the point is called a <strong>critical point</strong>, and gradient descent algorithm will get stuck. For (strongly) convex functions, there is a unique <em>critical point</em> that is also the <em>global minimum</em>.</p>
 
-<p>I followed the instructions described by Dason Kurkiewicz for 
-<a href="http://dasonk.github.io/blog/2012/10/09/Using-Jekyll-and-Mathjax/">using Jekyll and Mathjax</a>.</p>
+<p>However, this is not always this case. All critical points of \( f(x) \) can be further characterized by the curvature of the function in its vicinity, especially described by it’s eigenvalues of the Hessian matrix. Here I describe three possibilities as the figure above shown:</p>
 
-<p>Here are some important details. I had to modify the Ruby library for Markdown in 
-my <code class="highlighter-rouge">_config.yml</code> file. Now I’m using redcarpet so the corresponding line in the 
-configuration file is: <code class="highlighter-rouge">markdown: redcarpet</code></p>
+<ul>
+  <li>If all eigenvalues are non-zero and positive, then the critical point is a local minimum.</li>
+  <li>If all eigenvalues are non-zero and negative, then the critical point is a local maximum.</li>
+  <li>If the eigenvalues are non-zero, and both positive and negative eigenvalues exist, then the critical point is a saddle point.</li>
+</ul>
 
-<p>To load the MathJax javascript, I added the following lines in my layout <code class="highlighter-rouge">page.html</code> 
-(located in my folder <code class="highlighter-rouge">_layouts</code>)</p>
+<p>The proof of the above three possibilities can be shown from the reparametrization of the space of Hessian matrix. The Taylor expansion is given by(first order derivative vanishes):</p>
 
-<figure class="highlight"><pre><code class="language-r" data-lang="r"><span class="o">&lt;</span><span class="n">script</span><span class="w"> </span><span class="n">type</span><span class="o">=</span><span class="s2">"text/javascript"</span><span class="w">
-    </span><span class="n">src</span><span class="o">=</span><span class="s2">"http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"</span><span class="o">&gt;</span><span class="w">
-</span><span class="o">&lt;/</span><span class="n">script</span><span class="o">&gt;</span></code></pre></figure>
+<script type="math/tex; mode=display">f(x+\Delta x) = f(x) + \frac{1}{2} (\Delta x)^T \mathbf{H} \Delta x \,\,\,\, -----  \,\,\,(1)</script>
 
-<p>Of course you can choose a different file location in your jekyll layouts.</p>
+<p>And assume \(\mathbf{e_1}, \mathbf{e_2}, …, \mathbf{e_n}\) are the eigenvectors and \(\lambda_1, \lambda_2, …, \lambda_n\) are the eigenvalues correspondingly. We can make the reparametrization of the space by:</p>
 
-<h3 id="a-couple-of-examples">A Couple of Examples</h3>
+<script type="math/tex; mode=display">\Delta v = \frac{1}{2} \begin{bmatrix} \mathbf{e_1}^T\\ ... \\ \mathbf{e_n}^T \end{bmatrix} \Delta x</script>
 
-<p>Here’s a short list of examples. To know more about the details behind MathJax, you can 
-always checked the provided documentation available at 
-<a href="http://docs.mathjax.org/en/latest/">http://docs.mathjax.org/en/latest/</a></p>
+<p>Then combined with Taylor expansion, we can get the following equation:</p>
 
-<p>I’m assuming you are familiar with LaTeX. However, you should know that MathJax does not 
-have the exactly same behavior as LaTeX. By default, the <strong>tex2jax</strong> preprocessor defines the 
-LaTeX math delimiters, which are <code class="highlighter-rouge">\\(...\\)</code> for in-line math, and <code class="highlighter-rouge">\\[...\\]</code> for 
-displayed equations. It also defines the TeX delimiters <code class="highlighter-rouge">$$...$$</code> for displayed 
-equations, but it does not define <code class="highlighter-rouge">$...$</code> as in-line math delimiters. Fortunately, 
-you can change these predefined specifications if you want to do so.</p>
+<script type="math/tex; mode=display">f(x+ \Delta x) = f(x)+\frac{1}{2} \sum_{i=1}^n \lambda_i(\mathbf{e_i}^T \Delta x)^2 = f(x) + \sum_{i=1}^n \lambda_i \Delta \mathbf{v_i}^2</script>
 
-<p>Let’s try a first example. Here’s a dummy equation:</p>
+<p>For the proof of the above equation, you may need to look at <a href="https://inst.eecs.berkeley.edu/~ee127a/book/login/l_sym_sed.html">Spectrum Theorem</a>, which is related to the eigenvalues and eigenvectors of symmetric matrices.</p>
 
-<script type="math/tex; mode=display">a^2 + b^2 = c^2</script>
+<p>From this equation, all the three scenarios for critical points are self-explained.</p>
 
-<p>How do you write such expression? Very simple: using <strong>double dollar</strong> signs</p>
+<h2 id="first-order-method-to-escape-from-saddle-point">First order method to escape from saddle point</h2>
+<p>A <a href="http://www.offconvex.org/2016/03/22/saddlepoints/">post</a> by Rong Ge introduced a first order method to escape from saddle point. He claimed that saddle points are very <em>unstable</em>: if we put a ball on a saddle point, then slightly perturb it, the ball is likely to fall to a local minimum, especially when the second order term \(\frac{1}{2} (\Delta x)^T \mathbf{H} \Delta x\) is significantly smaller than 0(there is a steep direction where the function value decrease, and assume we are looking for local minimum), which is called a <em>Strict Saddle Function</em> in Rong Ge’s post. In this case we can use <em>noisy gradient descent</em>:</p>
 
-<figure class="highlight"><pre><code class="language-r" data-lang="r"><span class="o">$$</span><span class="n">a</span><span class="o">^</span><span class="m">2</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">b</span><span class="o">^</span><span class="m">2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">c</span><span class="o">^</span><span class="m">2</span><span class="o">$$</span></code></pre></figure>
+<blockquote>
+  <p>\(y = x - \eta \nabla f(x) + \epsilon.\)</p>
+</blockquote>
 
-<p>To display inline math use <code class="highlighter-rouge">\\( ... \\)</code> like this <code class="highlighter-rouge">\\( sin(x^2) \\)</code> which gets 
-rendered as \( sin(x^2) \)</p>
+<p>where \(\epsilon\)  is a noise vector that has mean \(\mathbf{0}\). Actually, it is the basic idea of <em>stochastic gradient descent</em>, which uses the gradient of a mini batch rather than the true gradient. However, the drawback of the stochastic gradient descent is not the direction, but the size of the step along each eigenvector. The step, along any direction \(\mathbf{e_i}\), is given by \(-\lambda_i \Delta \mathbf{v_i}\), when the steps taken in the direction with small absolute value of eigenvalues, the step is small. To be more concrete, an example that the curvature of the error surface may not be the same in all directions. If there is a long and narrow valley in the error surface, the component of the gradient in the direction that points along base of the valley is very small while the component perpendicular to the valley walls is quite large even though we have to move a long distance along the base and a small distance perpendicular to the walls. This phenomenon can be seen as the following figure:</p>
 
-<p>Here’s another example using type <code class="highlighter-rouge">\mathsf</code></p>
+<hr />
 
-<figure class="highlight"><pre><code class="language-r" data-lang="r"><span class="o">$$</span><span class="w"> </span><span class="err">\</span><span class="n">mathsf</span><span class="p">{</span><span class="n">Data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">PCs</span><span class="p">}</span><span class="w"> </span><span class="err">\</span><span class="n">times</span><span class="w"> </span><span class="err">\</span><span class="n">mathsf</span><span class="p">{</span><span class="n">Loadings</span><span class="p">}</span><span class="w"> </span><span class="o">$$</span></code></pre></figure>
+<div class="fig figcenter fighighlight">
+  <img src="/assets/blog/updatemethods/without_momentum.png" width="70%" />
+  <div class="figcaption">
+    SGD optimization routes
+  </div>
+</div>
+<hr />
 
-<p>which gets displayed as</p>
+<p>We normally move by making a step that is some constant times the negative gradient rather than a step of constant length in the direction of the negative gradient. This means that in steep regions (where we have to be careful not to make our steps too large), we move quickly, and in shallow regions (where we need to move in big steps), we move slowly.</p>
 
-<script type="math/tex; mode=display">\mathsf{Data = PCs} \times \mathsf{Loadings}</script>
+<h2 id="newton-methods">Newton methods</h2>
+<p>To look at the detail of newton methods, you can follow the proof shown in (Sam Roweis’s) in the reference list. The newton method solves the slowness problem by rescaling the gradients in each direction with the inverse of the corresponding eigenvalue, yielding the step \(-\Delta \mathbf{v_i}\)(because \(\frac{1}{\lambda_i}\mathbf{e_i} = \mathbf{H}^{-1}\mathbf{e_i}  \) ). However, this approach can result in moving in the wrong direction when the eigenvalue is negative. The newton step moves along the eigenvector in a direction <strong>opposite</strong> to the gradient descent step, thus increase the error.</p>
 
-<p>Or even better:</p>
+<p>From the idea of Levenberg gradient descent method, we can use damping, in which case we remove negative curvature by adding a constant \(\alpha\) to its diagonal. Informally, \(x^{k+1} = x^{k} - (\mathbf{H}+\alpha \mathbf{I})^{-1} \mathbf{g_k}\). We can view \(\alpha\) as the tradeoff between newton methods and gradient descent. When \(\alpha\) is small, it is closer to newton method, when \(\alpha\) is large, it is closer to gradient descent. In this case, we get the step \(-\frac{\lambda_i}{\lambda_i + \alpha}\Delta \mathbf{v_i}\). Therefore, obviously, the drawback of damping newton method is that it potentially has small step size in many eigen-directions incurred by large damping factor \(\alpha\).</p>
 
-<figure class="highlight"><pre><code class="language-r" data-lang="r"><span class="err">\\</span><span class="p">[</span><span class="w"> </span><span class="err">\</span><span class="n">mathbf</span><span class="p">{</span><span class="n">X</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="err">\</span><span class="n">mathbf</span><span class="p">{</span><span class="n">Z</span><span class="p">}</span><span class="w"> </span><span class="err">\</span><span class="n">mathbf</span><span class="p">{</span><span class="n">P</span><span class="o">^</span><span class="err">\</span><span class="n">mathsf</span><span class="p">{</span><span class="nb">T</span><span class="p">}}</span><span class="w"> </span><span class="err">\\</span><span class="p">]</span></code></pre></figure>
+<h2 id="saddle-free-newton-method">Saddle free newton method</h2>
+<p>(Dauphin et al., 2014) introduced a method called saddle free newton method, which is a modified version of trust region approach. It minimizes first-order Taylor expansion constraint by the distance between first-order Taylor expansion and second-order Taylor expansion. By this constraint, unlike gradient descent, it can move further in the directions of low curvature; and move less in the directions of high curvature. I recommend you to read this paper throughly.</p>
 
-<p>is displayed as</p>
+<h2 id="future-post">Future post</h2>
+<p>I have talked about degenerate critical point in this post， where there are only positive and zero eigenvalues in the Hessian matrix.</p>
 
-<p>\[ \mathbf{X} = \mathbf{Z} \mathbf{P^\mathsf{T}} \]</p>
+<h2 id="marks">Marks</h2>
 
-<p>If you want to use subscripts like this \( \mathbf{X}_{n,p} \) you need to scape the 
-underscores with a backslash like so <code class="highlighter-rouge">\mathbf{X}\_{n,p}</code>:</p>
+<p>The slides for the talk of this blog can be found at <a href="http://www.junlulocky.com/assets/talks/2016onsaddlepoints.pdf">Link</a>. Contact me if the link is not working.</p>
 
-<figure class="highlight"><pre><code class="language-r" data-lang="r"><span class="o">$$</span><span class="w"> </span><span class="err">\</span><span class="n">mathbf</span><span class="p">{</span><span class="n">X</span><span class="p">}</span><span class="err">\_</span><span class="p">{</span><span class="n">n</span><span class="p">,</span><span class="n">p</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="err">\</span><span class="n">mathbf</span><span class="p">{</span><span class="n">A</span><span class="p">}</span><span class="err">\_</span><span class="p">{</span><span class="n">n</span><span class="p">,</span><span class="n">k</span><span class="p">}</span><span class="w"> </span><span class="err">\</span><span class="n">mathbf</span><span class="p">{</span><span class="n">B</span><span class="p">}</span><span class="err">\_</span><span class="p">{</span><span class="n">k</span><span class="p">,</span><span class="n">p</span><span class="p">}</span><span class="w"> </span><span class="o">$$</span></code></pre></figure>
-
-<p>will be displayed as</p>
-
-<p>\[ \mathbf{X}_{n,p} = \mathbf{A}_{n,k} \mathbf{B}_{k,p} \]</p>
+<h2 id="references">References</h2>
+<ul>
+  <li><a href="https://inst.eecs.berkeley.edu/~ee127a/book/login/l_sym_sed.html">Berkeley Optimization Models: Spectral Theorem</a></li>
+  <li>Dauphin, Yann N., et al. <em>Identifying and attacking the saddle point problem in high-dimensional non-convex optimization.</em> Advances in neural information processing systems. 2014.</li>
+  <li><a href="https://www.cs.nyu.edu/~roweis/notes/lm.pdf">Sam Roweis’s note on Levenberg-Marquardt Optimization</a></li>
+  <li>Rong Ge, <em>Escaping from Saddle Points</em>, Off the convex path blog, 2016</li>
+  <li>Benjamin Recht, <em>Saddles Again</em>, Off the convex path blog, 2016</li>
+</ul>
 
   
 	</div>
@@ -216,7 +222,7 @@ underscores with a backslash like so <code class="highlighter-rouge">\mathbf{X}\
   }) %>
   -->
   
-  <a class="article-category-link" href="/categories/#Announcement">Announcement</a>
+  <a class="article-category-link" href="/categories/#Machine-Learning">Machine-Learning</a>
   
 </div>
 
@@ -230,9 +236,7 @@ underscores with a backslash like so <code class="highlighter-rouge">\mathbf{X}\
   <span></span> <!--<%- tags.join('') %>-->
   
   
-  <a href="/tags/#resources">resources</a>
-  
-  <a href="/tags/#jekyll">jekyll</a>
+  <a href="/tags/#Learning theory">Learning theory</a>
   
   </div>
 
@@ -242,7 +246,7 @@ underscores with a backslash like so <code class="highlighter-rouge">\mathbf{X}\
 
 	<div class="article-share" id="share">
 	
-	  <div data-url="http://localhost:4000/contributing" data-title="Contributing an article | Cheer ML" data-tsina="" class="share clearfix">
+	  <div data-url="http://localhost:4000/saddle-points" data-title="On Saddle Points: a painless tutorial | Cheer ML" data-tsina="" class="share clearfix">
 	  </div>
 	
 	</div>
@@ -253,11 +257,19 @@ underscores with a backslash like so <code class="highlighter-rouge">\mathbf{X}\
 	
 <nav class="article-nav clearfix">
  
+ <div class="prev" >
+ <a href="/contributing" title="Contributing an article">
+  <strong>Prev: </strong><br/>
+  <span>
+  Contributing an article</span>
+</a>
+</div>
+
 
 <div class="next">
-<a href="/saddle-points"  title="On Saddle Points: a painless tutorial">
+<a href="/bias-variance"  title="Bias-variance decomposition in a nutshell">
  <strong>Next: </strong><br/> 
- <span>On Saddle Points: a painless tutorial
+ <span>Bias-variance decomposition in a nutshell
 </span>
 </a>
 </div>

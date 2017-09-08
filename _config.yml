@@ -9,7 +9,7 @@ highlighter: pygments
 permalink: /:categories/:year/:month/:day/:title 
 
 #### Markdown Processors
-markdown: redcarpet
+markdown: kramdown
 redcarpet:
   extensions:
     - hard_wrap
