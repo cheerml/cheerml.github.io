@@ -4,7 +4,7 @@
  <title>Cheer ML</title>
  <link href="" rel="self"/>
  <link href=""/>
- <updated>2017-09-08T22:32:38+08:00</updated>
+ <updated>2017-09-14T21:42:53+02:00</updated>
  <id></id>
  <author>
    <name>Jun Lu, Yixuan Hu</name>
@@ -15,7 +15,7 @@
  <entry>
    <title>A comparison of distributed machine learning platform</title>
    <link href="/comparison-distributed-ml-platform"/>
-   <updated>2017-09-07T00:00:00+08:00</updated>
+   <updated>2017-09-07T00:00:00+02:00</updated>
    <id>/a-comparison-of-distributed-machine-learning-platform</id>
    <content type="html">&lt;p&gt;A short summary and comparison of different platforms. Based on &lt;a href=&quot;http://muratbuffalo.blogspot.ch/2017/07/a-comparison-of-distributed-machine.html&quot;&gt;this blog&lt;/a&gt; and (Zhang et al., 2017).&lt;/p&gt;
 
@@ -166,7 +166,7 @@ The post is used for study purpose only.&lt;/li&gt;
  <entry>
    <title>Bias-variance decomposition in a nutshell</title>
    <link href="/bias-variance"/>
-   <updated>2016-12-08T00:00:00+08:00</updated>
+   <updated>2016-12-08T00:00:00+01:00</updated>
    <id>/biasvariance</id>
    <content type="html">&lt;h2 id=&quot;basic-setting&quot;&gt;basic setting&lt;/h2&gt;
 &lt;p&gt;We will show four key results using Bias-variance decomposition.&lt;/p&gt;
@@ -220,7 +220,7 @@ The post is used for study purpose only.&lt;/li&gt;
  <entry>
    <title>On Saddle Points: a painless tutorial</title>
    <link href="/saddle-points"/>
-   <updated>2016-09-07T00:00:00+08:00</updated>
+   <updated>2016-09-07T00:00:00+02:00</updated>
    <id>/SaddlePoints</id>
    <content type="html">&lt;p&gt;Are we really stuck in the local minima rather than anything else?&lt;/p&gt;
 
@@ -318,7 +318,7 @@ The post is used for study purpose only.&lt;/li&gt;
  <entry>
    <title>Contributing an article</title>
    <link href="/contributing"/>
-   <updated>2016-09-06T00:00:00+08:00</updated>
+   <updated>2016-09-06T00:00:00+02:00</updated>
    <id>/contribute</id>
    <content type="html">&lt;p&gt;If you’re writing an article for this blog, please follow these guidelines.&lt;/p&gt;
 
