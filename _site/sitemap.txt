@@ -13,4 +13,5 @@
 /comparison-distributed-ml-platform
 /bias-variance
 /saddle-points
+/mathGD
 /contributing

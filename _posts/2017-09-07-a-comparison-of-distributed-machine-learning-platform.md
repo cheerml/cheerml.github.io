@@ -3,7 +3,7 @@ layout: post
 title: "A comparison of distributed machine learning platform"
 permalink: /comparison-distributed-ml-platform
 date: 2017-09-07
-categories: ['Machine-Learning', 'Deep Learning']
+categories: ['Machine Learning', 'Deep Learning']
 author: Tao LIN
 authorlink: http://www.tlin.me
 tags: [Systems]

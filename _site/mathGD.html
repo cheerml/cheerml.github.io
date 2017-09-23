@@ -8,7 +8,7 @@
     
     
     
-    <title>On Saddle Points: a painless tutorial | Cheer ML</title>
+    <title>The math behind Gradient Descent | Cheer ML</title>
     
 
     <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
@@ -23,12 +23,12 @@
     
     <meta property="og:type" content="article">
     
-    <meta property="og:title" content="On Saddle Points: a painless tutorial">
-    <meta property="og:url" content="/saddle-points">
+    <meta property="og:title" content="The math behind Gradient Descent">
+    <meta property="og:url" content="/mathGD">
     <meta property="og:site_name" content="Cheer ML">
     <meta property="og:description" content="">
     <meta name="twitter:card" content="summary">
-    <meta name="twitter:title" content="On Saddle Points: a painless tutorial">
+    <meta name="twitter:title" content="The math behind Gradient Descent">
     <meta name="twitter:description" content="page.description">
     <meta name="twitter:creator" content="@">
     <link rel="publisher" href="">
@@ -97,14 +97,14 @@
 	<header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/saddle-points" title="On Saddle Points: a painless tutorial" itemprop="url">On Saddle Points: a painless tutorial</a>
+      <a href="/mathGD" title="The math behind Gradient Descent" itemprop="url">The math behind Gradient Descent</a>
   </h1>
   <p class="article-author">By
     
 		<a href="http://www.junlulocky.com" title="Jun Lu, Yixuan Hu" target="_blank" itemprop="author">Jun Lu</a>
 		
   <p class="article-time">
-    <time datetime="2016-09-07 00:00:00 +0200" itemprop="datePublished"> Published 2016-09-07</time>
+    <time datetime="2016-09-06 00:00:00 +0200" itemprop="datePublished"> Published 2016-09-06</time>
     
   </p>
 </header>
@@ -116,95 +116,48 @@
 		
 		</div>
 		
-		<p>Are we really stuck in the local minima rather than anything else?</p>
+		<p>This post means to help starters to understand the math behind Gradient Descent (GD).</p>
 
-<h2 id="different-types-of-critical-points">Different types of critical points</h2>
-<hr />
+<h2 id="intuitive-understanding">Intuitive understanding</h2>
+<p>An intuitive way to think of Gradient Descent is to imagine the path of a river originating from top of a mountain. The goal of gradient descent is exactly what the river strives to achieve - namely, reach the bottom most point (at the foothill) climbing down from the mountain. That’s what you taught by your machine learning teacher right? But do you only understand this and use gradient descent naively every time? This post will help you understand the math behind gradient descent.</p>
 
-<div class="fig figcenter fighighlight">
-  <img src="/assets/blog/updatemethods/minmaxsaddle.png" width="100%" />
-  <div class="figcaption">
-    Various Types of Critical Points. Source: Rong Ge's blog.
-  </div>
-</div>
-<hr />
+<h2 id="math-behind-gradient-descent">Math behind Gradient Descent</h2>
+<p>Here I define the objective function to be \(L(x,w,b)\) and the input variable of \(L\) is \(x\) with \(d\)-dimension, weight variable \(w\) and bias variable\(b\), our goal is to use algorithm to get the minimum of \(L(x,w,b)\).</p>
 
-<p>To minimize the function \(f:\mathbb{R}^n\to \mathbb{R}\), the most popular approach is to follow the opposite direction of the gradient \(\nabla f(x)\) (for simplicity, all functions we talk about are infinitely differentiable), that is,</p>
+<p>To make this question more precise, let’s think about what happens when we move the ball a small amount \(\Delta x_1\) in the \(x_1\) direction, a small amount \(\Delta x_2\) in the \(x_2\) direction, …, and a small amount \(\Delta x_d\) in the \(x_d\) direction. Calculus tells us that \(L(x,w,b)\) changes as follows:</p>
 
-<script type="math/tex; mode=display">y = x - \eta \nabla f(x),</script>
+<script type="math/tex; mode=display">\Delta L \approx \frac{\partial L}{\partial x_1}\Delta x_1 + ... + \frac{\partial L}{\partial x_d}\Delta x_d</script>
 
-<p>Here \(\eta\) is a small step size. This is the <em>gradient descent</em> algorithm.</p>
-
-<p>Whenever the gradient \(\nabla f(x)\) is nonzero, as long as we choose a small enough \(\eta\), the algorithm is guaranteed to make <em>local</em> progress. When the gradient \(\nabla f(x)\) is equal to \(\vec{0}\), the point is called a <strong>critical point</strong>, and gradient descent algorithm will get stuck. For (strongly) convex functions, there is a unique <em>critical point</em> that is also the <em>global minimum</em>.</p>
-
-<p>However, this is not always this case. All critical points of \( f(x) \) can be further characterized by the curvature of the function in its vicinity, especially described by it’s eigenvalues of the Hessian matrix. Here I describe three possibilities as the figure above shown:</p>
+<p>In this sense, we need to find a way of choosing \(\Delta x_1\), …, \(\Delta x_d\) so as to make \(\Delta L\) negative; i.e., we’ll make the objective function decrease so that to minimize.</p>
 
 <ul>
-  <li>If all eigenvalues are non-zero and positive, then the critical point is a local minimum.</li>
-  <li>If all eigenvalues are non-zero and negative, then the critical point is a local maximum.</li>
-  <li>If the eigenvalues are non-zero, and both positive and negative eigenvalues exist, then the critical point is a saddle point.</li>
+  <li>Define \(\Delta x=(\Delta x_1, …, \Delta x_d)^T\) to be the vector of changes in \(x\).</li>
+  <li>Define \(\nabla L=(\frac{\partial L}{\partial x_1}, …, \frac{\partial L}{\partial x_d})^T\) to be the gradient vector of \(L\).</li>
 </ul>
 
-<p>The proof of the above three possibilities can be shown from the reparametrization of the space of Hessian matrix. The Taylor expansion is given by(first order derivative vanishes):</p>
+<p>So we can find: <script type="math/tex">\Delta L \approx \frac{\partial L}{\partial x_1}\Delta x_1 + ... + \frac{\partial L}{\partial x_d}\Delta x_d = \nabla L ^T \Delta x</script>. By now, things are becoming easier. Suppose, \(\Delta x=-\eta \nabla L\) (i.e. the step size in gradient descent, where \(\eta\) is the learning rate). Then:</p>
 
-<script type="math/tex; mode=display">f(x+\Delta x) = f(x) + \frac{1}{2} (\Delta x)^T \mathbf{H} \Delta x \,\,\,\, -----  \,\,\,(1)</script>
+<script type="math/tex; mode=display">\nabla L \approx -\eta \nabla L^T\nabla L = -\eta||\nabla L||_2^2 \leq 0</script>
 
-<p>And assume \(\mathbf{e_1}, \mathbf{e_2}, …, \mathbf{e_n}\) are the eigenvectors and \(\lambda_1, \lambda_2, …, \lambda_n\) are the eigenvalues correspondingly. We can make the reparametrization of the space by:</p>
+<p>Now, we can find the rightness of gradient descent. We can use the following update rule to update next \(x\):</p>
 
-<script type="math/tex; mode=display">\Delta v = \frac{1}{2} \begin{bmatrix} \mathbf{e_1}^T\\ ... \\ \mathbf{e_n}^T \end{bmatrix} \Delta x</script>
+<script type="math/tex; mode=display">x^{k+1} = x^{k} - \eta \nabla L(x^k)</script>
 
-<p>Then combined with Taylor expansion, we can get the following equation:</p>
+<p>this update rule will make the objective function drop to the minimum point.</p>
 
-<script type="math/tex; mode=display">f(x+ \Delta x) = f(x)+\frac{1}{2} \sum_{i=1}^n \lambda_i(\mathbf{e_i}^T \Delta x)^2 = f(x) + \sum_{i=1}^n \lambda_i \Delta \mathbf{v_i}^2</script>
+<h2 id="gradient-descent-in-a-convex-problem">Gradient Descent in a convex problem</h2>
+<p>Now, I will consider the gradient descent in a convex problem, because we usually use gradient descent in a convex problem, otherwise, we usually get the local minimum. If the objective function is convex, then \(\nabla L(x^k)^T(x^{k+1}-x^{k})\geq 0\) implies \(L(x^{k+1}) \geq L(x^k)\). This can be derived from the convex property of a convex function, i.e. \(L(x^{k+1}) \geq L(x^k)^T(x^{k+1}-x^k)\).</p>
 
-<p>For the proof of the above equation, you may need to look at <a href="https://inst.eecs.berkeley.edu/~ee127a/book/login/l_sym_sed.html">Spectrum Theorem</a>, which is related to the eigenvalues and eigenvectors of symmetric matrices.</p>
-
-<p>From this equation, all the three scenarios for critical points are self-explained.</p>
-
-<h2 id="first-order-method-to-escape-from-saddle-point">First order method to escape from saddle point</h2>
-<p>A <a href="http://www.offconvex.org/2016/03/22/saddlepoints/">post</a> by Rong Ge introduced a first order method to escape from saddle point. He claimed that saddle points are very <em>unstable</em>: if we put a ball on a saddle point, then slightly perturb it, the ball is likely to fall to a local minimum, especially when the second order term \(\frac{1}{2} (\Delta x)^T \mathbf{H} \Delta x\) is significantly smaller than 0(there is a steep direction where the function value decrease, and assume we are looking for local minimum), which is called a <em>Strict Saddle Function</em> in Rong Ge’s post. In this case we can use <em>noisy gradient descent</em>:</p>
-
-<blockquote>
-  <p>\(y = x - \eta \nabla f(x) + \epsilon.\)</p>
-</blockquote>
-
-<p>where \(\epsilon\)  is a noise vector that has mean \(\mathbf{0}\). Actually, it is the basic idea of <em>stochastic gradient descent</em>, which uses the gradient of a mini batch rather than the true gradient. However, the drawback of the stochastic gradient descent is not the direction, but the size of the step along each eigenvector. The step, along any direction \(\mathbf{e_i}\), is given by \(-\lambda_i \Delta \mathbf{v_i}\), when the steps taken in the direction with small absolute value of eigenvalues, the step is small. To be more concrete, an example that the curvature of the error surface may not be the same in all directions. If there is a long and narrow valley in the error surface, the component of the gradient in the direction that points along base of the valley is very small while the component perpendicular to the valley walls is quite large even though we have to move a long distance along the base and a small distance perpendicular to the walls. This phenomenon can be seen as the following figure:</p>
-
-<hr />
-
-<div class="fig figcenter fighighlight">
-  <img src="/assets/blog/updatemethods/without_momentum.png" width="70%" />
-  <div class="figcaption">
-    SGD optimization routes
-  </div>
-</div>
-<hr />
-
-<p>We normally move by making a step that is some constant times the negative gradient rather than a step of constant length in the direction of the negative gradient. This means that in steep regions (where we have to be careful not to make our steps too large), we move quickly, and in shallow regions (where we need to move in big steps), we move slowly.</p>
-
-<h2 id="newton-methods">Newton methods</h2>
-<p>To look at the detail of newton methods, you can follow the proof shown in (Sam Roweis’s) in the reference list. The newton method solves the slowness problem by rescaling the gradients in each direction with the inverse of the corresponding eigenvalue, yielding the step \(-\Delta \mathbf{v_i}\)(because \(\frac{1}{\lambda_i}\mathbf{e_i} = \mathbf{H}^{-1}\mathbf{e_i}  \) ). However, this approach can result in moving in the wrong direction when the eigenvalue is negative. The newton step moves along the eigenvector in a direction <strong>opposite</strong> to the gradient descent step, thus increase the error.</p>
-
-<p>From the idea of Levenberg gradient descent method, we can use damping, in which case we remove negative curvature by adding a constant \(\alpha\) to its diagonal. Informally, \(x^{k+1} = x^{k} - (\mathbf{H}+\alpha \mathbf{I})^{-1} \mathbf{g_k}\). We can view \(\alpha\) as the tradeoff between newton methods and gradient descent. When \(\alpha\) is small, it is closer to newton method, when \(\alpha\) is large, it is closer to gradient descent. In this case, we get the step \(-\frac{\lambda_i}{\lambda_i + \alpha}\Delta \mathbf{v_i}\). Therefore, obviously, the drawback of damping newton method is that it potentially has small step size in many eigen-directions incurred by large damping factor \(\alpha\).</p>
-
-<h2 id="saddle-free-newton-method">Saddle free newton method</h2>
-<p>(Dauphin et al., 2014) introduced a method called saddle free newton method, which is a modified version of trust region approach. It minimizes first-order Taylor expansion constraint by the distance between first-order Taylor expansion and second-order Taylor expansion. By this constraint, unlike gradient descent, it can move further in the directions of low curvature; and move less in the directions of high curvature. I recommend you to read this paper throughly.</p>
-
-<h2 id="future-post">Future post</h2>
-<p>I have talked about degenerate critical point in this post， where there are only positive and zero eigenvalues in the Hessian matrix.</p>
-
-<h2 id="marks">Marks</h2>
-
-<p>The slides for the talk of this blog can be found at <a href="http://www.junlulocky.com/assets/talks/2016onsaddlepoints.pdf">Link</a>. Contact me if the link is not working.</p>
+<p>In this sense, we need to make \(\nabla L(x^k)^T(x^{k+1}-x^{k})\leq 0\) so as to make the objective function decrease. In gradient descent \(\Delta x\) is chosen to be \(-\nabla L(x^k)\). However, there are many other descent method, such as <strong>steepest descend</strong>, <strong>normalized steepest descent</strong>, <strong>newton step</strong> and so on. The main idea of these methods is to make \(\nabla L(x^k)^T(x^{k+1}-x^{k})= \nabla L^T \Delta x \leq 0\).</p>
 
 <h2 id="references">References</h2>
 <ul>
-  <li><a href="https://inst.eecs.berkeley.edu/~ee127a/book/login/l_sym_sed.html">Berkeley Optimization Models: Spectral Theorem</a></li>
-  <li>Dauphin, Yann N., et al. <em>Identifying and attacking the saddle point problem in high-dimensional non-convex optimization.</em> Advances in neural information processing systems. 2014.</li>
-  <li><a href="https://www.cs.nyu.edu/~roweis/notes/lm.pdf">Sam Roweis’s note on Levenberg-Marquardt Optimization</a></li>
-  <li>Rong Ge, <em>Escaping from Saddle Points</em>, Off the convex path blog, 2016</li>
-  <li>Benjamin Recht, <em>Saddles Again</em>, Off the convex path blog, 2016</li>
+  <li>Michael A. Nielsen, <em>Neural Networks and Deep Learning</em>, Determination Press, 2015</li>
+  <li>Stephen Boyd, and Lieven Vandenberghe. <em>Convex optimization</em>. Cambridge university press, 2004.</li>
 </ul>
+
+<h2 id="remarks">Remarks</h2>
+<p>Last updated on June 14, 2016</p>
 
   
 	</div>
@@ -246,7 +199,7 @@
 
 	<div class="article-share" id="share">
 	
-	  <div data-url="http://localhost:4000/saddle-points" data-title="On Saddle Points: a painless tutorial | Cheer ML" data-tsina="" class="share clearfix">
+	  <div data-url="http://localhost:4000/mathGD" data-title="The math behind Gradient Descent | Cheer ML" data-tsina="" class="share clearfix">
 	  </div>
 	
 	</div>
@@ -258,18 +211,18 @@
 <nav class="article-nav clearfix">
  
  <div class="prev" >
- <a href="/mathGD" title="The math behind Gradient Descent">
+ <a href="/contributing" title="Contributing an article">
   <strong>Prev: </strong><br/>
   <span>
-  The math behind Gradient Descent</span>
+  Contributing an article</span>
 </a>
 </div>
 
 
 <div class="next">
-<a href="/bias-variance"  title="Bias-variance decomposition in a nutshell">
+<a href="/saddle-points"  title="On Saddle Points: a painless tutorial">
  <strong>Next: </strong><br/> 
- <span>Bias-variance decomposition in a nutshell
+ <span>On Saddle Points: a painless tutorial
 </span>
 </a>
 </div>

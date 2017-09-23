@@ -3,7 +3,7 @@ layout: post
 title: "On Saddle Points: a painless tutorial"
 permalink: /saddle-points
 date: 2016-09-07
-categories: 'Machine-Learning'
+categories: ['Machine Learning']
 author: Jun Lu
 authorlink: http://www.junlulocky.com
 tags: [Learning theory]

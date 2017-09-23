@@ -3,11 +3,12 @@ layout: post
 title: "Bias-variance decomposition in a nutshell"
 permalink: /bias-variance
 date: 2016-12-08
-categories: 'Machine-Learning'
+categories: ['Machine Learning']
 author: Jun Lu
 authorlink: http://www.junlulocky.com
 tags: [Learning theory]
 ---
+This post means to give you a nutshell description of bias-variance decomposition.
 
 ## basic setting
 We will show four key results using Bias-variance decomposition. 
