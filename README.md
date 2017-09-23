@@ -1,7 +1,7 @@
 # cheerml
 Our blog website for machine learning
 
-![CheerML logo](/assets/image/mlessence.png)
+![CheerML logo](/assets/img/mlessence.png)
 
 ## About the blog
 This blog may contain machine learning related posts. We hope the posts can help people to have a better understanding on the machine learning algorithms and concepts, so we would like to deliver the expression as intuitively as possible.
