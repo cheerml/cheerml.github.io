@@ -6,7 +6,7 @@ date: 2016-08-03 20:10:48
 categories: ['Machine Learning', 'Deep Learning']
 author: Yeephyho
 authorlink: http://yeephycho.github.io
-tags: [Local Contrast Normalization, Local Response Normalization, Batch Normalization]
+tags: [LCN, LRN, BN]
 ---
 
 
