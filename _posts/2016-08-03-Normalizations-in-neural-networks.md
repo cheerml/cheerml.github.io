@@ -6,7 +6,7 @@ date: 2016-08-03
 categories: ['Deep Learning']
 author: Yeephyho
 authorlink: http://yeephycho.github.io
-tags: [deep learning]
+tags: ['deep learning']
 ---
 
 
