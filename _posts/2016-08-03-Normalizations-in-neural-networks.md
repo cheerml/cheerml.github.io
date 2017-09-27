@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "Normalizations in Neural Networks"
-permalink: /normalizations_in_neural_networks
+permalink: /normalizations-in-neural-networks
 date: 2016-08-03
 categories: ['Deep Learning']
 author: Yeephyho
