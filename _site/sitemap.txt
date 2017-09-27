@@ -14,4 +14,5 @@
 /bias-variance
 /saddle-points
 /mathGD
+/normalizations-in-neural-networks
 /contributing

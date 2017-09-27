@@ -432,6 +432,100 @@
         <header class="article-info clearfix">
   <h1 itemprop="name">
     
+      <a href="/normalizations-in-neural-networks" title="Normalizations in Neural Networks" itemprop="url">Normalizations in Neural Networks</a>
+  </h1>
+  <p class="article-author">By
+    
+		<a href="http://yeephycho.github.io" title="Jun Lu, Yixuan Hu" target="_blank" itemprop="author">Yeephyho</a>
+		
+  <p class="article-time">
+    <time datetime="2016-08-03 00:00:00 +0200" itemprop="datePublished">  2016-08-03</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <h2 id="normalizations-for-the-input-data-normalization-equalization">Normalizations for the input data (normalization, equalization)</h2>
+<p>In image process area, the term “[normalization](https://en.wikipedia.org/wiki/Normalization_(image_processing)” has many other names such as contrast stretching, histogram stretching or dynamic range expansion etc.
+If you have an 8-bit grayscale image, the minimum and maximum pixel values are 50 and 180, we can normalize this image to a larger dynamic range say 0 to 255. After normalize, the previous 50 becomes 0, and 180 becomes 255, the values in the middle will be scaled according to the following formula:&lt;div  align="center"&gt;
+<strong>(I_n: new_intensity) = ((I_o: old_intensity)- (I_o_min: old_minimum_intensity)) x ((I_n_max: new_maximum_intensity) - (I_n_min: new_minimum_intensity)) / ((I_o_max: old_maximum_intensity) - (I_o_min: old_minimum_intensity)) + (I_n_min: new_minimum_intensity)</strong>
+<br />
+<img src="http://yeephycho.github.io/blog_img/normalization.jpg" alt="Normalization" />
+&lt;/div&gt;
+<!--more-->
+It’s a typical linear transform. Still the previous image, the pixel value 70 will become (70-50)x(255-0)/(180-50) - 0 = 39, the pixel value 130 will become (130-50)x(255-0)/(180-50) - 0 = 156.
+The image above shows the effect of an image before and after normalization, the third image is effect of another transform called <a href="https://en.wikipedia.org/wiki/Histogram_equalization">histogram equalization</a>, for your information, histogram equalization is different from normalization, normalization will not change your image’s histogram but equalization will. Histogram equalization doesn’t care about intensity value of the pixel, however, the ranking of the current intensity in the whole image matters a lot.
+The maximum intensity of the original image is 238 and the minimum is 70, implemented through OpenCV. (OpenCV’s normalization function isn’t the normalization we are talking about, if you want to repeat the effect, you have to do it yourself.)
+For normalization, the new intensity derives from the new and old maximum, minimum intensity; for equalization, the new intensity derives from the intensity value’s ranking in the whole image (for example, a image has 64 pixels, the intensity of a certain pixel is 90, and there are 22 pixels has a low intensity and 41 pixels has a higher intensity, the new intensity after equalization of that point is (22/64) x (255-0) = 87).</p>
+
+
+        
+        
+        <p class="article-more-link">
+          
+            <a href="/normalizations-in-neural-networks#more">Read More</a>
+          
+       </p>
+    </div>
+    
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <!--
+  <%- list_categories(item.categories, {
+      show_count: false,
+      class: 'article-category',
+      style: 'none',
+      separator: '►'
+  }) %>
+  -->
+  
+  <a class="article-category-link" href="/categories/#Deep Learning">Deep Learning</a>
+  
+</div>
+
+
+  <div class="article-tags">
+  <!--
+  <% var tags = [];
+    item.tags.forEach(function(tag){
+      tags.push('<a href="' + config.root + tag.path + '">' + tag.name + '</a>');
+    }); %>-->
+  <span></span> <!--<%- tags.join('') %>-->
+  
+  
+  <a href="/tags/#Deep Learning">Deep Learning</a>
+  
+  </div>
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+</div>
+
+</footer>
+    </article>
+
+
+
+
+
+
+  
+  
+  
+  
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
       <a href="/contributing" title="Contributing an article" itemprop="url">Contributing an article</a>
   </h1>
   <p class="article-author">By
@@ -439,7 +533,7 @@
 		<a href="" title="Jun Lu, Yixuan Hu" target="_blank" itemprop="author">Jun Lu</a>
 		
   <p class="article-time">
-    <time datetime="2016-09-06 00:00:00 +0200" itemprop="datePublished">  2016-09-06</time>
+    <time datetime="2010-01-01 00:00:00 +0100" itemprop="datePublished">  2010-01-01</time>
     
   </p>
 </header>
@@ -544,11 +638,11 @@
 		  
 		
 		  
-			<li><a href="/categories/#Machine Learning" title="Machine Learning">Machine Learning<sup>4</sup></a></li>
+			<li><a href="/categories/#Deep Learning" title="Deep Learning">Deep Learning<sup>2</sup></a></li>
 		  
 		
 		  
-			<li><a href="/categories/#Deep Learning" title="Deep Learning">Deep Learning<sup>1</sup></a></li>
+			<li><a href="/categories/#Machine Learning" title="Machine Learning">Machine Learning<sup>4</sup></a></li>
 		  
 		
 		</ul>
@@ -566,6 +660,10 @@
 		
 			
 				<li><a href="/tags/#jekyll" title="jekyll">jekyll<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#Deep Learning" title="Deep Learning">Deep Learning<sup>1</sup></a></li>
 			
 		
 			

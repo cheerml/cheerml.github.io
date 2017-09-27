@@ -6,7 +6,7 @@ date: 2016-08-03
 categories: ['Deep Learning']
 author: Yeephyho
 authorlink: http://yeephycho.github.io
-tags: [Deep Learning']
+tags: [Deep Learning]
 ---
 
 
@@ -44,9 +44,9 @@ Related papers are listed below:
 [Nonlinear Image Representation Using Divisive Normalization](http://www.cns.nyu.edu/pub/lcv/lyu08b.pdf), published in Jun. 2008. The name is "Divisive Normalization".
 [What is the Best Multi-Stage Architecture for Object Recognition?](http://yann.lecun.com/exdb/publis/pdf/jarrett-iccv-09.pdf), released in 2009. The name is "Local Constrast Normalization".
 Whitening is a way to normalize the data in different dimensions to reduce the correlations among the data, however, local contrast normalization, whose idea is inspired by computational neuroscience, aims at to make the features in feature maps more significant.
-{% blockquote %}
+
 This (Local Constrast Normalization) module performs local subtraction and division normalizations, enforcing a sort of local competition between adjacent features in a feature map, and between features at the same spatial location in different feature maps.
-{% endblockquote %}
+
 Local contrast normalization is implemented as follows:
 +	First, for each pixel in a feature map, find its adjacent pixels. Let's say the radius is 1, so there are 8 pixels around the target pixel (do the zero padding if the target is at the edge of the feature map).
 +	Then, compute the mean of these 9 pixels (8 neighbor pixels and the target pixel itself), subtract the mean for each one of the 9 pixels.
@@ -54,7 +54,8 @@ Local contrast normalization is implemented as follows:
 +	At last, save the target pixel value to the same spatial position of a blank feature map as the input of the following CNN stages.
 
 I typed the following python code to illustrate the math of the LCN:
-``` python
+
+```python
 >>> import numpy as np
 >>> x = np.matrix(np.random.randint(0,255, size=(3, 3))) # generate a random 3x3 matrix, the pixel value is ranging from 0 to 255.
 >>> x
@@ -74,6 +75,7 @@ True
 >>> LCN_value
 -0.0617926207...
 ```
+
 Please be noted that the real process in the neural network is not looks like this, because the data is usually whitened before feed to the network, the image usually isn't randomly generated and the negative value is usually set to zero in ReLU.
 Here, we presume that each adjacent pixel has the same importance to the contrast normalization so we calculate the mean of the 9 pixels, actually, the weights for each pixel can be various.
 We, presume the adjacent pixel radius is 1 and the image has only one channel, but the radius can be larger or smaller, you can pick up 4 adjacent pixels (up, down, left, right) or 24 pixels (radius is 2) or arbitrary pixels at arbitrary positions (the result may looks odd).
