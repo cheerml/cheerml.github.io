@@ -2,11 +2,11 @@
 layout: post
 title: "Normalizations in Neural Networks"
 permalink: /normalizations_in_neural_networks
-date: 2016-08-03 20:10:48
-categories: ['Machine Learning', 'Deep Learning']
+date: 2016-08-03
+categories: ['Deep Learning']
 author: Yeephyho
 authorlink: http://yeephycho.github.io
-tags: [LCN, LRN, BN]
+tags: [deep learning]
 ---
 
 
