@@ -9,16 +9,19 @@ authorlink: http://yeephycho.github.io
 tags: [Deep Learning]
 ---
 
+# This post will introduce some normalization related tricks in neural networks.
+
+<!--more-->
 
 
 ## Normalizations for the input data (normalization, equalization)
-In image process area, the term "[normalization](https://en.wikipedia.org/wiki/Normalization_(image_processing)" has many other names such as contrast stretching, histogram stretching or dynamic range expansion etc.
-If you have an 8-bit grayscale image, the minimum and maximum pixel values are 50 and 180, we can normalize this image to a larger dynamic range say 0 to 255. After normalize, the previous 50 becomes 0, and 180 becomes 255, the values in the middle will be scaled according to the following formula:<div  align="center">
-**(I_n: new_intensity) = ((I_o: old_intensity)- (I_o_min: old_minimum_intensity)) x ((I_n_max: new_maximum_intensity) - (I_n_min: new_minimum_intensity)) / ((I_o_max: old_maximum_intensity) - (I_o_min: old_minimum_intensity)) + (I_n_min: new_minimum_intensity)**
-<br />
+In image process area, the term [normalization](https://en.wikipedia.org/wiki/Normalization_(image_processing) has many other names such as contrast stretching, histogram stretching or dynamic range expansion etc.
+If you have an 8-bit grayscale image, the minimum and maximum pixel values are 50 and 180, we can normalize this image to a larger dynamic range say 0 to 255. After normalize, the previous 50 becomes 0, and 180 becomes 255, the values in the middle will be scaled according to the following formula:
+
+$$(I_n: new_intensity) = ((I_o: old_intensity)- (I_o_min: old_minimum_intensity)) x ((I_n_max: new_maximum_intensity) - (I_n_min: new_minimum_intensity)) / ((I_o_max: old_maximum_intensity) - (I_o_min: old_minimum_intensity)) + (I_n_min: new_minimum_intensity)$$
+
 ![Normalization](http://yeephycho.github.io/blog_img/normalization.jpg)
-</div>
-<!--more-->
+
 It's a typical linear transform. Still the previous image, the pixel value 70 will become (70-50)x(255-0)/(180-50) - 0 = 39, the pixel value 130 will become (130-50)x(255-0)/(180-50) - 0 = 156.
 The image above shows the effect of an image before and after normalization, the third image is effect of another transform called [histogram equalization](https://en.wikipedia.org/wiki/Histogram_equalization), for your information, histogram equalization is different from normalization, normalization will not change your image's histogram but equalization will. Histogram equalization doesn't care about intensity value of the pixel, however, the ranking of the current intensity in the whole image matters a lot.
 The maximum intensity of the original image is 238 and the minimum is 70, implemented through OpenCV. (OpenCV's normalization function isn't the normalization we are talking about, if you want to repeat the effect, you have to do it yourself.)
@@ -27,10 +30,10 @@ For normalization, the new intensity derives from the new and old maximum, minim
 ## Simplified Whitening
 Real whitening process is a series of linear transform to make the data have zero means and unit variances, and decorrelated. And there's quite a lot of math, I don't really want to talk too much about the math. (Editing formulas are quite annoying, you know.)
 As issued above, the propose of whitening or ICA (Independent Compoment Analysis) or sphering is to get ride of the correlations among the raw data. Let's say, for an image, there's a high chance that the adjacent pixel's intensity is similar, this kind of similarity over the spatial domain is the so called correlation, and ICA is a way to reduce this similarity.
-Usually, in neural networks we use simplified whitening instead of original ICA, because the computation burden for ICA is just too heavy for big data (say millions of images). <div  align="center">
+Usually, in neural networks we use simplified whitening instead of original ICA, because the computation burden for ICA is just too heavy for big data (say millions of images).
 ![simplified whitening](http://yeephycho.github.io/blog_img/simplified_whitening.jpg)
 Too tired to explain this formula, maybe later, forgive me...
-</div>
+
 Let's presume you have 100 grayscale images to process, each image has a width of 64 and height of 64, conventions are described as follows:
 -	First, calculate the mean and standard deviation (square root of variance) for pixels that has the same x and y coordinate.
 -	Then, for each pixel, subtract the mean and divide the standard deviation.
@@ -83,17 +86,17 @@ In the third paper, they introduced the divisive normalization into neural netwo
 ## Local Response Normalization (LRN)
 This concept was raised in AlexNet, click [here](http://yeephycho.github.io/2016/07/21/A-reminder-of-algorithms-in-Convolutional-Neural-Networks-and-their-influences-I/) to learn more.
 Local response normalization algorithm was inspired by the real neurons, as the author said, "bears some resemblance to the local contrast normalization". The common point is that they both want to introduce competitions to the neuron outputs, the difference is LRN do not subtract mean and the competition happens among the outputs of adjacent kernels at the same layer.
-The formula for LRN is as follows:<div  align="center">
+The formula for LRN is as follows:
 ![Local Response Normalization](http://yeephycho.github.io/blog_img/local_response_normalization.jpg)
-</div>
+
 ***a(i, x, y)*** represents the *i* th conv. kernel's output (after ReLU) at the position of (x, y) in the feature map.
 ***b(i, x, y)*** represents the output of local response normalization, and of course it's also the input for the next layer.
 ***N*** is the number of the conv. kernel number.
 ***n*** is the adjacent conv. kernel number, this number is up to you. In the article they choose n = 5.
-***k, α， β*** are hyper-parameters, in the article, they choose ***k = 2, α = 10e-4, β = 0.75***.<div  align="center">
+***k, α， β*** are hyper-parameters, in the article, they choose ***k = 2, α = 10e-4, β = 0.75***.
 ![Local Response Normalization illustration](http://yeephycho.github.io/blog_img/local_response_normalization_process.jpg)
 Flowchart of Local Response Normalization
-</div>
+
 I drew the above figure to illustrate the process of LRN in neural network. Just a few tips here:
 - This graph presumes that the *i* th kernel is not at the edge of the kernel space. If i equals zero or one or last or one to the last, one or two additional zero padding conv. kernels are required.
 - In the article, n is 5, we presume n/2 is integer division, 5/2 = 2.
@@ -101,9 +104,9 @@ I drew the above figure to illustrate the process of LRN in neural network. Just
 - I presume the necessary padding is used by the input feature map so that the output feature maps have the same size of the input feature map, if you really care. But this padding may not be quite necessary.
 
 After knowing what LRN is, another question is: what the output of LRN looks like?
-Because the LRN happens after ReLU, so the inputs should all be no less than 0. The following graph tries to give you an intuitive understanding on the output of LRN, however, you still need to use your imagination.<div  align="center">
+Because the LRN happens after ReLU, so the inputs should all be no less than 0. The following graph tries to give you an intuitive understanding on the output of LRN, however, you still need to use your imagination.
 ![Local Response Normalization output](http://yeephycho.github.io/blog_img/LRN.png)
-</div>
+
 Be noted that the x axis represents the summation of the squared output of ReLU, ranging from 0 to 1000, and the y axis represents b(i, x, y) divides a(i, x, y). The hyper-parameters are set default to the article.
 So, the real b(i, x, y)'s value should be the the y axis's value multiplied with the a(i, x, y), use your imagination here, two different inputs a(i, x, y) pass through this function. Since the slope at the beginning is very steep, little difference among the inputs will be significantly enlarged, this is where the competition happens.
 The figure was generated by the following python code:
@@ -125,22 +128,22 @@ I summarized related paper in [another blog](http://yeephycho.github.io/2016/08/
 Batch normalization, at first glance, is quite difficult to understand. It truly introduced something new to CNNs, that is a kind of learnable whitening process to the inputs of the non-linear activations(ReLUs or Sigmoids).
 You can view the BN operation (represented as op. at the rest of this post) as a simplified whitening on the data in the intermittent layer of the neural network. In the original paper, I think the BN op. happens after the conv. op. but before the ReLU or Sigmoid op.
 But, BN is not that easy, because, first, the hyper-parameters "means" and "variances" are learned through back-propagation, and the training is mini-batch training either online training nor batch training. I'm going to explain these ideas below.
-First, let's review the simplified whitening formula:<div  align="center">
+First, let's review the simplified whitening formula:
 ![simplified whitening](http://yeephycho.github.io/blog_img/simplified_whitening.jpg)
-</div>
 
-Then, follow the similar idea, batch normalization defined two trainable parameters one comes from the mean, the other comes from the variance (or variance's square root-standard deviation), view the algorithms and formula sets in page 3 and 4 in [original paper](https://arxiv.org/pdf/1502.03167.pdf).<div  align="center">
+
+Then, follow the similar idea, batch normalization defined two trainable parameters one comes from the mean, the other comes from the variance (or variance's square root-standard deviation), view the algorithms and formula sets in page 3 and 4 in [original paper](https://arxiv.org/pdf/1502.03167.pdf).
 ![Batch normalization algorithms](http://yeephycho.github.io/blog_img/bn_train.jpg)
-</div>
+
 
 Online training means that when you train your network, each time you feed only one instance to your network, calculate the loss at the last layer and based on the loss of this single instance, using back-propagation to adjust your network's parameters. Batch training means when you train your network, you feed all your data to the network, and calculate the loss of the whole dataset, based on the total loss do be BP learning. Mini-batch training means you feed a small part of your training data to the network, then, calculate the total loss of the small part of the data at the last layer, then based on the loss of this small part of data do the BP learning.
 Online training usually suffers from the noise the adjustment is usually quite noisy but if your training is implemented on a single thread CPU, online training is believed to be the fastest scheme and you can use larger learning rate.
 Batch training has a better estimation on the gradient, so the training can be less noisy, but batch training should be carefully initialized and the learning rate should be small, so the training speed is believed to be slow.
 Mini-batch training is a compromise between online training and the batch training. It uses a batch of data to estimate the gradient, so the learning is less noisy. Batch training and mini-batch training all can take advantage of the parallel computing such as multi-thread computing or GPU computing. So, the speed is much faster than single thread training.
 Batch normalization of course uses batch training. In ImageNet classification, they choose the batch size of 32, that is every time they feed 32 images to the network to calculate the loss and estimate the error. Each image is 224*224 pixels, so each batch has 50176 dimensions.
-Let's take out a intermittent conv. layer to illustrate the BN op.<div  align="center">
+Let's take out a intermittent conv. layer to illustrate the BN op.
 ![Batch normalization process](http://yeephycho.github.io/blog_img/bn_process.jpg)
-</div>
+
 
 The trick part is γ and β are initialized by the batch standard deviations and means but trained subject to the loss of the network through back-propagation.
 Why? Why we need to train γ and β instead of using the standard deviation and mean of the batch directly, you may think it's possibly a better way to reduce the correlations or shifts. The reason is that it can be proved or observed that by naive subtracting mean and dividing the variance, there's no help to the network, take mean as an example, the bias unit in the network will make up the loss of the mean.
@@ -149,7 +152,7 @@ The last thing to address, when using the network trained by BN to do the infere
 
 <br />
 ## License
-<div  align="center">
+
 The content of this blog itself is licensed under the [Creative Commons Attribution 4.0 International License](https://creativecommons.org/licenses/by-sa/4.0/).
 ![CC-BY-SA LICENCES](http://yeephycho.github.io/blog_img/license.jpg)
 
@@ -165,4 +168,3 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
 express or implied. See the License for the specific language
 governing permissions and limitations under the License.
 ![APACHE LICENCES](http://yeephycho.github.io/blog_img/APACHE.jpg)
-</div>
