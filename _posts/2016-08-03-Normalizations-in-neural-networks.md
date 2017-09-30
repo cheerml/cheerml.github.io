@@ -8,13 +8,13 @@ author: Yeephyho
 authorlink: http://yeephycho.github.io
 tags: [Deep Learning]
 ---
-# This post will introduce some normalization related tricks in neural networks.
+This post will introduce some normalization related tricks in neural networks.
 
 <!--more-->
 
 
 ## Normalization and Equalization
-In image process area, the term "[normalization](https://en.wikipedia.org/wiki/Normalization_(image_processing)" has many other names such as contrast stretching, histogram stretching or dynamic range expansion etc.
+In image process area, the term [normalization](https://en.wikipedia.org/wiki/Normalization_(image_processing) has many other names such as contrast stretching, histogram stretching or dynamic range expansion etc.
 If you have an 8-bit grayscale image, the minimum and maximum pixel values are 50 and 180, we can normalize this image to a larger dynamic range say 0 to 255. After normalize, the previous 50 becomes 0, and 180 becomes 255, the values in the middle will be scaled according to the following formula:
 
 (I_n: new_intensity) = ((I_o: old_intensity)- (I_o_min: old_minimum_intensity)) x ((I_n_max: new_maximum_intensity) - (I_n_min: new_minimum_intensity)) / ((I_o_max: old_maximum_intensity) - (I_o_min: old_minimum_intensity)) + (I_n_min: new_minimum_intensity)
