@@ -8,19 +8,20 @@ author: Yeephyho
 authorlink: http://yeephycho.github.io
 tags: [Deep Learning]
 ---
-
 # This post will introduce some normalization related tricks in neural networks.
 
 <!--more-->
 
 
-## Normalizations for the input data (normalization, equalization)
-In image process area, the term [normalization](https://en.wikipedia.org/wiki/Normalization_(image_processing) has many other names such as contrast stretching, histogram stretching or dynamic range expansion etc.
+## Normalization and Equalization
+In image process area, the term "[normalization](https://en.wikipedia.org/wiki/Normalization_(image_processing)" has many other names such as contrast stretching, histogram stretching or dynamic range expansion etc.
 If you have an 8-bit grayscale image, the minimum and maximum pixel values are 50 and 180, we can normalize this image to a larger dynamic range say 0 to 255. After normalize, the previous 50 becomes 0, and 180 becomes 255, the values in the middle will be scaled according to the following formula:
 
-$$(I_n: new_intensity) = ((I_o: old_intensity)- (I_o_min: old_minimum_intensity)) x ((I_n_max: new_maximum_intensity) - (I_n_min: new_minimum_intensity)) / ((I_o_max: old_maximum_intensity) - (I_o_min: old_minimum_intensity)) + (I_n_min: new_minimum_intensity)$$
+(I_n: new_intensity) = ((I_o: old_intensity)- (I_o_min: old_minimum_intensity)) x ((I_n_max: new_maximum_intensity) - (I_n_min: new_minimum_intensity)) / ((I_o_max: old_maximum_intensity) - (I_o_min: old_minimum_intensity)) + (I_n_min: new_minimum_intensity)
 
+<br />
 ![Normalization](http://yeephycho.github.io/blog_img/normalization.jpg)
+
 
 It's a typical linear transform. Still the previous image, the pixel value 70 will become (70-50)x(255-0)/(180-50) - 0 = 39, the pixel value 130 will become (130-50)x(255-0)/(180-50) - 0 = 156.
 The image above shows the effect of an image before and after normalization, the third image is effect of another transform called [histogram equalization](https://en.wikipedia.org/wiki/Histogram_equalization), for your information, histogram equalization is different from normalization, normalization will not change your image's histogram but equalization will. Histogram equalization doesn't care about intensity value of the pixel, however, the ranking of the current intensity in the whole image matters a lot.
@@ -157,7 +158,7 @@ The content of this blog itself is licensed under the [Creative Commons Attribut
 ![CC-BY-SA LICENCES](http://yeephycho.github.io/blog_img/license.jpg)
 
 The containing source code (if applicable) and the source code used to format and display that content is licensed under the [Apache License 2.0](http://www.apache.org/licenses/LICENSE-2.0).
-**Copyright [2016] [yeephycho]**
+Copyright [2016] [yeephycho]
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
 You may obtain a copy of the License at
