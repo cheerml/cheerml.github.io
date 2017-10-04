@@ -1,7 +1,7 @@
 <div class="linkslist">
   <p class="asidetitle">{{ lang.links }}</p>
     <ul>
-        {% for i in site.links %}
+        {% for i in site.data.authors.links %}
           <li>
             <a href="{{ i[1] }}" target="_blank" title="{{ i[0] }}">{{ i[0] }}</a>
           </li>

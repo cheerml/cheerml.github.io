@@ -110,10 +110,7 @@ toc:
 ## you can set both of the value to true of neither of them.
 ## if you don't want display contents in a specified post,you can modify `front-matter` and add `toc: false`.
 
-#### Links
-links:
-  Jun Lu's website: http://www.junlulocky.com
-  Yixuan Hu's website: http://yeephycho.github.io/
+
 
 #### Comment
 duoshuo_shortname:    ## e.g. wuchong   your duoshuo short name.

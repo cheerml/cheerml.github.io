@@ -22,6 +22,8 @@ We will do what we can when we had the time.
 
 Please add yourself to the list if you contribute to the blog!
 
+And also add your name and website into the '_data/authors.yml' file.
+
 - [Jun Lu](https://github.com/junlulocky)
 - [Yixuan Hu](https://github.com/yeephycho)
 - [Tao Lin](https://github.com/iamtao)
