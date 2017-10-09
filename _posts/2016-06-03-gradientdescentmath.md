@@ -2,7 +2,7 @@
 layout: post
 title: "The math behind Gradient Descent"
 permalink: /mathGD
-date: 2016-09-06
+date: 2016-06-03
 categories: ['Machine Learning']
 author: Jun Lu
 authorlink: http://www.junlulocky.com
@@ -40,6 +40,9 @@ this update rule will make the objective function drop to the minimum point.
 Now, I will consider the gradient descent in a convex problem, because we usually use gradient descent in a convex problem, otherwise, we usually get the local minimum. If the objective function is convex, then \\(\nabla L(x^k)^T(x^{k+1}-x^{k})\geq 0\\) implies \\(L(x^{k+1}) \geq L(x^k)\\). This can be derived from the convex property of a convex function, i.e. \\(L(x^{k+1}) \geq L(x^k)^T(x^{k+1}-x^k)\\). 
 
 In this sense, we need to make \\(\nabla L(x^k)^T(x^{k+1}-x^{k})\leq 0\\) so as to make the objective function decrease. In gradient descent \\(\Delta x\\) is chosen to be \\(-\nabla L(x^k)\\). However, there are many other descent method, such as **steepest descend**, **normalized steepest descent**, **newton step** and so on. The main idea of these methods is to make \\(\nabla L(x^k)^T(x^{k+1}-x^{k})= \nabla L^T \Delta x \leq 0\\).
+
+## Acknowledgement
+We would like to thank [Wei Ma](https://github.com/Marvinmw) and [Yixuan Hu](https://github.com/yeephycho) for checking the details of this blog.
 
 ## References
 - Michael A. Nielsen, *Neural Networks and Deep Learning*, Determination Press, 2015

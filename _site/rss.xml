@@ -5,8 +5,8 @@
         <description>Cheer ML - Jun Lu, Yixuan Hu</description>
         <link></link>
         <atom:link href="" rel="self" type="application/rss+xml" />
-        <lastBuildDate>Wed, 04 Oct 2017 18:07:04 +0200</lastBuildDate>
-        <pubDate>Wed, 04 Oct 2017 18:07:04 +0200</pubDate>
+        <lastBuildDate>Mon, 09 Oct 2017 18:16:01 +0200</lastBuildDate>
+        <pubDate>Mon, 09 Oct 2017 18:16:01 +0200</pubDate>
         <ttl>60</ttl>
 
 
@@ -316,57 +316,6 @@ The post is used for study purpose only.&lt;/li&gt;
         </item>
 
         <item>
-                <title>The math behind Gradient Descent</title>
-                <description>&lt;p&gt;This post means to help starters to understand the math behind Gradient Descent (GD).&lt;/p&gt;
-
-&lt;h2 id=&quot;intuitive-understanding&quot;&gt;Intuitive understanding&lt;/h2&gt;
-&lt;p&gt;An intuitive way to think of Gradient Descent is to imagine the path of a river originating from top of a mountain. The goal of gradient descent is exactly what the river strives to achieve - namely, reach the bottom most point (at the foothill) climbing down from the mountain. That’s what you taught by your machine learning teacher right? But do you only understand this and use gradient descent naively every time? This post will help you understand the math behind gradient descent.&lt;/p&gt;
-
-&lt;h2 id=&quot;math-behind-gradient-descent&quot;&gt;Math behind Gradient Descent&lt;/h2&gt;
-&lt;p&gt;Here I define the objective function to be \(L(x,w,b)\) and the input variable of \(L\) is \(x\) with \(d\)-dimension, weight variable \(w\) and bias variable\(b\), our goal is to use algorithm to get the minimum of \(L(x,w,b)\).&lt;/p&gt;
-
-&lt;p&gt;To make this question more precise, let’s think about what happens when we move the ball a small amount \(\Delta x_1\) in the \(x_1\) direction, a small amount \(\Delta x_2\) in the \(x_2\) direction, …, and a small amount \(\Delta x_d\) in the \(x_d\) direction. Calculus tells us that \(L(x,w,b)\) changes as follows:&lt;/p&gt;
-
-&lt;script type=&quot;math/tex; mode=display&quot;&gt;\Delta L \approx \frac{\partial L}{\partial x_1}\Delta x_1 + ... + \frac{\partial L}{\partial x_d}\Delta x_d&lt;/script&gt;
-
-&lt;p&gt;In this sense, we need to find a way of choosing \(\Delta x_1\), …, \(\Delta x_d\) so as to make \(\Delta L\) negative; i.e., we’ll make the objective function decrease so that to minimize.&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;Define \(\Delta x=(\Delta x_1, …, \Delta x_d)^T\) to be the vector of changes in \(x\).&lt;/li&gt;
-  &lt;li&gt;Define \(\nabla L=(\frac{\partial L}{\partial x_1}, …, \frac{\partial L}{\partial x_d})^T\) to be the gradient vector of \(L\).&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;So we can find: &lt;script type=&quot;math/tex&quot;&gt;\Delta L \approx \frac{\partial L}{\partial x_1}\Delta x_1 + ... + \frac{\partial L}{\partial x_d}\Delta x_d = \nabla L ^T \Delta x&lt;/script&gt;. By now, things are becoming easier. Suppose, \(\Delta x=-\eta \nabla L\) (i.e. the step size in gradient descent, where \(\eta\) is the learning rate). Then:&lt;/p&gt;
-
-&lt;script type=&quot;math/tex; mode=display&quot;&gt;\nabla L \approx -\eta \nabla L^T\nabla L = -\eta||\nabla L||_2^2 \leq 0&lt;/script&gt;
-
-&lt;p&gt;Now, we can find the rightness of gradient descent. We can use the following update rule to update next \(x\):&lt;/p&gt;
-
-&lt;script type=&quot;math/tex; mode=display&quot;&gt;x^{k+1} = x^{k} - \eta \nabla L(x^k)&lt;/script&gt;
-
-&lt;p&gt;this update rule will make the objective function drop to the minimum point.&lt;/p&gt;
-
-&lt;h2 id=&quot;gradient-descent-in-a-convex-problem&quot;&gt;Gradient Descent in a convex problem&lt;/h2&gt;
-&lt;p&gt;Now, I will consider the gradient descent in a convex problem, because we usually use gradient descent in a convex problem, otherwise, we usually get the local minimum. If the objective function is convex, then \(\nabla L(x^k)^T(x^{k+1}-x^{k})\geq 0\) implies \(L(x^{k+1}) \geq L(x^k)\). This can be derived from the convex property of a convex function, i.e. \(L(x^{k+1}) \geq L(x^k)^T(x^{k+1}-x^k)\).&lt;/p&gt;
-
-&lt;p&gt;In this sense, we need to make \(\nabla L(x^k)^T(x^{k+1}-x^{k})\leq 0\) so as to make the objective function decrease. In gradient descent \(\Delta x\) is chosen to be \(-\nabla L(x^k)\). However, there are many other descent method, such as &lt;strong&gt;steepest descend&lt;/strong&gt;, &lt;strong&gt;normalized steepest descent&lt;/strong&gt;, &lt;strong&gt;newton step&lt;/strong&gt; and so on. The main idea of these methods is to make \(\nabla L(x^k)^T(x^{k+1}-x^{k})= \nabla L^T \Delta x \leq 0\).&lt;/p&gt;
-
-&lt;h2 id=&quot;references&quot;&gt;References&lt;/h2&gt;
-&lt;ul&gt;
-  &lt;li&gt;Michael A. Nielsen, &lt;em&gt;Neural Networks and Deep Learning&lt;/em&gt;, Determination Press, 2015&lt;/li&gt;
-  &lt;li&gt;Stephen Boyd, and Lieven Vandenberghe. &lt;em&gt;Convex optimization&lt;/em&gt;. Cambridge university press, 2004.&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2 id=&quot;remarks&quot;&gt;Remarks&lt;/h2&gt;
-&lt;p&gt;Last updated on June 14, 2016&lt;/p&gt;
-
-</description>
-                <link>/mathGD</link>
-                <guid>/gradientdescentmath</guid>
-                <pubDate>Tue, 06 Sep 2016 00:00:00 +0200</pubDate>
-        </item>
-
-        <item>
                 <title>Normalizations in Neural Networks</title>
                 <description>&lt;p&gt;This post will introduce some normalization related tricks in neural networks.&lt;/p&gt;
 
@@ -530,6 +479,60 @@ governing permissions and limitations under the License.
                 <link>/normalizations-in-neural-networks</link>
                 <guid>/Normalizations-in-neural-networks</guid>
                 <pubDate>Wed, 03 Aug 2016 00:00:00 +0200</pubDate>
+        </item>
+
+        <item>
+                <title>The math behind Gradient Descent</title>
+                <description>&lt;p&gt;This post means to help starters to understand the math behind Gradient Descent (GD).&lt;/p&gt;
+
+&lt;h2 id=&quot;intuitive-understanding&quot;&gt;Intuitive understanding&lt;/h2&gt;
+&lt;p&gt;An intuitive way to think of Gradient Descent is to imagine the path of a river originating from top of a mountain. The goal of gradient descent is exactly what the river strives to achieve - namely, reach the bottom most point (at the foothill) climbing down from the mountain. That’s what you taught by your machine learning teacher right? But do you only understand this and use gradient descent naively every time? This post will help you understand the math behind gradient descent.&lt;/p&gt;
+
+&lt;h2 id=&quot;math-behind-gradient-descent&quot;&gt;Math behind Gradient Descent&lt;/h2&gt;
+&lt;p&gt;Here I define the objective function to be \(L(x,w,b)\) and the input variable of \(L\) is \(x\) with \(d\)-dimension, weight variable \(w\) and bias variable\(b\), our goal is to use algorithm to get the minimum of \(L(x,w,b)\).&lt;/p&gt;
+
+&lt;p&gt;To make this question more precise, let’s think about what happens when we move the ball a small amount \(\Delta x_1\) in the \(x_1\) direction, a small amount \(\Delta x_2\) in the \(x_2\) direction, …, and a small amount \(\Delta x_d\) in the \(x_d\) direction. Calculus tells us that \(L(x,w,b)\) changes as follows:&lt;/p&gt;
+
+&lt;script type=&quot;math/tex; mode=display&quot;&gt;\Delta L \approx \frac{\partial L}{\partial x_1}\Delta x_1 + ... + \frac{\partial L}{\partial x_d}\Delta x_d&lt;/script&gt;
+
+&lt;p&gt;In this sense, we need to find a way of choosing \(\Delta x_1\), …, \(\Delta x_d\) so as to make \(\Delta L\) negative; i.e., we’ll make the objective function decrease so that to minimize.&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Define \(\Delta x=(\Delta x_1, …, \Delta x_d)^T\) to be the vector of changes in \(x\).&lt;/li&gt;
+  &lt;li&gt;Define \(\nabla L=(\frac{\partial L}{\partial x_1}, …, \frac{\partial L}{\partial x_d})^T\) to be the gradient vector of \(L\).&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;So we can find: &lt;script type=&quot;math/tex&quot;&gt;\Delta L \approx \frac{\partial L}{\partial x_1}\Delta x_1 + ... + \frac{\partial L}{\partial x_d}\Delta x_d = \nabla L ^T \Delta x&lt;/script&gt;. By now, things are becoming easier. Suppose, \(\Delta x=-\eta \nabla L\) (i.e. the step size in gradient descent, where \(\eta\) is the learning rate). Then:&lt;/p&gt;
+
+&lt;script type=&quot;math/tex; mode=display&quot;&gt;\nabla L \approx -\eta \nabla L^T\nabla L = -\eta||\nabla L||_2^2 \leq 0&lt;/script&gt;
+
+&lt;p&gt;Now, we can find the rightness of gradient descent. We can use the following update rule to update next \(x\):&lt;/p&gt;
+
+&lt;script type=&quot;math/tex; mode=display&quot;&gt;x^{k+1} = x^{k} - \eta \nabla L(x^k)&lt;/script&gt;
+
+&lt;p&gt;this update rule will make the objective function drop to the minimum point.&lt;/p&gt;
+
+&lt;h2 id=&quot;gradient-descent-in-a-convex-problem&quot;&gt;Gradient Descent in a convex problem&lt;/h2&gt;
+&lt;p&gt;Now, I will consider the gradient descent in a convex problem, because we usually use gradient descent in a convex problem, otherwise, we usually get the local minimum. If the objective function is convex, then \(\nabla L(x^k)^T(x^{k+1}-x^{k})\geq 0\) implies \(L(x^{k+1}) \geq L(x^k)\). This can be derived from the convex property of a convex function, i.e. \(L(x^{k+1}) \geq L(x^k)^T(x^{k+1}-x^k)\).&lt;/p&gt;
+
+&lt;p&gt;In this sense, we need to make \(\nabla L(x^k)^T(x^{k+1}-x^{k})\leq 0\) so as to make the objective function decrease. In gradient descent \(\Delta x\) is chosen to be \(-\nabla L(x^k)\). However, there are many other descent method, such as &lt;strong&gt;steepest descend&lt;/strong&gt;, &lt;strong&gt;normalized steepest descent&lt;/strong&gt;, &lt;strong&gt;newton step&lt;/strong&gt; and so on. The main idea of these methods is to make \(\nabla L(x^k)^T(x^{k+1}-x^{k})= \nabla L^T \Delta x \leq 0\).&lt;/p&gt;
+
+&lt;h2 id=&quot;acknowledgement&quot;&gt;Acknowledgement&lt;/h2&gt;
+&lt;p&gt;We would like to thank &lt;a href=&quot;https://github.com/Marvinmw&quot;&gt;Wei Ma&lt;/a&gt; and &lt;a href=&quot;https://github.com/yeephycho&quot;&gt;Yixuan Hu&lt;/a&gt; for checking the details of this blog.&lt;/p&gt;
+
+&lt;h2 id=&quot;references&quot;&gt;References&lt;/h2&gt;
+&lt;ul&gt;
+  &lt;li&gt;Michael A. Nielsen, &lt;em&gt;Neural Networks and Deep Learning&lt;/em&gt;, Determination Press, 2015&lt;/li&gt;
+  &lt;li&gt;Stephen Boyd, and Lieven Vandenberghe. &lt;em&gt;Convex optimization&lt;/em&gt;. Cambridge university press, 2004.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;remarks&quot;&gt;Remarks&lt;/h2&gt;
+&lt;p&gt;Last updated on June 14, 2016&lt;/p&gt;
+
+</description>
+                <link>/mathGD</link>
+                <guid>/gradientdescentmath</guid>
+                <pubDate>Fri, 03 Jun 2016 00:00:00 +0200</pubDate>
         </item>
 
         <item>

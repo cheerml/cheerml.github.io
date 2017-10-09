@@ -13,6 +13,6 @@
 /comparison-distributed-ml-platform
 /bias-variance
 /saddle-points
-/mathGD
 /normalizations-in-neural-networks
+/mathGD
 /contributing
