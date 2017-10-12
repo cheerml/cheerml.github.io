@@ -10,6 +10,7 @@
 /rss.xml
 /sitemap.txt
 
+/random-projection
 /comparison-distributed-ml-platform
 /bias-variance
 /saddle-points

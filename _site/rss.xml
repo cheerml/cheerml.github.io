@@ -5,10 +5,83 @@
         <description>Cheer ML - Jun Lu, Yixuan Hu</description>
         <link></link>
         <atom:link href="" rel="self" type="application/rss+xml" />
-        <lastBuildDate>Mon, 09 Oct 2017 18:16:01 +0200</lastBuildDate>
-        <pubDate>Mon, 09 Oct 2017 18:16:01 +0200</pubDate>
+        <lastBuildDate>Thu, 12 Oct 2017 18:44:12 +0200</lastBuildDate>
+        <pubDate>Thu, 12 Oct 2017 18:44:12 +0200</pubDate>
         <ttl>60</ttl>
 
+
+        <item>
+                <title>Dimensionality Reduction via JL Lemma and Random Projection</title>
+                <description>&lt;p&gt;Nowadays, dimensionality is a serious problem of data analysis as the huge data we experience today results in very sparse sets and very high dimensions. Although, data scientists have long used tools such as principal component analysis (PCA) and independent component analysis (ICA) to project the high-dimensional data onto a subspace, but all those techniques reply on the computation of the eigenvectors of a $n \times n$ matrix, a very expensive operation (e.g., spectral decomposition) for high dimension $n$. Moreover, even though eigenspace has many important properties, it does not lead good approximations for many useful measures such as vector norms.&lt;/p&gt;
+
+&lt;p&gt;In 1984, two mathematicians introduced and proved the following lemma.&lt;/p&gt;
+
+&lt;h2 id=&quot;johnson-lindenstrauss-lemma&quot;&gt;Johnson-Lindenstrauss lemma&lt;/h2&gt;
+&lt;p&gt;For any $\epsilon \in (0,\frac{1}{2})$, $\forall x_1, x_2, \dots, x_d \in R^{n}$, there exists a matrix $M \in R^{m \times n}$ with $m = O(\frac{1}{\epsilon^2} \log{d})$ such that $\forall 1 \leq i,j \leq d$, we have&lt;/p&gt;
+
+&lt;script type=&quot;math/tex; mode=display&quot;&gt;(1-\epsilon)||x_i - x_j||_2 \leq ||Mx_i - Mx_j||_2 \leq (1+\epsilon)||x_i - x_j||_2&lt;/script&gt;
+
+&lt;p&gt;Remark: This lemma states that for any pair vector $x_i, x_j$ in $d$ dimension, there exist a sketch matrix $M$ which maps $R^n \rightarrow R^m$ and the Euclidean distance is preserved within $\epsilon$ factor. The result dimension does not have any relationship to origin dimension $n$ (only relates to the number of vector pairs $d$).&lt;/p&gt;
+
+&lt;p&gt;During a long time, no one can figure out how to get this sketch matrix.&lt;/p&gt;
+
+&lt;h2 id=&quot;random-projection&quot;&gt;Random Projection&lt;/h2&gt;
+&lt;p&gt;Until 2003, some researches point out that this sketch matrix can be created using Gaussian distribution.&lt;/p&gt;
+
+&lt;p&gt;Consider the following matrix $A \in R^{m \times n}$, where $A_{ij} \sim \mathcal{N}(0,1)$ and all $A_{ij}$ are independent. We claim that this matrix satisfies the statement of JL lemma.&lt;/p&gt;
+
+&lt;p&gt;Proof. It is obvious that sketch has an additional property, 
+$\forall i, (Ax)_i = \sum_{j=1}^{n} A_{ij} x_j \sim \mathcal{N}(0, ||x||_2^2)$. In other word, Gaussian distribution is 2-stable distribution. Then we can obtain $||Ax||_2^2 = \sum_{i=1}^{m} y_i^2$, where $y_i \sim \mathcal{N}(0, ||x||_2^2)$. That is to say, $||Ax||_2^2$ follows a $\chi^2$ (chi-squared) distribution with degrees of freedom $m$. For tail bound of $\chi^2$ distribution, we can get&lt;/p&gt;
+
+&lt;p&gt;&lt;script type=&quot;math/tex&quot;&gt;% &lt;![CDATA[
+P(||Ax||_2^2 - m||X||_2^2| &gt; \epsilon m||X||_2^2) &lt; \exp(-C \epsilon^2 m) %]]&gt;&lt;/script&gt;
+for a constant $C &amp;gt; 0$.&lt;/p&gt;
+
+&lt;p&gt;Fix two index $i, j$, and let $y^{ij} = x_i - x_j$ and $M = \frac{1}{\sqrt{m}} A$, and set $m = \frac{4}{C \epsilon^2} \log{n}$ to get&lt;/p&gt;
+
+&lt;script type=&quot;math/tex; mode=display&quot;&gt;% &lt;![CDATA[
+P(|||M y^{ij}||_2^2 - ||y^{ij}||_2^2| &gt; \epsilon ||y^{ij}||_2^2) &lt; \exp(-C \epsilon^2 m) = \frac{1}{n^4} %]]&gt;&lt;/script&gt;
+
+&lt;p&gt;Take the union bound to obtain,&lt;/p&gt;
+
+&lt;script type=&quot;math/tex; mode=display&quot;&gt;% &lt;![CDATA[
+P(\forall i \neq j, |||M y^{ij}||_2^2 - ||y^{ij}||_2^2| &gt; \epsilon ||y^{ij}||_2^2 ) &lt; \sum_{i \neq j} P(|||M y^{ij}||_2^2 - ||y^{ij}||_2^2| &lt; \epsilon ||y^{ij}||_2^2 ) &lt; {n \choose 2} n^4 &lt; \frac{1}{n^2} %]]&gt;&lt;/script&gt;
+
+&lt;p&gt;which is same as the guarantee in Johnson-Lindenstrauss lemma.&lt;/p&gt;
+
+&lt;h2 id=&quot;application&quot;&gt;Application&lt;/h2&gt;
+&lt;p&gt;In this or other forms, the JL lemma has been used for a large variety of computational tasks, especially in streaming algorithm, such as&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;a href=&quot;https://www.stat.berkeley.edu/~mmahoney/f13-stat260-cs294/Lectures/lecture19.pdf&quot;&gt;Computing a low-rank approximation to the original matrix A.&lt;/a&gt;&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;a href=&quot;http://web.stanford.edu/class/cs369g/files/lectures/lec16.pdf&quot;&gt;Finding nearest neighbors in high-dimensional space.&lt;/a&gt;&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;a href=&quot;http://www.cs.yale.edu/homes/spielman/561/lect17-15.pdf&quot;&gt;Simplify the calculation of the effective resistance in Graph Spectral Sparsification.&lt;/a&gt;&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;a href=&quot;http://repository.upenn.edu/cgi/viewcontent.cgi?article=1528&amp;amp;context=cis_papers&quot;&gt;Design various Graph Sketches.&lt;/a&gt;&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;reference&quot;&gt;Reference&lt;/h2&gt;
+&lt;ul&gt;
+  &lt;li&gt;EPFL sublinear algorithm course, 2017&lt;/li&gt;
+  &lt;li&gt;EPFL advanced algorithm course, 2016&lt;/li&gt;
+  &lt;li&gt;Johnson, William B.; Lindenstrauss, Joram (1984). “Extensions of Lipschitz mappings into a Hilbert space”. In Beals, Richard; Beck, Anatole; Bellow, Alexandra; et al. Conference in modern analysis and probability (New Haven, Conn., 1982). Contemporary Mathematics. 26. Providence, RI: American Mathematical Society. pp. 189–206.&lt;/li&gt;
+  &lt;li&gt;Kane, Daniel M.; Nelson, Jelani (2012). “Sparser Johnson-Lindenstrauss Transforms”. Proceedings of the Twenty-Third Annual ACM-SIAM Symposium on Discrete Algorithms,. New York: Association for Computing Machinery (ACM).&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;The post is used for study purpose only.&lt;/p&gt;
+
+</description>
+                <link>/random-projection</link>
+                <guid>/Dimensionality-Reduction-via-JL-Lemma-and-Random-Projection</guid>
+                <pubDate>Tue, 10 Oct 2017 00:00:00 +0200</pubDate>
+        </item>
 
         <item>
                 <title>A comparison of distributed machine learning platform</title>
@@ -612,6 +685,10 @@ rendered as \( sin(x^2) \)&lt;/p&gt;
 
 &lt;p&gt;\[ \mathbf{X} = \mathbf{Z} \mathbf{P^\mathsf{T}} \]&lt;/p&gt;
 
+&lt;h2 id=&quot;important-notes&quot;&gt;Important notes&lt;/h2&gt;
+
+&lt;h3 id=&quot;subscripts&quot;&gt;1. Subscripts&lt;/h3&gt;
+
 &lt;p&gt;If you want to use subscripts like this \( \mathbf{X}_{n,p} \) you need to scape the 
 underscores with a backslash like so &lt;code class=&quot;highlighter-rouge&quot;&gt;\mathbf{X}\_{n,p}&lt;/code&gt;:&lt;/p&gt;
 
@@ -620,6 +697,16 @@ underscores with a backslash like so &lt;code class=&quot;highlighter-rouge&quot
 &lt;p&gt;will be displayed as&lt;/p&gt;
 
 &lt;p&gt;\[ \mathbf{X}_{n,p} = \mathbf{A}_{n,k} \mathbf{B}_{k,p} \]&lt;/p&gt;
+
+&lt;h3 id=&quot;vertical-line&quot;&gt;2. vertical line&lt;/h3&gt;
+
+&lt;p&gt;If you want to use vertical line &lt;code class=&quot;highlighter-rouge&quot;&gt;|&lt;/code&gt;, you also need to scape the underscores with a blackslash like so &lt;code class=&quot;highlighter-rouge&quot;&gt;\|&lt;/code&gt;&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-r&quot; data-lang=&quot;r&quot;&gt;&lt;span class=&quot;o&quot;&gt;$$&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;err&quot;&gt;\&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;|&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;\&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;|&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;A&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;\&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;|&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;\&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;|&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;$$&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;will be displayed as&lt;/p&gt;
+
+&lt;p&gt;\[ ||A|| \]&lt;/p&gt;
 
 </description>
                 <link>/contributing</link>

@@ -18,6 +18,16 @@ huyixuanhyx@gmail.com
 
 We will do what we can when we had the time.
 
+## Important notes
+
+Make sure to use the following chars in MathTex:
+- '\_' instead of '_'
+- '\|' instead of '|' 
+
+And more important notes can be found via [Link](https://cheerml.github.io/contributing#important-notes).
+
+Please also take a look at the link above before contributing.
+
 ## Contributors
 
 Please add yourself to the list if you contribute to the blog!

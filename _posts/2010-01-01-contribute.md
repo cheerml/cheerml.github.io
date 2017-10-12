@@ -98,6 +98,10 @@ is displayed as
 
 \\[ \mathbf{X} = \mathbf{Z} \mathbf{P^\mathsf{T}} \\]
 
+## Important notes 
+
+### 1. Subscripts
+
 If you want to use subscripts like this \\( \mathbf{X}\_{n,p} \\) you need to scape the 
 underscores with a backslash like so ``` \mathbf{X}\_{n,p} ```:
 
@@ -108,5 +112,20 @@ $$ \mathbf{X}\_{n,p} = \mathbf{A}\_{n,k} \mathbf{B}\_{k,p} $$
 will be displayed as
 
 \\[ \mathbf{X}\_{n,p} = \mathbf{A}\_{n,k} \mathbf{B}\_{k,p} \\]
+
+### 2. vertical line
+
+If you want to use vertical line ```|```, you also need to scape the underscores with a blackslash like so ```\|```
+
+{% highlight r %}
+$$ \|\|A\|\| $$
+{% endhighlight %}
+
+will be displayed as
+
+\\[ \|\|A\|\| \\]
+
+
+
 
 

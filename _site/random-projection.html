@@ -8,7 +8,7 @@
     
     
     
-    <title>Contributing an article | Cheer ML</title>
+    <title>Dimensionality Reduction via JL Lemma and Random Projection | Cheer ML</title>
     
 
     <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
@@ -23,12 +23,12 @@
     
     <meta property="og:type" content="article">
     
-    <meta property="og:title" content="Contributing an article">
-    <meta property="og:url" content="/contributing">
+    <meta property="og:title" content="Dimensionality Reduction via JL Lemma and Random Projection">
+    <meta property="og:url" content="/random-projection">
     <meta property="og:site_name" content="Cheer ML">
     <meta property="og:description" content="">
     <meta name="twitter:card" content="summary">
-    <meta name="twitter:title" content="Contributing an article">
+    <meta name="twitter:title" content="Dimensionality Reduction via JL Lemma and Random Projection">
     <meta name="twitter:description" content="page.description">
     <meta name="twitter:creator" content="@">
     <link rel="publisher" href="">
@@ -97,14 +97,14 @@
 	<header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/contributing" title="Contributing an article" itemprop="url">Contributing an article</a>
+      <a href="/random-projection" title="Dimensionality Reduction via JL Lemma and Random Projection" itemprop="url">Dimensionality Reduction via JL Lemma and Random Projection</a>
   </h1>
   <p class="article-author">By
     
-		<a href="" title="Jun Lu, Yixuan Hu" target="_blank" itemprop="author">Jun Lu</a>
+		<a href="http://ovss.github.io" title="Jun Lu, Yixuan Hu" target="_blank" itemprop="author">Junxiong Wang</a>
 		
   <p class="article-time">
-    <time datetime="2010-01-01 00:00:00 +0100" itemprop="datePublished"> Published 2010-01-01</time>
+    <time datetime="2017-10-10 00:00:00 +0200" itemprop="datePublished"> Published 2017-10-10</time>
     
   </p>
 </header>
@@ -116,103 +116,70 @@
 		
 		</div>
 		
-		<p>If you’re writing an article for this blog, please follow these guidelines.</p>
+		<p>Nowadays, dimensionality is a serious problem of data analysis as the huge data we experience today results in very sparse sets and very high dimensions. Although, data scientists have long used tools such as principal component analysis (PCA) and independent component analysis (ICA) to project the high-dimensional data onto a subspace, but all those techniques reply on the computation of the eigenvectors of a $n \times n$ matrix, a very expensive operation (e.g., spectral decomposition) for high dimension $n$. Moreover, even though eigenspace has many important properties, it does not lead good approximations for many useful measures such as vector norms.</p>
 
-<p>One of the rewards of switching my website to <a href="http://jekyllrb.com/">Jekyll</a> is the 
-ability to support <strong>MathJax</strong>, which means I can write LaTeX-like equations that get 
-nicely displayed in a web browser, like this one \( \sqrt{\frac{n!}{k!(n-k)!}} \) or 
-this one \( x^2 + y^2 = r^2 \).</p>
+<p>In 1984, two mathematicians introduced and proved the following lemma.</p>
 
-<!--more-->
+<h2 id="johnson-lindenstrauss-lemma">Johnson-Lindenstrauss lemma</h2>
+<p>For any $\epsilon \in (0,\frac{1}{2})$, $\forall x_1, x_2, \dots, x_d \in R^{n}$, there exists a matrix $M \in R^{m \times n}$ with $m = O(\frac{1}{\epsilon^2} \log{d})$ such that $\forall 1 \leq i,j \leq d$, we have</p>
 
-<p><img class="centered" src="http://gastonsanchez.com/images/blog/mathjax_logo.png" /></p>
+<script type="math/tex; mode=display">(1-\epsilon)||x_i - x_j||_2 \leq ||Mx_i - Mx_j||_2 \leq (1+\epsilon)||x_i - x_j||_2</script>
 
-<h3 id="whats-mathjax">What’s MathJax?</h3>
+<p>Remark: This lemma states that for any pair vector $x_i, x_j$ in $d$ dimension, there exist a sketch matrix $M$ which maps $R^n \rightarrow R^m$ and the Euclidean distance is preserved within $\epsilon$ factor. The result dimension does not have any relationship to origin dimension $n$ (only relates to the number of vector pairs $d$).</p>
 
-<p>If you check MathJax website <a href="http://www.mathjax.org/">(www.mathjax.org)</a> you’ll see 
-that it <em>is an open source JavaScript display engine for mathematics that works in all 
-browsers</em>.</p>
+<p>During a long time, no one can figure out how to get this sketch matrix.</p>
 
-<h3 id="how-to-implement-mathjax-with-jekyll">How to implement MathJax with Jekyll</h3>
+<h2 id="random-projection">Random Projection</h2>
+<p>Until 2003, some researches point out that this sketch matrix can be created using Gaussian distribution.</p>
 
-<p>I followed the instructions described by Dason Kurkiewicz for 
-<a href="http://dasonk.github.io/blog/2012/10/09/Using-Jekyll-and-Mathjax/">using Jekyll and Mathjax</a>.</p>
+<p>Consider the following matrix $A \in R^{m \times n}$, where $A_{ij} \sim \mathcal{N}(0,1)$ and all $A_{ij}$ are independent. We claim that this matrix satisfies the statement of JL lemma.</p>
 
-<p>Here are some important details. I had to modify the Ruby library for Markdown in 
-my <code class="highlighter-rouge">_config.yml</code> file. Now I’m using redcarpet so the corresponding line in the 
-configuration file is: <code class="highlighter-rouge">markdown: redcarpet</code></p>
+<p>Proof. It is obvious that sketch has an additional property, 
+$\forall i, (Ax)_i = \sum_{j=1}^{n} A_{ij} x_j \sim \mathcal{N}(0, ||x||_2^2)$. In other word, Gaussian distribution is 2-stable distribution. Then we can obtain $||Ax||_2^2 = \sum_{i=1}^{m} y_i^2$, where $y_i \sim \mathcal{N}(0, ||x||_2^2)$. That is to say, $||Ax||_2^2$ follows a $\chi^2$ (chi-squared) distribution with degrees of freedom $m$. For tail bound of $\chi^2$ distribution, we can get</p>
 
-<p>To load the MathJax javascript, I added the following lines in my layout <code class="highlighter-rouge">page.html</code> 
-(located in my folder <code class="highlighter-rouge">_layouts</code>)</p>
+<p><script type="math/tex">% <![CDATA[
+P(||Ax||_2^2 - m||X||_2^2| > \epsilon m||X||_2^2) < \exp(-C \epsilon^2 m) %]]></script>
+for a constant $C &gt; 0$.</p>
 
-<figure class="highlight"><pre><code class="language-r" data-lang="r"><span class="o">&lt;</span><span class="n">script</span><span class="w"> </span><span class="n">type</span><span class="o">=</span><span class="s2">"text/javascript"</span><span class="w">
-    </span><span class="n">src</span><span class="o">=</span><span class="s2">"http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"</span><span class="o">&gt;</span><span class="w">
-</span><span class="o">&lt;/</span><span class="n">script</span><span class="o">&gt;</span></code></pre></figure>
+<p>Fix two index $i, j$, and let $y^{ij} = x_i - x_j$ and $M = \frac{1}{\sqrt{m}} A$, and set $m = \frac{4}{C \epsilon^2} \log{n}$ to get</p>
 
-<p>Of course you can choose a different file location in your jekyll layouts.</p>
+<script type="math/tex; mode=display">% <![CDATA[
+P(|||M y^{ij}||_2^2 - ||y^{ij}||_2^2| > \epsilon ||y^{ij}||_2^2) < \exp(-C \epsilon^2 m) = \frac{1}{n^4} %]]></script>
 
-<h3 id="a-couple-of-examples">A Couple of Examples</h3>
+<p>Take the union bound to obtain,</p>
 
-<p>Here’s a short list of examples. To know more about the details behind MathJax, you can 
-always checked the provided documentation available at 
-<a href="http://docs.mathjax.org/en/latest/">http://docs.mathjax.org/en/latest/</a></p>
+<script type="math/tex; mode=display">% <![CDATA[
+P(\forall i \neq j, |||M y^{ij}||_2^2 - ||y^{ij}||_2^2| > \epsilon ||y^{ij}||_2^2 ) < \sum_{i \neq j} P(|||M y^{ij}||_2^2 - ||y^{ij}||_2^2| < \epsilon ||y^{ij}||_2^2 ) < {n \choose 2} n^4 < \frac{1}{n^2} %]]></script>
 
-<p>I’m assuming you are familiar with LaTeX. However, you should know that MathJax does not 
-have the exactly same behavior as LaTeX. By default, the <strong>tex2jax</strong> preprocessor defines the 
-LaTeX math delimiters, which are <code class="highlighter-rouge">\\(...\\)</code> for in-line math, and <code class="highlighter-rouge">\\[...\\]</code> for 
-displayed equations. It also defines the TeX delimiters <code class="highlighter-rouge">$$...$$</code> for displayed 
-equations, but it does not define <code class="highlighter-rouge">$...$</code> as in-line math delimiters. Fortunately, 
-you can change these predefined specifications if you want to do so.</p>
+<p>which is same as the guarantee in Johnson-Lindenstrauss lemma.</p>
 
-<p>Let’s try a first example. Here’s a dummy equation:</p>
+<h2 id="application">Application</h2>
+<p>In this or other forms, the JL lemma has been used for a large variety of computational tasks, especially in streaming algorithm, such as</p>
 
-<script type="math/tex; mode=display">a^2 + b^2 = c^2</script>
+<ul>
+  <li>
+    <p><a href="https://www.stat.berkeley.edu/~mmahoney/f13-stat260-cs294/Lectures/lecture19.pdf">Computing a low-rank approximation to the original matrix A.</a></p>
+  </li>
+  <li>
+    <p><a href="http://web.stanford.edu/class/cs369g/files/lectures/lec16.pdf">Finding nearest neighbors in high-dimensional space.</a></p>
+  </li>
+  <li>
+    <p><a href="http://www.cs.yale.edu/homes/spielman/561/lect17-15.pdf">Simplify the calculation of the effective resistance in Graph Spectral Sparsification.</a></p>
+  </li>
+  <li>
+    <p><a href="http://repository.upenn.edu/cgi/viewcontent.cgi?article=1528&amp;context=cis_papers">Design various Graph Sketches.</a></p>
+  </li>
+</ul>
 
-<p>How do you write such expression? Very simple: using <strong>double dollar</strong> signs</p>
+<h2 id="reference">Reference</h2>
+<ul>
+  <li>EPFL sublinear algorithm course, 2017</li>
+  <li>EPFL advanced algorithm course, 2016</li>
+  <li>Johnson, William B.; Lindenstrauss, Joram (1984). “Extensions of Lipschitz mappings into a Hilbert space”. In Beals, Richard; Beck, Anatole; Bellow, Alexandra; et al. Conference in modern analysis and probability (New Haven, Conn., 1982). Contemporary Mathematics. 26. Providence, RI: American Mathematical Society. pp. 189–206.</li>
+  <li>Kane, Daniel M.; Nelson, Jelani (2012). “Sparser Johnson-Lindenstrauss Transforms”. Proceedings of the Twenty-Third Annual ACM-SIAM Symposium on Discrete Algorithms,. New York: Association for Computing Machinery (ACM).</li>
+</ul>
 
-<figure class="highlight"><pre><code class="language-r" data-lang="r"><span class="o">$$</span><span class="n">a</span><span class="o">^</span><span class="m">2</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">b</span><span class="o">^</span><span class="m">2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">c</span><span class="o">^</span><span class="m">2</span><span class="o">$$</span></code></pre></figure>
-
-<p>To display inline math use <code class="highlighter-rouge">\\( ... \\)</code> like this <code class="highlighter-rouge">\\( sin(x^2) \\)</code> which gets 
-rendered as \( sin(x^2) \)</p>
-
-<p>Here’s another example using type <code class="highlighter-rouge">\mathsf</code></p>
-
-<figure class="highlight"><pre><code class="language-r" data-lang="r"><span class="o">$$</span><span class="w"> </span><span class="err">\</span><span class="n">mathsf</span><span class="p">{</span><span class="n">Data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">PCs</span><span class="p">}</span><span class="w"> </span><span class="err">\</span><span class="n">times</span><span class="w"> </span><span class="err">\</span><span class="n">mathsf</span><span class="p">{</span><span class="n">Loadings</span><span class="p">}</span><span class="w"> </span><span class="o">$$</span></code></pre></figure>
-
-<p>which gets displayed as</p>
-
-<script type="math/tex; mode=display">\mathsf{Data = PCs} \times \mathsf{Loadings}</script>
-
-<p>Or even better:</p>
-
-<figure class="highlight"><pre><code class="language-r" data-lang="r"><span class="err">\\</span><span class="p">[</span><span class="w"> </span><span class="err">\</span><span class="n">mathbf</span><span class="p">{</span><span class="n">X</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="err">\</span><span class="n">mathbf</span><span class="p">{</span><span class="n">Z</span><span class="p">}</span><span class="w"> </span><span class="err">\</span><span class="n">mathbf</span><span class="p">{</span><span class="n">P</span><span class="o">^</span><span class="err">\</span><span class="n">mathsf</span><span class="p">{</span><span class="nb">T</span><span class="p">}}</span><span class="w"> </span><span class="err">\\</span><span class="p">]</span></code></pre></figure>
-
-<p>is displayed as</p>
-
-<p>\[ \mathbf{X} = \mathbf{Z} \mathbf{P^\mathsf{T}} \]</p>
-
-<h2 id="important-notes">Important notes</h2>
-
-<h3 id="subscripts">1. Subscripts</h3>
-
-<p>If you want to use subscripts like this \( \mathbf{X}_{n,p} \) you need to scape the 
-underscores with a backslash like so <code class="highlighter-rouge">\mathbf{X}\_{n,p}</code>:</p>
-
-<figure class="highlight"><pre><code class="language-r" data-lang="r"><span class="o">$$</span><span class="w"> </span><span class="err">\</span><span class="n">mathbf</span><span class="p">{</span><span class="n">X</span><span class="p">}</span><span class="err">\_</span><span class="p">{</span><span class="n">n</span><span class="p">,</span><span class="n">p</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="err">\</span><span class="n">mathbf</span><span class="p">{</span><span class="n">A</span><span class="p">}</span><span class="err">\_</span><span class="p">{</span><span class="n">n</span><span class="p">,</span><span class="n">k</span><span class="p">}</span><span class="w"> </span><span class="err">\</span><span class="n">mathbf</span><span class="p">{</span><span class="n">B</span><span class="p">}</span><span class="err">\_</span><span class="p">{</span><span class="n">k</span><span class="p">,</span><span class="n">p</span><span class="p">}</span><span class="w"> </span><span class="o">$$</span></code></pre></figure>
-
-<p>will be displayed as</p>
-
-<p>\[ \mathbf{X}_{n,p} = \mathbf{A}_{n,k} \mathbf{B}_{k,p} \]</p>
-
-<h3 id="vertical-line">2. vertical line</h3>
-
-<p>If you want to use vertical line <code class="highlighter-rouge">|</code>, you also need to scape the underscores with a blackslash like so <code class="highlighter-rouge">\|</code></p>
-
-<figure class="highlight"><pre><code class="language-r" data-lang="r"><span class="o">$$</span><span class="w"> </span><span class="err">\</span><span class="o">|</span><span class="err">\</span><span class="o">|</span><span class="n">A</span><span class="err">\</span><span class="o">|</span><span class="err">\</span><span class="o">|</span><span class="w"> </span><span class="o">$$</span></code></pre></figure>
-
-<p>will be displayed as</p>
-
-<p>\[ ||A|| \]</p>
+<p>The post is used for study purpose only.</p>
 
   
 	</div>
@@ -230,7 +197,9 @@ underscores with a backslash like so <code class="highlighter-rouge">\mathbf{X}\
   }) %>
   -->
   
-  <a class="article-category-link" href="/categories/#Announcement">Announcement</a>
+  <a class="article-category-link" href="/categories/#Theory">Theory</a>
+  
+  <a class="article-category-link" href="/categories/#Machine Learning">Machine Learning</a>
   
 </div>
 
@@ -244,9 +213,7 @@ underscores with a backslash like so <code class="highlighter-rouge">\mathbf{X}\
   <span></span> <!--<%- tags.join('') %>-->
   
   
-  <a href="/tags/#resources">resources</a>
-  
-  <a href="/tags/#jekyll">jekyll</a>
+  <a href="/tags/#Theory">Theory</a>
   
   </div>
 
@@ -256,7 +223,7 @@ underscores with a backslash like so <code class="highlighter-rouge">\mathbf{X}\
 
 	<div class="article-share" id="share">
 	
-	  <div data-url="http://localhost:4000/contributing" data-title="Contributing an article | Cheer ML" data-tsina="" class="share clearfix">
+	  <div data-url="http://localhost:4000/random-projection" data-title="Dimensionality Reduction via JL Lemma and Random Projection | Cheer ML" data-tsina="" class="share clearfix">
 	  </div>
 	
 	</div>
@@ -267,14 +234,14 @@ underscores with a backslash like so <code class="highlighter-rouge">\mathbf{X}\
 	
 <nav class="article-nav clearfix">
  
-
-<div class="next">
-<a href="/mathGD"  title="The math behind Gradient Descent">
- <strong>Next: </strong><br/> 
- <span>The math behind Gradient Descent
-</span>
+ <div class="prev" >
+ <a href="/comparison-distributed-ml-platform" title="A comparison of distributed machine learning platform">
+  <strong>Prev: </strong><br/>
+  <span>
+  A comparison of distributed machine learning platform</span>
 </a>
 </div>
+
 
 </nav>
 
