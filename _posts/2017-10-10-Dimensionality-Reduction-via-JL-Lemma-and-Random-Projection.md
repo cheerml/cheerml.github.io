@@ -30,7 +30,8 @@ Until 2003, some researches point out that this sketch matrix can be created usi
 
 Consider the following matrix $A \in R^{m \times n}$, where $A_{ij} \sim \mathcal{N}(0,1)$ and all $A_{ij}$ are independent. We claim that this matrix satisfies the statement of JL lemma.
 
-Proof. It is obvious that sketch has an additional property: $\forall i, (Ax)_i = \sum_{j=1}^{n} A_{ij} x_j \sim \mathcal{N}(0, ||x||_2^2)$. In other word, Gaussian distribution is 2-stable distribution. Then we can obtain $||Ax||_2^2 = \sum_{i=1}^{m} y_i^2$, where $y_i \sim \mathcal{N}(0, ||x||_2^2)$. That is to say, $||Ax||_2^2$ follows a $\chi^2$ (chi-squared) distribution with degrees of freedom $m$. For tail bound of $\chi^2$ distribution, we can get
+Proof. It is obvious that sketch has an additional property, 
+$\forall i, (Ax)_i = \sum_{j=1}^{n} A_{ij} x_j \sim \mathcal{N}(0, ||x||_2^2)$. In other word, Gaussian distribution is 2-stable distribution. Then we can obtain $||Ax||_2^2 = \sum_{i=1}^{m} y_i^2$, where $y_i \sim \mathcal{N}(0, ||x||_2^2)$. That is to say, $||Ax||_2^2$ follows a $\chi^2$ (chi-squared) distribution with degrees of freedom $m$. For tail bound of $\chi^2$ distribution, we can get
 
 $$
 P(|||Ax||_2^2 - m||X||_2^2| > \epsilon m||X||_2^2) < \exp(-C \epsilon^2 m)
