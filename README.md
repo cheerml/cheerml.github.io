@@ -25,6 +25,7 @@ Please add yourself to the list if you contribute to the blog!
 And also add your name and website into the '_data/authors.yml' file.
 
 - [Jun Lu](https://github.com/junlulocky)
+- [Junxiong Wang](https://github.com/ovss)
 - [Yixuan Hu](https://github.com/yeephycho)
 - [Tao Lin](https://github.com/iamtao)
 
