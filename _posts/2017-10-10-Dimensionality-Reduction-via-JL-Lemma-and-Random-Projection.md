@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "Dimensionality-Reduction-via-JL-Lemma-and-Random-Projection"
+title: "Dimensionality Reduction via JL Lemma and Random Projection"
 permalink: /random-projection
 date: 2017-10-10
 categories: ['Theory', 'Machine Learning']
@@ -14,7 +14,7 @@ Nowadays, dimensionality is a serious problem of data analysis as the huge data 
 
 In 1984, two mathematicians introduced and proved the following lemma.
 
-##Johnson-Lindenstrauss lemma
+## Johnson-Lindenstrauss lemma
 For any $\epsilon \in (0,\frac{1}{2})$, $\forall x_1, x_2, \dots, x_d \in R^{n}$, there exists a matrix $M \in R^{m \times n}$ with $m = O(\frac{1}{\epsilon^2} \log{d})$ such that $\forall 1 \leq i,j \leq d$, we have
 
 $$
@@ -25,7 +25,7 @@ Remark: This lemma states that for any pair vector $x_i, x_j$ in $d$ dimension, 
 
 During a long time, no one can figure out how to get this sketch matrix.
 
-##Random Projection
+## Random Projection
 Until 2003, some researches point out that this sketch matrix can be created using Gaussian distribution.
 
 Consider the following matrix $A \in R^{m \times n}$, where $A_{ij} \sim \mathcal{N}(0,1)$ and all $A_{ij}$ are independent. We claim that this matrix satisfies the statement of JL lemma.
@@ -51,7 +51,7 @@ $$
 
 which is same as the guarantee in Johnson-Lindenstrauss lemma.
 
-##Application
+## Application
 In this or other forms, the JL lemma has been used for a large variety of computational tasks, especially in streaming algorithm, such as
 
 * [Computing a low-rank approximation to the original matrix A.](https://www.stat.berkeley.edu/~mmahoney/f13-stat260-cs294/Lectures/lecture19.pdf)
