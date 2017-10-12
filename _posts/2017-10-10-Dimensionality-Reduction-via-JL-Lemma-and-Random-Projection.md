@@ -10,7 +10,7 @@ tags: [Theory]
 ---
 
 
-Nowadays, dimensionality is a serious problem of data analysis as the huge data we experience today results in very sparse sets and very high dimensions. Although, data scientists have long used tools such as principal component analysis (PCA) and independent component analysis (ICA) to project the high-dimensional data onto a subspace, but all those techniques reply on the computation of the eigenvectors of a $n \times n$ matrix, a very expensive operation (e.g., spectral decomposition) for high dimension $n$. Moreover, even though eigenspace has many important properties, it does not lead good approximations for many useful measures such as vector norms.
+Nowadays, dimensionality is a serious problem of data analysis as the huge data we experience today results in very sparse sets and very high dimensions. Although, data scientists have long used tools such as principal component analysis (PCA) and independent component analysis (ICA) to project the high-dimensional data onto a subspace, but all those techniques reply on the computation of the eigenvectors of a $n \times n$ matrix, a very expensive operation (e.g., spectral decomposition) for high dimension $n$. Moreover, even though eigenspace has many important properties, it does not lead good approximations for many useful measures such as vector norms. We discuss another method random projection to reduce dimensionality.
 
 In 1984, two mathematicians introduced and proved the following lemma.
 
@@ -59,10 +59,9 @@ In this or other forms, the JL lemma has been used for a large variety of comput
 
 * [Finding nearest neighbors in high-dimensional space.](http://web.stanford.edu/class/cs369g/files/lectures/lec16.pdf)
 
-* [Simplify the calculation of the effective resistance in Graph Spectral Sparsification.](http://www.cs.yale.edu/homes/spielman/561/lect17-15.pdf)
+* [Simplify the calculation of the effective resistance in Graph Spectral Sparsification.](https://simons.berkeley.edu/sites/default/files/docs/1768/slidessrivastava1.pdf)
 
-* [Design various Graph Sketches.](http://repository.upenn.edu/cgi/viewcontent.cgi?article=1528&context=cis_papers) 
-
+* [Relates to Graph Sketches.](https://people.cs.umass.edu/~mcgregor/papers/12-pods1.pdf)
 
 ## Reference
 - EPFL sublinear algorithm course, 2017
