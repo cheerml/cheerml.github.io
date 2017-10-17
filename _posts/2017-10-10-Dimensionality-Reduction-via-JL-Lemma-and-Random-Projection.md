@@ -15,20 +15,20 @@ Nowadays, dimensionality is a serious problem of data analysis as the huge data 
 In 1984, two mathematicians introduced and proved the following lemma.
 
 ## Johnson-Lindenstrauss lemma
-For any $\epsilon \in (0,\frac{1}{2})$, $\forall x_1, x_2, \dots, x_d \in R^{n}$, there exists a matrix $M \in R^{m \times n}$ with $m = O(\frac{1}{\epsilon^2} \log{d})$ such that $\forall 1 \leq i,j \leq d$, we have
+For any $\epsilon \in (0,\frac{1}{2})$, $\forall x_1, x_2, \dots, x_d \in \mathrm{R}^{n}$, there exists a matrix $M \in \mathrm{R}^{m \times n}$ with $m = O(\frac{1}{\epsilon^2} \log{d})$ such that $\forall 1 \leq i,j \leq d$, we have
 
 $$
 (1-\epsilon)||x_i - x_j||_2 \leq ||Mx_i - Mx_j||_2 \leq (1+\epsilon)||x_i - x_j||_2 
 $$
  
-Remark: This lemma states that for any pair vector $x_i, x_j$ in $d$ dimension, there exist a sketch matrix $M$ which maps $R^n \rightarrow R^m$ and the Euclidean distance is preserved within $\epsilon$ factor. The result dimension does not have any relationship to origin dimension $n$ (only relates to the number of vector pairs $d$).
+Remark: This lemma states that for any pair vector $x_i, x_j$ in $d$ dimension, there exist a sketch matrix $M$ which maps $\mathrm{R}^n \rightarrow \mathrm{R}^m$ and the Euclidean distance is preserved within $\epsilon$ factor. The result dimension does not have any relationship to origin dimension $n$ (only relates to the number of vector pairs $d$).
 
 During a long time, no one can figure out how to get this sketch matrix.
 
 ## Random Projection
 Until 2003, some researches point out that this sketch matrix can be created using Gaussian distribution.
 
-Consider the following matrix $A \in R^{m \times n}$, where $A_{ij} \sim \mathcal{N}(0,1)$ and all $A_{ij}$ are independent. We claim that this matrix satisfies the statement of JL lemma.
+Consider the following matrix $A \in \mathrm{R}^{m \times n}$, where $A_{ij} \sim \mathcal{N}(0,1)$ and all $A_{ij}$ are independent. We claim that this matrix satisfies the statement of JL lemma.
 
 Proof. It is obvious that sketch has an additional property, 
 $\forall i, (Ax)\_i = \sum\_{j=1}^{n} A\_{ij} x\_j \sim \mathcal{N}(0, ||x||_2^2)$. In other word, Gaussian distribution is 2-stable distribution. Then we can obtain $\|\|Ax\|\|\_2^2 = \sum\_{i=1}^{m} y\_i^2$, where $y\_i \sim \mathcal{N}(0, \|\|x\|\|\_2^2)$. That is to say, $\|\|Ax\|\|\_2^2$ follows a $\chi^2$ (chi-squared) distribution with degrees of freedom $m$. For tail bound of $\chi^2$ distribution, we can get
