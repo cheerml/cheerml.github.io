@@ -2,7 +2,7 @@
 layout: post
 title: "An Introduction to Word Embeddings - Part 2: Problems and Theory"
 permalink: /wordembedtheory
-date: 2017-12-15
+date: 2017-12-14
 categories: ['NLP', 'Machine Learning']
 author: Aaron Geelon So
 authorlink: https://www.linkedin.com/in/geelon/

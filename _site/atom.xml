@@ -4,7 +4,7 @@
  <title>Cheer ML</title>
  <link href="" rel="self"/>
  <link href=""/>
- <updated>2017-12-15T20:57:19+01:00</updated>
+ <updated>2017-12-15T20:58:30+01:00</updated>
  <id></id>
  <author>
    <name>Jun Lu, Yixuan Hu</name>
@@ -15,7 +15,7 @@
  <entry>
    <title>An Introduction to Word Embeddings - Part 2: Problems and Theory</title>
    <link href="/wordembedtheory"/>
-   <updated>2017-12-15T00:00:00+01:00</updated>
+   <updated>2017-12-14T00:00:00+01:00</updated>
    <id>/wordembedtheory</id>
    <content type="html">&lt;p&gt;In the previous &lt;a href=&quot;/wordembedapp&quot;&gt;post&lt;/a&gt;, we introduced what word embeddings are and what they can do. This time, we’ll try to make sense of them. What problem do they solve? How can they help computers understand natural language?&lt;/p&gt;
 
@@ -198,7 +198,7 @@ Expand here to see the he references I cited above&lt;/li&gt;
  <entry>
    <title>An Introduction to Word Embeddings - Part 1: Applications</title>
    <link href="/wordembedapp"/>
-   <updated>2017-12-15T00:00:00+01:00</updated>
+   <updated>2017-12-14T00:00:00+01:00</updated>
    <id>/wordembedapp</id>
    <content type="html">&lt;p&gt;If you already have a solid understanding of word embeddings and are well into your data science career, skip ahead to the &lt;a href=&quot;/wordembedtheory&quot;&gt;next part&lt;/a&gt;!&lt;/p&gt;
 

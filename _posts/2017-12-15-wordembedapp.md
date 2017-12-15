@@ -2,7 +2,7 @@
 layout: post
 title: "An Introduction to Word Embeddings - Part 1: Applications"
 permalink: /wordembedapp
-date: 2017-12-15
+date: 2017-12-14
 categories: ['NLP', 'Machine Learning']
 author: Aaron Geelon So
 authorlink: https://www.linkedin.com/in/geelon/
