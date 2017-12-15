@@ -5,13 +5,21 @@ author: Jun Lu
 title: About us
 ---
 
-<h2 id="contributers">Contributers</h2>
+<h2 id="contributers">Contributors</h2>
 
 <ul>
-<li><a href="http://www.junlulocky.com/">Jun Lu</a></li>
+<!-- <li><a href="http://www.junlulocky.com/">Jun Lu</a></li>
 <li><a href="http://yeephycho.github.io/">Yixuan Hu</a></li>
 <li><a href="http://ovss.github.io/">Junxiong Wang</a></li>
+ -->
+{% for i in site.data.authors.links %}
+  <li>
+    <a href="{{ i[1] }}" target="_blank" title="{{ i[0] }}">{{ i[0] }}</a>
+  </li>
+{% endfor %}
 </ul>
+
+
 
 <h2 id="contributing-an-article">Contributing an article</h2>
 
