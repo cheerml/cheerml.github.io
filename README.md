@@ -38,6 +38,7 @@ And also add your name and website into the '_data/authors.yml' file.
 - [Junxiong Wang](https://github.com/ovss)
 - [Yixuan Hu](https://github.com/yeephycho)
 - [Tao Lin](https://github.com/iamtao)
+- [Aaron Geelon So](https://www.linkedin.com/in/geelon/)
 
 
 ## LICENSE

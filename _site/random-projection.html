@@ -116,40 +116,41 @@
 		
 		</div>
 		
-		<p>Nowadays, dimensionality is a serious problem of data analysis as the huge data we experience today results in very sparse sets and very high dimensions. Although, data scientists have long used tools such as principal component analysis (PCA) and independent component analysis (ICA) to project the high-dimensional data onto a subspace, but all those techniques reply on the computation of the eigenvectors of a $n \times n$ matrix, a very expensive operation (e.g., spectral decomposition) for high dimension $n$. Moreover, even though eigenspace has many important properties, it does not lead good approximations for many useful measures such as vector norms.</p>
+		<p>Nowadays, dimensionality is a serious problem of data analysis as the huge data we experience today results in very sparse sets and very high dimensions. Although, data scientists have long used tools such as principal component analysis (PCA) and independent component analysis (ICA) to project the high-dimensional data onto a subspace, but all those techniques reply on the computation of the eigenvectors of a $n \times n$ matrix, a very expensive operation (e.g., spectral decomposition) for high dimension $n$. Moreover, even though eigenspace has many important properties, it does not lead good approximations for many useful measures such as vector norms. We discuss another method random projection to reduce dimensionality.</p>
 
 <p>In 1984, two mathematicians introduced and proved the following lemma.</p>
 
 <h2 id="johnson-lindenstrauss-lemma">Johnson-Lindenstrauss lemma</h2>
-<p>For any $\epsilon \in (0,\frac{1}{2})$, $\forall x_1, x_2, \dots, x_d \in R^{n}$, there exists a matrix $M \in R^{m \times n}$ with $m = O(\frac{1}{\epsilon^2} \log{d})$ such that $\forall 1 \leq i,j \leq d$, we have</p>
+<p>For any $\epsilon \in (0,\frac{1}{2})$, $\forall x_1, x_2, \dots, x_d \in \mathbb{R}^{n}$, there exists a matrix $M \in \mathbb{R}^{m \times n}$ with $m = O(\frac{1}{\epsilon^2} \log{d})$ such that $\forall 1 \leq i,j \leq d$, we have</p>
 
 <script type="math/tex; mode=display">(1-\epsilon)||x_i - x_j||_2 \leq ||Mx_i - Mx_j||_2 \leq (1+\epsilon)||x_i - x_j||_2</script>
 
-<p>Remark: This lemma states that for any pair vector $x_i, x_j$ in $d$ dimension, there exist a sketch matrix $M$ which maps $R^n \rightarrow R^m$ and the Euclidean distance is preserved within $\epsilon$ factor. The result dimension does not have any relationship to origin dimension $n$ (only relates to the number of vector pairs $d$).</p>
+<p>Remark: This lemma states that for any pair vector $x_i, x_j$ in $\mathbb{R}^n$ dimension, there exist a sketch matrix $M$ which maps $\mathbb{R}^n \rightarrow \mathbb{R}^m$ and the Euclidean distance is preserved within $\epsilon$ factor. The result dimension does not relate to origin dimension $n$ (only relates to the number of vector pairs $d$).</p>
 
 <p>During a long time, no one can figure out how to get this sketch matrix.</p>
 
 <h2 id="random-projection">Random Projection</h2>
 <p>Until 2003, some researches point out that this sketch matrix can be created using Gaussian distribution.</p>
 
-<p>Consider the following matrix $A \in R^{m \times n}$, where $A_{ij} \sim \mathcal{N}(0,1)$ and all $A_{ij}$ are independent. We claim that this matrix satisfies the statement of JL lemma.</p>
+<p>Consider the following matrix $A \in \mathbb{R}^{m \times n}$, where $A_{ij} \sim \mathcal{N}(0,1)$ and all $A_{ij}$ are independent. We claim that this matrix satisfies the statement of JL lemma.</p>
 
 <p>Proof. It is obvious that sketch has an additional property, 
 $\forall i, (Ax)_i = \sum_{j=1}^{n} A_{ij} x_j \sim \mathcal{N}(0, ||x||_2^2)$. In other word, Gaussian distribution is 2-stable distribution. Then we can obtain $||Ax||_2^2 = \sum_{i=1}^{m} y_i^2$, where $y_i \sim \mathcal{N}(0, ||x||_2^2)$. That is to say, $||Ax||_2^2$ follows a $\chi^2$ (chi-squared) distribution with degrees of freedom $m$. For tail bound of $\chi^2$ distribution, we can get</p>
 
-<p><script type="math/tex">% <![CDATA[
+<script type="math/tex; mode=display">% <![CDATA[
 P(||Ax||_2^2 - m||X||_2^2| > \epsilon m||X||_2^2) < \exp(-C \epsilon^2 m) %]]></script>
-for a constant $C &gt; 0$.</p>
+
+<p>for a constant $C &gt; 0$.</p>
 
 <p>Fix two index $i, j$, and let $y^{ij} = x_i - x_j$ and $M = \frac{1}{\sqrt{m}} A$, and set $m = \frac{4}{C \epsilon^2} \log{n}$ to get</p>
 
 <script type="math/tex; mode=display">% <![CDATA[
-P(|||M y^{ij}||_2^2 - ||y^{ij}||_2^2| > \epsilon ||y^{ij}||_2^2) < \exp(-C \epsilon^2 m) = \frac{1}{n^4} %]]></script>
+P(\left| ||M y^{ij}||_2^2 - ||y^{ij}||_2^2 \right| > \epsilon ||y^{ij}||_2^2) < \exp(-C \epsilon^2 m) = \frac{1}{n^4} %]]></script>
 
 <p>Take the union bound to obtain,</p>
 
 <script type="math/tex; mode=display">% <![CDATA[
-P(\forall i \neq j, |||M y^{ij}||_2^2 - ||y^{ij}||_2^2| > \epsilon ||y^{ij}||_2^2 ) < \sum_{i \neq j} P(|||M y^{ij}||_2^2 - ||y^{ij}||_2^2| < \epsilon ||y^{ij}||_2^2 ) < {n \choose 2} n^4 < \frac{1}{n^2} %]]></script>
+P(\forall i \neq j, \left| ||M y^{ij}||_2^2 - ||y^{ij}||_2^2 \right| > \epsilon ||y^{ij}||_2^2 ) < \sum_{i \neq j} P(|||M y^{ij}||_2^2 - ||y^{ij}||_2^2| < \epsilon ||y^{ij}||_2^2 ) < {n \choose 2} n^4 < \frac{1}{n^2} %]]></script>
 
 <p>which is same as the guarantee in Johnson-Lindenstrauss lemma.</p>
 
@@ -164,17 +165,17 @@ P(\forall i \neq j, |||M y^{ij}||_2^2 - ||y^{ij}||_2^2| > \epsilon ||y^{ij}||_2^
     <p><a href="http://web.stanford.edu/class/cs369g/files/lectures/lec16.pdf">Finding nearest neighbors in high-dimensional space.</a></p>
   </li>
   <li>
-    <p><a href="http://www.cs.yale.edu/homes/spielman/561/lect17-15.pdf">Simplify the calculation of the effective resistance in Graph Spectral Sparsification.</a></p>
+    <p><a href="https://simons.berkeley.edu/sites/default/files/docs/1768/slidessrivastava1.pdf">Simplify the calculation of the effective resistance in Graph Spectral Sparsification.</a></p>
   </li>
   <li>
-    <p><a href="http://repository.upenn.edu/cgi/viewcontent.cgi?article=1528&amp;context=cis_papers">Design various Graph Sketches.</a></p>
+    <p><a href="https://people.cs.umass.edu/~mcgregor/papers/12-pods1.pdf">Relates to Graph Sketches.</a></p>
   </li>
 </ul>
 
 <h2 id="reference">Reference</h2>
 <ul>
-  <li>EPFL sublinear algorithm course, 2017</li>
-  <li>EPFL advanced algorithm course, 2016</li>
+  <li>EPFL Topics in Theoretical Computer Science (Sublinear Algorithm for Big Data Analysis), 2017</li>
+  <li>EPFL Advanced Algorithm, 2016</li>
   <li>Johnson, William B.; Lindenstrauss, Joram (1984). “Extensions of Lipschitz mappings into a Hilbert space”. In Beals, Richard; Beck, Anatole; Bellow, Alexandra; et al. Conference in modern analysis and probability (New Haven, Conn., 1982). Contemporary Mathematics. 26. Providence, RI: American Mathematical Society. pp. 189–206.</li>
   <li>Kane, Daniel M.; Nelson, Jelani (2012). “Sparser Johnson-Lindenstrauss Transforms”. Proceedings of the Twenty-Third Annual ACM-SIAM Symposium on Discrete Algorithms,. New York: Association for Computing Machinery (ACM).</li>
 </ul>
@@ -243,6 +244,14 @@ P(\forall i \neq j, |||M y^{ij}||_2^2 - ||y^{ij}||_2^2| > \epsilon ||y^{ij}||_2^
 </div>
 
 
+<div class="next">
+<a href="/wordembedapp"  title="An Introduction to Word Embeddings - Part 1: Applications">
+ <strong>Next: </strong><br/> 
+ <span>An Introduction to Word Embeddings - Part 1: Applications
+</span>
+</a>
+</div>
+
 </nav>
 
 	
@@ -274,7 +283,7 @@ P(\forall i \neq j, |||M y^{ij}||_2^2 - ||y^{ij}||_2^2| > \epsilon ||y^{ij}||_2^
 		  
 		
 		  
-			<li><a href="/categories/#Machine Learning" title="Machine Learning">Machine Learning<sup>5</sup></a></li>
+			<li><a href="/categories/#Machine Learning" title="Machine Learning">Machine Learning<sup>7</sup></a></li>
 		  
 		
 		  
@@ -283,6 +292,10 @@ P(\forall i \neq j, |||M y^{ij}||_2^2 - ||y^{ij}||_2^2| > \epsilon ||y^{ij}||_2^
 		
 		  
 			<li><a href="/categories/#Theory" title="Theory">Theory<sup>1</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/#NLP" title="NLP">NLP<sup>2</sup></a></li>
 		  
 		
 		</ul>
@@ -318,6 +331,10 @@ P(\forall i \neq j, |||M y^{ij}||_2^2 - ||y^{ij}||_2^2| > \epsilon ||y^{ij}||_2^
 				<li><a href="/tags/#Theory" title="Theory">Theory<sup>1</sup></a></li>
 			
 		
+			
+				<li><a href="/tags/#Machine Learning" title="Machine Learning">Machine Learning<sup>2</sup></a></li>
+			
+		
 		</ul>
 </div>
 
@@ -344,6 +361,10 @@ P(\forall i \neq j, |||M y^{ij}||_2^2 - ||y^{ij}||_2^2| > \epsilon ||y^{ij}||_2^
         
           <li>
             <a href="https://ovss.github.io" target="_blank" title="Junxiong Wang's website">Junxiong Wang's website</a>
+          </li>
+        
+          <li>
+            <a href="https://www.linkedin.com/in/geelon" target="_blank" title="Aaron Geelon So's website">Aaron Geelon So's website</a>
           </li>
         
 

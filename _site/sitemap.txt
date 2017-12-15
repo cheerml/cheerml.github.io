@@ -1,15 +1,17 @@
 
 /404
 /atom.xml
-/about/
+/categories/
 /search/
 /tags/
-/categories/
+/about/
 /
 /archives/
 /rss.xml
 /sitemap.txt
 
+/wordembedtheory
+/wordembedapp
 /random-projection
 /comparison-distributed-ml-platform
 /bias-variance

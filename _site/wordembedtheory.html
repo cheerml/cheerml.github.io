@@ -1,0 +1,774 @@
+
+
+ <!DOCTYPE HTML>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+    
+    
+    
+    
+    <title>An Introduction to Word Embeddings - Part 2: Problems and Theory | Cheer ML</title>
+    
+
+    <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
+    
+    <meta name="author" content="Jun Lu, Yixuan Hu">
+    
+
+    
+    <!--<%- open_graph({twitter_id: theme.author.twitter, google_plus: theme.author.google_plus}) %>-->
+    
+    <meta name="description" content="page.description">
+    
+    <meta property="og:type" content="article">
+    
+    <meta property="og:title" content="An Introduction to Word Embeddings - Part 2: Problems and Theory">
+    <meta property="og:url" content="/wordembedtheory">
+    <meta property="og:site_name" content="Cheer ML">
+    <meta property="og:description" content="">
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="An Introduction to Word Embeddings - Part 2: Problems and Theory">
+    <meta name="twitter:description" content="page.description">
+    <meta name="twitter:creator" content="@">
+    <link rel="publisher" href="">
+
+    
+    <link rel="alternative" href="/atom.xml" title="Cheer ML" type="application/atom+xml">
+    
+    
+    <link rel="icon" href="/assets/img/favicon.ico">
+    
+    
+    <link rel="apple-touch-icon" href="/assets/img/jacman.jpg">
+    <link rel="apple-touch-icon-precomposed" href="/assets/img/jacman.jpg">
+    
+
+    <link rel="stylesheet" href="/assets/css/style.css" type="text/css">
+    <link rel="stylesheet" href="/assets/css/highlight.css" type="text/css">
+</head>
+
+  <body>
+    <header>
+        <div>
+		    
+			<div id="imglogo">
+				<a href="/"><img src="/assets/img/logo.png" alt="Cheer ML" title="Cheer ML"/></a>
+			</div>
+			
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="Cheer ML">Cheer ML</a></h1>
+				<!-- <h2 class="blog-motto">the essence of machine leaerning</h2> -->
+				<h2 class="blog-motto">the essence of ma<font color="black">ch</font>ine l<font color="black">e</font>a<font color="black">er</font>ning</h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="menu">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					<ul>
+					 
+						<li><a href="/">Home</a></li>
+					
+						<li><a href="/archives">Archives</a></li>
+					
+						<li><a href="/about">About</a></li>
+					
+					<li>
+ 					
+					<form class="search" action="//google.com/search" method="get" accept-charset="utf-8">
+						<label>Search</label>
+						<input type="search" id="search" name="q" autocomplete="off" maxlength="20" placeholder="Search" />
+						<input type="hidden" name="q" value="site:">
+					</form>
+					
+					</li>
+				</ul>
+			</nav>	
+</div>
+    </header>
+    <div id="container">
+      
+
+
+
+<div id="main" class="post" itemscope itemprop="blogPost">
+  
+	<article itemprop="articleBody"> 
+	<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/wordembedtheory" title="An Introduction to Word Embeddings - Part 2: Problems and Theory" itemprop="url">An Introduction to Word Embeddings - Part 2: Problems and Theory</a>
+  </h1>
+  <p class="article-author">By
+    
+		<a href="https://www.linkedin.com/in/geelon/" title="Jun Lu, Yixuan Hu" target="_blank" itemprop="author">Aaron Geelon So</a>
+		
+  <p class="article-time">
+    <time datetime="2017-12-15 00:00:00 +0100" itemprop="datePublished"> Published 2017-12-15</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		<div id="toc" class="toc-article toc-content" style="display: none;">
+		
+			<!--<%- toc(item.content) %>-->
+		
+		</div>
+		
+		<p>In the previous <a href="/wordembedapp">post</a>, we introduced what word embeddings are and what they can do. This time, we’ll try to make sense of them. What problem do they solve? How can they help computers understand natural language?</p>
+
+<h2 id="understanding">Understanding</h2>
+
+<p>See if you can guess what the word wapper means from how it’s used in the following two sentences:</p>
+
+<ol>
+  <li>After running the marathon, I could barely keep my legs from wappering.</li>
+  <li>Thou’ll not see Stratfort to-night, sir, thy horse is wappered out. (Or perhaps a more modern take: I can’t drive you to Stratford tonight for I’m wappered out).</li>
+</ol>
+
+<p>The second example is from the <a href="http://www.oed.com/view/Entry/225584">Oxford English Dictionary</a> entry. If you haven’t guessed, the word was probably more popular in the late-19th century. But it means to shake, especially from fatigue (and it might share the same linguistic roots as to waver).</p>
+
+<p>By now, you likely have a pretty good understanding of what to wapper means, if you like, even creating new sentences. Impressively, you probably didn’t need me to explicitly tell you the definition; indeed, how many words in this sentence did you learn by reading a dictionary entry? We learn what words mean from their surrounding contexts.</p>
+
+<p>This implies that even though it appears that the meaning of a word is intrinsic to the word, <strong>some of the meaning of a word also exists in its context</strong>.</p>
+
+<p>Words, like notes on an instrument, do have their individual tones. But it is their relationship with each other—their interplay—that gives way to fuller music. Context enriches meaning.</p>
+
+<p>So, take a context,</p>
+
+<div class="language-c highlighter-rouge"><pre class="highlight"><code><span class="n">After</span> <span class="n">running</span> <span class="n">the</span> <span class="n">marathon</span><span class="p">,</span> <span class="n">I</span> <span class="n">could</span> <span class="n">barely</span> <span class="n">keep</span> <span class="n">my</span> <span class="n">legs</span> <span class="n">from</span> <span class="n">____________</span><span class="p">.</span>
+</code></pre>
+</div>
+
+<p>We should have a sense of what words could fill the blank. Much more likely to appear are words like shaking, trembling, and of course, wappering. Especially compared to nonsense like pickled, big data, or even pickled big data.</p>
+
+<p>In short, the higher probability of appearing in this context corresponds to greater shared meaning. From this, we can deduce the <a href="https://en.wikipedia.org/wiki/Distributional_semantics#Distributional_hypothesis">distributional hypothesis</a>: words that share many contexts tend to have similar meaning.</p>
+
+<p>What does this mean for a computer trying to understand words?</p>
+
+<p>Well, if it can estimate how likely a word is to appear in different contexts, then for most intents and purposes, the computer has learned the meaning of the word.<a href="#he1" class="footnoteRef" id="fnhe1"><sup>1</sup></a> Mathematically, we want to approximate the probability distribution of</p>
+
+<script type="math/tex; mode=display">p( word | context ) \textit{ or } p( context | word ).</script>
+
+<p>Then, the next time the computer sees a specific context $c$, it can just figure out which words have the highest probability of appearing, $p( word | c )$.</p>
+
+<h2 id="challenges">Challenges</h2>
+
+<p>The straightforward and naive approach to approximating the probability distribution is:</p>
+
+<ul>
+  <li>step 1: obtain a huge training corpus of texts,</li>
+  <li>step 2: calculate the probability of each <em>(word,context)</em> pair within the corpus.</li>
+</ul>
+
+<p>The underlying (bad) assumption? The probability distribution learned from the training corpus will approximate the theoretical distribution over all word-context pairs.</p>
+
+<p>However, if we think about it, the number of contexts is so great that the computer will never see a vast majority of them. That is, many of the probabilities $p( word | c )$ will be computed to be 0. This is mostly a terrible approximation.</p>
+
+<p>The problem we’ve run into is the <strong>curse of dimensionality</strong>. The number of possible contexts grows exponentially relative to the size of our vocabulary—when we add a new word to our vocabulary, we more or less multiply the number of contexts we can make.<a href="#he2" class="footnoteRef" id="fnhe2"><sup>2</sup></a></p>
+
+<p><img src="/assets/blog/wordembedtheory/wmd-Copy.png" alt="Figure 1. The exponential growth of the number of contexts with respect to the number of words." /></p>
+
+<p>We overcome the curse of dimensionality with word embeddings, otherwise known as <strong>distributed representations of words</strong>. Instead of focusing on words as individual entities to be trained one-by-one, we focus on the attributes or features that words share.</p>
+
+<p>For example, king is a noun, singular and masculine. Of course, many words are masculine singular nouns. But as we add more features, we narrow down on the number of words satisfying each of those qualities.</p>
+
+<p>Eventually, if we consider enough features, the collection of features a word satisfies will be distinct from that of any other word.<a href="#he3" class="footnoteRef" id="fnhe3"><sup>3</sup></a>  This lets us uniquely represent words by their features. As a result, we can now train features instead of individual words.<a href="#he4" class="footnoteRef" id="fnhe4"><sup>4</sup></a></p>
+
+<p>This new type of algorithm would learn more along the lines of <em>in this context, nouns having such and such qualities are more likely to appear instead of we’re more likely to see words X, Y, Z</em>. And since many words are nouns, each context teaches the algorithm a little bit about many words at once.</p>
+
+<p>In summary, every word we train actually recalls a whole network of other words. This allows us to overcome the exponential explosion of word-context pairs by training an exponential number of them at a time.<a href="#he5" class="footnoteRef" id="fnhe5"><sup>5</sup></a></p>
+
+<h2 id="a-new-problem">A New Problem</h2>
+<p>In theory, representing words by their features can help solve our dimensionality problem. But, how do we implement it? Somehow, we need to be able to turn every word into a unique feature vector, like so:</p>
+
+<p><img src="/assets/blog/wordembedtheory/Vector-Representation-of-Words.png" alt="Figure 2. The feature vector of the word king would be ⟨1,1,1,0,...⟩." /></p>
+
+<p>But features like is a word isn’t very helpful; it doesn’t contribute to forming a unique representation. One way to ensure uniqueness is by looking at a whole lot of specific features. Take is the word ‘king’ or is the word ‘gastroenteritis’, for example. That way, every word definitely corresponds to a different feature vector:</p>
+
+<p><img src="/assets/blog/wordembedtheory/Vector-Representation-of-Words-2.png" alt="Figure 3. An inefficent representation defeating the purpose of word embeddings." /></p>
+
+<p>This isn’t a great representation though. Not only is this a very inefficient way to represent words, but it also fails to solve the original dimensionality problem. Although every word still technically recalls a whole network of words, each network contains only one word!</p>
+
+<p>Constructing the right collection of features is a hard problem. They have to be not too general, not too specific. The resulting representation of each word using those features should be unique. And, we should limit the number of features to between 100-1000, usually.</p>
+
+<p>Furthermore, even though it’s simpler to think about binary features that take on True/False values, we’ll actually want to allow a spectrum of feature values. In particular, any real value. So, feature vectors are also actually vectors in a real vector space.</p>
+
+<h2 id="a-new-solution">A New Solution</h2>
+<p>The solution to feature construction is: don’t. At least not directly.<a href="#he6" class="footnoteRef" id="fnhe6"><sup>6</sup></a></p>
+
+<p>Instead, let’s revisit the probability distributions from before:
+<script type="math/tex">p( word | context )\textit{ and } p( context | word ).</script></p>
+
+<p>This time, words and contexts are represented by feature vectors:</p>
+
+<script type="math/tex; mode=display">\textit{word}\_i=⟨\theta_{i,1},\theta_{i,2}, \cdots,\theta_{i,300}⟩,</script>
+
+<p>which are just a collection of numbers. This turns the probability distributions from a functions over categorical objects (i.e. individual words) into a function over numerical variables θijθij. This is something that allows us to bring in a lot of existing analytical tools—in particular, neural networks and other optimization methods.</p>
+
+<p>The short version of the solution: from the above probability distributions, we can calculate the probability of seeing our training corpus, p(corpus)p(corpus), which had better be relatively large. We just need to find the values for each of the $\theta_{ij}$’s that maximize p(corpus)p(corpus).</p>
+
+<p>These values for $\theta_{ij}$ give precisely the feature representations for each word, which in turn lets us calculate $p( word | context )p( word | context )$.</p>
+
+<p>Recall that this in theory teaches a computer the meaning of a word!</p>
+
+<h2 id="a-bit-of-math">A Bit of Math</h2>
+<p>In this section, I’ll give enough details for the interested reader to go on and understand the literature with a bit more ease.</p>
+
+<p>Recall from previously, we have a collection of probability distributions that are functions over some $\theta_{ij}$’s. The literature refers to these $\theta_{ij}$’s as parameters of the probability distributions $p(w|c)$ and $p(c|w)$. The collection of parameters $\theta_{ij}$’s is often denoted by a singular θθ, and the parametrized distributions by $p(w|c;\theta)$ and $p(c|w;\theta)$.<a href="#he7" class="footnoteRef" id="fnhe7"><sup>7</sup></a></p>
+
+<p>If the goal is to maximize the probability of the training corpus, let’s first write $p(\textit{corpus};\theta)$ in terms of $p(c|w;\theta)$.</p>
+
+<p>There are a few different approaches. But in the simplest, we think of a training corpus as an ordered list of words, $w^1,w2, \cdots ,w^T$. Each word in the corpus wtwt has an associated context $C_t$, which is a collection of surrounding words.</p>
+
+<script type="math/tex; mode=display">% <![CDATA[
+\begin{align*}
+    \textit{corpus}: w_1 | w_2 | w_3 | \cdots        &w_t  \cdots | w_{T−2} | w_{T−1} |  w_T \\
+    \textit{context of } w_t: [w_{t−n} \cdots w_{t−1}] \, &w_t\, [w_{t+1} \cdots w_{t+n}]
+\end{align*} %]]></script>
+
+<p><strong>Diagram 1</strong>. A corpus is just an ordered list of words. The context CtCt of wtwt is a collection of words around it.<a href="#he8" class="footnoteRef" id="fnhe8"><sup>8</sup></a></p>
+
+<p>For a given word $w_t$ in the corpus, the probability of seeing another word $w_c$ in its context is $p(w_c | w_t;\theta)$. Therefore, the probability that a word sees all of the surrounding context words $w_c$ in the training corpus is</p>
+
+<script type="math/tex; mode=display">\prod_{w_c \in C_t} p(w_c|w_t;\theta).</script>
+
+<p>To get the total probability of seeing our training corpus, we just take the product over all words in the training corpus. Thus,</p>
+
+<script type="math/tex; mode=display">p(\textit{corpus};\theta) = \prod_{w_t} \prod_{w_c \in C_t} p(w_c|w_t;\theta).</script>
+
+<p>Now that we have the objective function, $f(\theta)=p(\textit{corpus};\theta)$, it’s just a matter of choosing the parameters $\theta$ that maximize $f$.<a href="#he9" class="footnoteRef" id="fnhe9"><sup>9</sup></a>  Depending on how the probability distribution is parametrized by $\theta$, this optimization problem can be solved using neural networks. For this reason, this method is also called a <a href="https://en.wikipedia.org/wiki/Language_model#Neural_language_models">neural language model</a> (NLM).</p>
+
+<p>There are actually more layers of abstraction and bits of brilliance between theory and implementation. While I hope that I’ve managed to give you some understanding on where research is proceeding, the successes of the current word embedding methods are still rather mysterious. The intuition we’ve developed on the way is still, as Goldberg, et. al. wrote, “very hand-wavy” (Goldberg 2014).</p>
+
+<p>Still, perhaps this can help you have some intuition for what’s going on behind all the math when reading the literature. A lot more has been written on this subject too; you can also take a look below where I list more resources I found useful.</p>
+
+<h2 id="resources">Resources</h2>
+<p>I focused mainly on word2vec while researching neural language models. However, do keep in mind that word2vec was just one of the earlier and possibly more famous models. To understand the theory, I quite liked all of the following. Approximately in order of increasing specificity,</p>
+
+<ul>
+  <li>Radim Řehůřek’s introductory post on word2vec. He also wrote and optimized the word2vec algorithm for Python, which he notes sometimes exceeds the performance of the original C code.</li>
+  <li>Chris McCormick’s word2vec tutorial series, which goes into much more depths on the actual word2vec algorithm. He writes very clearly, and he also provides a list of resources.</li>
+  <li>Goldberg and Levy 2014, word2vec Explained, which helped me formulate my explanations above.</li>
+  <li>Sebastian Ruder’s word embedding series. I found this series comprehensive but really accessible.</li>
+  <li>Bojanowski 2016, Enriching word vectors with subword information. This paper actually is for Facebook’s fastText (which Mikolov is a part of), but it is based in part on word2vec. I found the explanation of word2vec’s model in Section 3.1 transparent and concise.</li>
+  <li>Levy 2015, Improving distributional similarity with lessons learned from word embeddings points out that actually, the increased performance of word2vec over previous word embeddings models might be a result of “hyperparameter optimizations,” and not necessarily in the algorithm itself.
+Expand here to see the he references I cited above</li>
+</ul>
+
+<h2 id="references">References</h2>
+<ul>
+  <li>(Bengio 2003) Bengio, Yoshua, et al. “A neural probabilistic language model.” Journal of machine learning research 3.Feb (2003): 1137-1155.</li>
+  <li>(Bojanowski 2016) Bojanowski, Piotr, et al. “Enriching word vectors with subword information.” arXiv preprint arXiv:1607.04606 (2016).</li>
+  <li>(Goldberg 2014) Goldberg, Yoav, and Omer Levy. “word2vec Explained: deriving Mikolov et al.’s negative-sampling word-embedding method.” arXiv preprint arXiv:1402.3722 (2014).</li>
+  <li>(Goodfellow 2016) Goodfellow, Ian, Yoshua Bengio, and Aaron Courville. Deep learning. MIT press, 2016.</li>
+  <li>(Hamilton 2016) Hamilton, William L., et al. “Inducing domain-specific sentiment lexicons from unlabeled corpora.” arXiv preprint arXiv:1606.02820 (2016).</li>
+  <li>(Kusner 2015) Kusner, Matt, et al. “From word embeddings to document distances.” International Conference on Machine Learning. 2015.</li>
+  <li>(Levy 2015) Levy, Omer, Yoav Goldberg, and Ido Dagan. “Improving distributional similarity with lessons learned from word embeddings.” Transactions of the Association for Computational Linguistics 3 (2015): 211-225.</li>
+  <li>(Mikolov 2013a) Mikolov, Tomas, Wen-tau Yih, and Geoffrey Zweig. “Linguistic regularities in continuous space word representations.” hlt-Naacl. Vol. 13. 2013.</li>
+  <li>(Mikolov 2013b) Mikolov, Tomas, et al. “Efficient estimation of word representations in vector space.” arXiv preprint arXiv:1301.3781 (2013).</li>
+  <li>(Mikolov 2013c) Mikolov, Tomas, et al. “Distributed representations of words and phrases and their compositionality.” Advances in neural information processing systems. 2013.</li>
+  <li>(Mikolov 2013d) Mikolov, Tomas, Quoc V. Le, and Ilya Sutskever. “Exploiting similarities among languages for machine translation.” arXiv preprint arXiv:1309.4168 (2013).</li>
+  <li>(Mnih 2012) Mnih, Andriy, and Yee Whye Teh. “A fast and simple algorithm for training neural probabilistic language models.” arXiv preprint arXiv:1206.6426 (2012).</li>
+  <li>(Rong 2014) Rong, Xin. “word2vec parameter learning explained.” arXiv preprint arXiv:1411.2738 (2014).</li>
+</ul>
+
+<h2 id="foot-note">Foot note</h2>
+<ol>
+<li id="he1">And let's not get into any philosophical considerations of whether the computer really understands the word. Come to think of it, how do I even know you understand a word of what I'm saying? Maybe it's just a matter of serendipity that the string of words I write make sense to you. But here I am really talking about how to oil paint clouds, and you think that I'm talking about machine learning <a href="#fnhe1">↩</a> </li>
+<li id="he2">Consider a 20-word context. If we assume that the average English speaker's vocabulary is 25,000 words, then the increase of 1 word corresponds to an increase of about $7.2 e 84$ contexts, which is actually more than the number of atoms in the universe. Of course, most of those contexts wouldn't make any sense. <a href="#fnhe2">↩</a></li>
+<li id="he3">The algorithm used by the Google researchers mentioned above assumes 300 features.<a href="#fnhe3">↩</a></li>
+<li id="he4">The term distributed representation of words comes from this: we can now represent words by their features, which are shared (i.e. distributed) across all words. We can imagine the representation as a feature vector. For example, it might have a ‘noun bit' that would be set to 1 for nouns and 0 for everything else. This is, however, a bit simplified. Features can take on a spectrum of values, in particular, any real value. So, feature vectors are actually vectors in a real vector space. <a href="#fnhe4">↩</a></li>
+<li id="he5">The distributed representations of words "allows each training sentence to inform the model about an exponential number of semantically neighboring sentences," (Bengio 2003). <a href="#fnhe5">↩</a></li>
+<li id="he6">This also means that there's probably not a ‘noun bit' in our representation, like in the figures above. There might not be any obvious meaning to each feature. <a href="#fnhe6">↩</a></li>
+<li id="he7">The softmax function is often chosen as the ideal probability distribution. <a href="#fnhe7">↩</a></li>
+<li id="he8">One can control the algorithm by specifying different hyperparameters: do we care about order of words? How many surrounding words do we consider? And on. <a href="#fnhe8">↩</a></li>
+<li id="he9"> <a href="#fnhe9">↩</a></li>
+</ol>
+
+<h2 id="remark">Remark</h2>
+
+<p>This blog content is requested by <a href="https://www.linkedin.com/in/gautambay/">Gautam Tambay</a> and edited by Jun Lu.</p>
+
+  
+	</div>
+	<footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <!--
+  <%- list_categories(item.categories, {
+      show_count: false,
+      class: 'article-category',
+      style: 'none',
+      separator: '►'
+  }) %>
+  -->
+  
+  <a class="article-category-link" href="/categories/#NLP">NLP</a>
+  
+  <a class="article-category-link" href="/categories/#Machine Learning">Machine Learning</a>
+  
+</div>
+
+
+  <div class="article-tags">
+  <!--
+  <% var tags = [];
+    item.tags.forEach(function(tag){
+      tags.push('<a href="' + config.root + tag.path + '">' + tag.name + '</a>');
+    }); %>-->
+  <span></span> <!--<%- tags.join('') %>-->
+  
+  
+  <a href="/tags/#Machine Learning">Machine Learning</a>
+  
+  </div>
+
+</div>
+
+
+
+	<div class="article-share" id="share">
+	
+	  <div data-url="http://localhost:4000/wordembedtheory" data-title="An Introduction to Word Embeddings - Part 2: Problems and Theory | Cheer ML" data-tsina="" class="share clearfix">
+	  </div>
+	
+	</div>
+
+
+</footer>   
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+ <div class="prev" >
+ <a href="/wordembedapp" title="An Introduction to Word Embeddings - Part 1: Applications">
+  <strong>Prev: </strong><br/>
+  <span>
+  An Introduction to Word Embeddings - Part 1: Applications</span>
+</a>
+</div>
+
+
+</nav>
+
+	
+
+</div>  
+
+      
+      
+      <div class="openaside"><a class="navbutton" href="#" title="Show Sidebar"></a></div>
+
+  <div id="toc" class="toc-aside toc-content">
+ 
+ <!--<%- toc(item.content) %>-->
+ 
+  </div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="Hide Sidebar"></a></div>
+<aside class="clearfix">
+
+
+  
+<div class="categorieslist">
+	<p class="asidetitle">Categories</p>
+		<ul>
+		
+		  
+			<li><a href="/categories/#Announcement" title="Announcement">Announcement<sup>1</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/#Machine Learning" title="Machine Learning">Machine Learning<sup>7</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/#Deep Learning" title="Deep Learning">Deep Learning<sup>2</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/#Theory" title="Theory">Theory<sup>1</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/#NLP" title="NLP">NLP<sup>2</sup></a></li>
+		  
+		
+		</ul>
+</div>
+
+
+  
+<div class="tagslist">
+	<p class="asidetitle">Tags</p>
+		<ul class="clearfix">
+		
+			
+				<li><a href="/tags/#resources" title="resources">resources<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#jekyll" title="jekyll">jekyll<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#Learning theory" title="Learning theory">Learning theory<sup>3</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#Deep Learning" title="Deep Learning">Deep Learning<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#Systems" title="Systems">Systems<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#Theory" title="Theory">Theory<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/#Machine Learning" title="Machine Learning">Machine Learning<sup>2</sup></a></li>
+			
+		
+		</ul>
+</div>
+
+
+  <div class="linkslist">
+  <p class="asidetitle">Links</p>
+    <ul>
+        
+          <li>
+            <a href="reading" target="_blank" title="Our Reading Group website">Our Reading Group website</a>
+          </li>
+        
+          <li>
+            <a href="http://www.junlulocky.com" target="_blank" title="Jun Lu's website">Jun Lu's website</a>
+          </li>
+        
+          <li>
+            <a href="http://yeephycho.github.io/" target="_blank" title="Yixuan Hu's website">Yixuan Hu's website</a>
+          </li>
+        
+          <li>
+            <a href="https://github.com/IamTao" target="_blank" title="Tao Lin's website">Tao Lin's website</a>
+          </li>
+        
+          <li>
+            <a href="https://ovss.github.io" target="_blank" title="Junxiong Wang's website">Junxiong Wang's website</a>
+          </li>
+        
+          <li>
+            <a href="https://www.linkedin.com/in/geelon" target="_blank" title="Aaron Geelon So's website">Aaron Geelon So's website</a>
+          </li>
+        
+
+    </ul>
+</div>
+
+  
+
+
+  <div class="rsspart">
+	<a href="/atom.xml" target="_blank" title="rss">RSS</a>
+</div>
+
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer" >
+	
+	<div class="line">
+		<span></span>
+		<div class="author"></div>
+	</div>
+	
+	
+	<section class="info">
+		<p> Hello, we are machine learning lovers. <br/>
+			This is our blog, believe it or not.</p>
+	</section>
+	 
+	<div class="social-font" class="clearfix">
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+	</div>
+	<!--
+			<%  Array.prototype.S=String.fromCharCode(2);
+			  Array.prototype.in_array=function(e){
+    			var r=new RegExp(this.S+e+this.S);
+    			return (r.test(this.S+this.join(this.S)+this.S));
+				};
+				var cc = new Array('by','by-nc','by-nc-nd','by-nc-sa','by-nd','by-sa','zero'); %>
+		<% if (cc.in_array(theme.creative_commons) ) { %>
+				<div class="cc-license">
+          <a href="http://creativecommons.org/licenses/<%= theme.creative_commons %>/4.0" class="cc-opacity" target="_blank">
+            <img src="<%- config.root %>img/cc-<%= theme.creative_commons %>.svg" alt="Creative Commons" />
+          </a>
+        </div>
+    <% } %>
+				-->
+
+		<p class="copyright">
+		Powered by <a href="http://jekyllrb.com" target="_blank" title="jekyll">jekyll</a> and Theme by <a href="#" target="_blank" title="Jacman">Jacman</a> © 2016
+		
+		<a href="about" target="_blank" title="Jun Lu, Yixuan Hu">Jun Lu, Yixuan Hu</a>
+		
+		
+		</p>
+</div>
+</footer>
+    <script src="/assets/js/jquery-2.0.3.min.js"></script>
+<script src="/assets/js/jquery.imagesloaded.min.js"></script>
+<script src="/assets/js/gallery.js"></script>
+<script src="/assets/js/jquery.qrcode-0.12.0.min.js"></script>
+<script src="/assets/js/toc.js"></script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+  
+  
+  
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else{
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
+      
+    }
+  });
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('#toc.toc-aside').toc({
+    title: "Contents",
+    showEffect: "none"
+  });
+  $('#toc.toc-article').toc({
+    title: "Contents",
+    showEffect: "show",
+    showSpeed: 0
+  });
+});
+</script>
+
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  c.click(function(){
+    ta.css('display', 'block').addClass('fadeIn');
+  });
+  o.click(function(){
+    ta.css('display', 'none');
+  });
+  $(window).scroll(function(){
+    ta.css("top",Math.max(140,320-$(this).scrollTop()));
+  });
+});
+</script>
+
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina'),
+      description = $this.attr('description');
+  var html = [
+  '<div class="hoverqrcode clearfix"></div>',
+  '<a class="overlay" id="qrcode"></a>',
+  '<div class="qrcode clearfix"><span>扫描二维码分享到微信朋友圈</span><a class="qrclose" href="#nothing"></a><strong>Loading...Please wait</strong><img id="qrcode-pic" data-src="http://s.jiathis.com/qrcode.php?url=' + encodedUrl + '"/></div>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="微信"></a>',
+  '<a href="http://widget.renren.com/dialog/share?resourceUrl=' + encodedUrl + '&srcUrl=' + encodedUrl + '&title=' + title +'" class="article-share-renren" target="_blank" title="人人"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="微博"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+  
+  $('.article-share-qrcode').click(function(){
+    var imgSrc = $('#qrcode-pic').attr('data-src');
+    $('#qrcode-pic').attr('src', imgSrc);
+    $('#qrcode-pic').load(function(){
+        $('.qrcode strong').text(' ');
+    });
+  });
+/*
+  $('.hoverqrcode').hide();
+
+  var myWidth = 0;
+  function updatehoverqrcode(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+    var qrsize = myWidth > 1024 ? 200:100;
+    var options = {render: 'image', size: qrsize, fill: '#2ca6cb', text: url, radius: 0.5, quiet: 1};
+    var p = $('.article-share-qrcode').position();
+    $('.hoverqrcode').empty().css('width', qrsize).css('height', qrsize)
+                          .css('left', p.left-qrsize/2+20).css('top', p.top-qrsize-10)
+                          .qrcode(options);
+  };
+  $(window).resize(function(){
+    $('.hoverqrcode').hide();
+  });
+  $('.article-share-qrcode').click(function(){
+    updatehoverqrcode();
+    $('.hoverqrcode').toggle();
+  });
+  $('.article-share-qrcode').hover(function(){}, function(){
+      //$('.hoverqrcode').hide();
+  });
+  */
+});   
+</script>
+
+
+
+
+
+<!--
+
+-->
+
+
+
+
+<link rel="stylesheet" href="/assets/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/assets/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.article-content').each(function(i){
+    $(this).find('img').each(function(){
+      if ($(this).parent().hasClass('fancybox')) return;
+      if ($(this).hasClass('emoji')) return;
+      var alt = this.alt;
+      if (alt) $(this).after('<span class="caption">' + alt + '</span>');
+      $(this).wrap('<a href="' + this.src + '" title="' + alt + '" class="fancybox"></a>');
+    });
+    $(this).find('.fancybox').each(function(){
+      $(this).attr('rel', 'article' + i);
+    });
+  });
+  if($.fancybox){
+    $('.fancybox').fancybox();
+  }
+}); 
+</script>
+
+
+<!-- Analytics Begin -->
+
+
+
+
+
+<!-- Analytics End -->
+
+<!-- Totop Begin -->
+
+	<div id="totop">
+	<a title="Back to Top"><img src="/assets/img/scrollup.png"/></a>
+	</div>
+	<script src="/assets/js/totop.js"></script>
+
+<!-- Totop End -->
+
+<!-- MathJax Begin -->
+
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    extensions: ["tex2jax.js"],
+    jax: ["input/TeX", "output/HTML-CSS"],
+    tex2jax: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+      displayMath: [ ['$$','$$'], ["\[","\]"], ["\\[","\\]"] ],
+      processEscapes: true
+    },
+    messageStyle: "none",
+    "HTML-CSS": { availableFonts: ["TeX"] }
+  });
+</script>
+<!--<script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script> -->
+<script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js">
+</script> 
+
+<!-- MathJax End -->
+
+<!-- Tiny_search Begin -->
+
+<!-- Tiny_search End -->
+  </body>
+</html>
+
+

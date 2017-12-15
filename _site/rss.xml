@@ -5,47 +5,334 @@
         <description>Cheer ML - Jun Lu, Yixuan Hu</description>
         <link></link>
         <atom:link href="" rel="self" type="application/rss+xml" />
-        <lastBuildDate>Thu, 12 Oct 2017 18:44:12 +0200</lastBuildDate>
-        <pubDate>Thu, 12 Oct 2017 18:44:12 +0200</pubDate>
+        <lastBuildDate>Fri, 15 Dec 2017 20:57:19 +0100</lastBuildDate>
+        <pubDate>Fri, 15 Dec 2017 20:57:19 +0100</pubDate>
         <ttl>60</ttl>
 
 
         <item>
+                <title>An Introduction to Word Embeddings - Part 2: Problems and Theory</title>
+                <description>&lt;p&gt;In the previous &lt;a href=&quot;/wordembedapp&quot;&gt;post&lt;/a&gt;, we introduced what word embeddings are and what they can do. This time, we’ll try to make sense of them. What problem do they solve? How can they help computers understand natural language?&lt;/p&gt;
+
+&lt;h2 id=&quot;understanding&quot;&gt;Understanding&lt;/h2&gt;
+
+&lt;p&gt;See if you can guess what the word wapper means from how it’s used in the following two sentences:&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;After running the marathon, I could barely keep my legs from wappering.&lt;/li&gt;
+  &lt;li&gt;Thou’ll not see Stratfort to-night, sir, thy horse is wappered out. (Or perhaps a more modern take: I can’t drive you to Stratford tonight for I’m wappered out).&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;The second example is from the &lt;a href=&quot;http://www.oed.com/view/Entry/225584&quot;&gt;Oxford English Dictionary&lt;/a&gt; entry. If you haven’t guessed, the word was probably more popular in the late-19th century. But it means to shake, especially from fatigue (and it might share the same linguistic roots as to waver).&lt;/p&gt;
+
+&lt;p&gt;By now, you likely have a pretty good understanding of what to wapper means, if you like, even creating new sentences. Impressively, you probably didn’t need me to explicitly tell you the definition; indeed, how many words in this sentence did you learn by reading a dictionary entry? We learn what words mean from their surrounding contexts.&lt;/p&gt;
+
+&lt;p&gt;This implies that even though it appears that the meaning of a word is intrinsic to the word, &lt;strong&gt;some of the meaning of a word also exists in its context&lt;/strong&gt;.&lt;/p&gt;
+
+&lt;p&gt;Words, like notes on an instrument, do have their individual tones. But it is their relationship with each other—their interplay—that gives way to fuller music. Context enriches meaning.&lt;/p&gt;
+
+&lt;p&gt;So, take a context,&lt;/p&gt;
+
+&lt;div class=&quot;language-c highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;After&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;running&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;the&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;marathon&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;I&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;could&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;barely&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;keep&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;my&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;legs&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;from&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;____________&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;We should have a sense of what words could fill the blank. Much more likely to appear are words like shaking, trembling, and of course, wappering. Especially compared to nonsense like pickled, big data, or even pickled big data.&lt;/p&gt;
+
+&lt;p&gt;In short, the higher probability of appearing in this context corresponds to greater shared meaning. From this, we can deduce the &lt;a href=&quot;https://en.wikipedia.org/wiki/Distributional_semantics#Distributional_hypothesis&quot;&gt;distributional hypothesis&lt;/a&gt;: words that share many contexts tend to have similar meaning.&lt;/p&gt;
+
+&lt;p&gt;What does this mean for a computer trying to understand words?&lt;/p&gt;
+
+&lt;p&gt;Well, if it can estimate how likely a word is to appear in different contexts, then for most intents and purposes, the computer has learned the meaning of the word.&lt;a href=&quot;#he1&quot; class=&quot;footnoteRef&quot; id=&quot;fnhe1&quot;&gt;&lt;sup&gt;1&lt;/sup&gt;&lt;/a&gt; Mathematically, we want to approximate the probability distribution of&lt;/p&gt;
+
+&lt;script type=&quot;math/tex; mode=display&quot;&gt;p( word | context ) \textit{ or } p( context | word ).&lt;/script&gt;
+
+&lt;p&gt;Then, the next time the computer sees a specific context $c$, it can just figure out which words have the highest probability of appearing, $p( word | c )$.&lt;/p&gt;
+
+&lt;h2 id=&quot;challenges&quot;&gt;Challenges&lt;/h2&gt;
+
+&lt;p&gt;The straightforward and naive approach to approximating the probability distribution is:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;step 1: obtain a huge training corpus of texts,&lt;/li&gt;
+  &lt;li&gt;step 2: calculate the probability of each &lt;em&gt;(word,context)&lt;/em&gt; pair within the corpus.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;The underlying (bad) assumption? The probability distribution learned from the training corpus will approximate the theoretical distribution over all word-context pairs.&lt;/p&gt;
+
+&lt;p&gt;However, if we think about it, the number of contexts is so great that the computer will never see a vast majority of them. That is, many of the probabilities $p( word | c )$ will be computed to be 0. This is mostly a terrible approximation.&lt;/p&gt;
+
+&lt;p&gt;The problem we’ve run into is the &lt;strong&gt;curse of dimensionality&lt;/strong&gt;. The number of possible contexts grows exponentially relative to the size of our vocabulary—when we add a new word to our vocabulary, we more or less multiply the number of contexts we can make.&lt;a href=&quot;#he2&quot; class=&quot;footnoteRef&quot; id=&quot;fnhe2&quot;&gt;&lt;sup&gt;2&lt;/sup&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/blog/wordembedtheory/wmd-Copy.png&quot; alt=&quot;Figure 1. The exponential growth of the number of contexts with respect to the number of words.&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;We overcome the curse of dimensionality with word embeddings, otherwise known as &lt;strong&gt;distributed representations of words&lt;/strong&gt;. Instead of focusing on words as individual entities to be trained one-by-one, we focus on the attributes or features that words share.&lt;/p&gt;
+
+&lt;p&gt;For example, king is a noun, singular and masculine. Of course, many words are masculine singular nouns. But as we add more features, we narrow down on the number of words satisfying each of those qualities.&lt;/p&gt;
+
+&lt;p&gt;Eventually, if we consider enough features, the collection of features a word satisfies will be distinct from that of any other word.&lt;a href=&quot;#he3&quot; class=&quot;footnoteRef&quot; id=&quot;fnhe3&quot;&gt;&lt;sup&gt;3&lt;/sup&gt;&lt;/a&gt;  This lets us uniquely represent words by their features. As a result, we can now train features instead of individual words.&lt;a href=&quot;#he4&quot; class=&quot;footnoteRef&quot; id=&quot;fnhe4&quot;&gt;&lt;sup&gt;4&lt;/sup&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;This new type of algorithm would learn more along the lines of &lt;em&gt;in this context, nouns having such and such qualities are more likely to appear instead of we’re more likely to see words X, Y, Z&lt;/em&gt;. And since many words are nouns, each context teaches the algorithm a little bit about many words at once.&lt;/p&gt;
+
+&lt;p&gt;In summary, every word we train actually recalls a whole network of other words. This allows us to overcome the exponential explosion of word-context pairs by training an exponential number of them at a time.&lt;a href=&quot;#he5&quot; class=&quot;footnoteRef&quot; id=&quot;fnhe5&quot;&gt;&lt;sup&gt;5&lt;/sup&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;a-new-problem&quot;&gt;A New Problem&lt;/h2&gt;
+&lt;p&gt;In theory, representing words by their features can help solve our dimensionality problem. But, how do we implement it? Somehow, we need to be able to turn every word into a unique feature vector, like so:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/blog/wordembedtheory/Vector-Representation-of-Words.png&quot; alt=&quot;Figure 2. The feature vector of the word king would be ⟨1,1,1,0,...⟩.&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;But features like is a word isn’t very helpful; it doesn’t contribute to forming a unique representation. One way to ensure uniqueness is by looking at a whole lot of specific features. Take is the word ‘king’ or is the word ‘gastroenteritis’, for example. That way, every word definitely corresponds to a different feature vector:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/blog/wordembedtheory/Vector-Representation-of-Words-2.png&quot; alt=&quot;Figure 3. An inefficent representation defeating the purpose of word embeddings.&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;This isn’t a great representation though. Not only is this a very inefficient way to represent words, but it also fails to solve the original dimensionality problem. Although every word still technically recalls a whole network of words, each network contains only one word!&lt;/p&gt;
+
+&lt;p&gt;Constructing the right collection of features is a hard problem. They have to be not too general, not too specific. The resulting representation of each word using those features should be unique. And, we should limit the number of features to between 100-1000, usually.&lt;/p&gt;
+
+&lt;p&gt;Furthermore, even though it’s simpler to think about binary features that take on True/False values, we’ll actually want to allow a spectrum of feature values. In particular, any real value. So, feature vectors are also actually vectors in a real vector space.&lt;/p&gt;
+
+&lt;h2 id=&quot;a-new-solution&quot;&gt;A New Solution&lt;/h2&gt;
+&lt;p&gt;The solution to feature construction is: don’t. At least not directly.&lt;a href=&quot;#he6&quot; class=&quot;footnoteRef&quot; id=&quot;fnhe6&quot;&gt;&lt;sup&gt;6&lt;/sup&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;Instead, let’s revisit the probability distributions from before:
+&lt;script type=&quot;math/tex&quot;&gt;p( word | context )\textit{ and } p( context | word ).&lt;/script&gt;&lt;/p&gt;
+
+&lt;p&gt;This time, words and contexts are represented by feature vectors:&lt;/p&gt;
+
+&lt;script type=&quot;math/tex; mode=display&quot;&gt;\textit{word}\_i=⟨\theta_{i,1},\theta_{i,2}, \cdots,\theta_{i,300}⟩,&lt;/script&gt;
+
+&lt;p&gt;which are just a collection of numbers. This turns the probability distributions from a functions over categorical objects (i.e. individual words) into a function over numerical variables θijθij. This is something that allows us to bring in a lot of existing analytical tools—in particular, neural networks and other optimization methods.&lt;/p&gt;
+
+&lt;p&gt;The short version of the solution: from the above probability distributions, we can calculate the probability of seeing our training corpus, p(corpus)p(corpus), which had better be relatively large. We just need to find the values for each of the $\theta_{ij}$’s that maximize p(corpus)p(corpus).&lt;/p&gt;
+
+&lt;p&gt;These values for $\theta_{ij}$ give precisely the feature representations for each word, which in turn lets us calculate $p( word | context )p( word | context )$.&lt;/p&gt;
+
+&lt;p&gt;Recall that this in theory teaches a computer the meaning of a word!&lt;/p&gt;
+
+&lt;h2 id=&quot;a-bit-of-math&quot;&gt;A Bit of Math&lt;/h2&gt;
+&lt;p&gt;In this section, I’ll give enough details for the interested reader to go on and understand the literature with a bit more ease.&lt;/p&gt;
+
+&lt;p&gt;Recall from previously, we have a collection of probability distributions that are functions over some $\theta_{ij}$’s. The literature refers to these $\theta_{ij}$’s as parameters of the probability distributions $p(w|c)$ and $p(c|w)$. The collection of parameters $\theta_{ij}$’s is often denoted by a singular θθ, and the parametrized distributions by $p(w|c;\theta)$ and $p(c|w;\theta)$.&lt;a href=&quot;#he7&quot; class=&quot;footnoteRef&quot; id=&quot;fnhe7&quot;&gt;&lt;sup&gt;7&lt;/sup&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;If the goal is to maximize the probability of the training corpus, let’s first write $p(\textit{corpus};\theta)$ in terms of $p(c|w;\theta)$.&lt;/p&gt;
+
+&lt;p&gt;There are a few different approaches. But in the simplest, we think of a training corpus as an ordered list of words, $w^1,w2, \cdots ,w^T$. Each word in the corpus wtwt has an associated context $C_t$, which is a collection of surrounding words.&lt;/p&gt;
+
+&lt;script type=&quot;math/tex; mode=display&quot;&gt;% &lt;![CDATA[
+\begin{align*}
+    \textit{corpus}: w_1 | w_2 | w_3 | \cdots        &amp;w_t  \cdots | w_{T−2} | w_{T−1} |  w_T \\
+    \textit{context of } w_t: [w_{t−n} \cdots w_{t−1}] \, &amp;w_t\, [w_{t+1} \cdots w_{t+n}]
+\end{align*} %]]&gt;&lt;/script&gt;
+
+&lt;p&gt;&lt;strong&gt;Diagram 1&lt;/strong&gt;. A corpus is just an ordered list of words. The context CtCt of wtwt is a collection of words around it.&lt;a href=&quot;#he8&quot; class=&quot;footnoteRef&quot; id=&quot;fnhe8&quot;&gt;&lt;sup&gt;8&lt;/sup&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;For a given word $w_t$ in the corpus, the probability of seeing another word $w_c$ in its context is $p(w_c | w_t;\theta)$. Therefore, the probability that a word sees all of the surrounding context words $w_c$ in the training corpus is&lt;/p&gt;
+
+&lt;script type=&quot;math/tex; mode=display&quot;&gt;\prod_{w_c \in C_t} p(w_c|w_t;\theta).&lt;/script&gt;
+
+&lt;p&gt;To get the total probability of seeing our training corpus, we just take the product over all words in the training corpus. Thus,&lt;/p&gt;
+
+&lt;script type=&quot;math/tex; mode=display&quot;&gt;p(\textit{corpus};\theta) = \prod_{w_t} \prod_{w_c \in C_t} p(w_c|w_t;\theta).&lt;/script&gt;
+
+&lt;p&gt;Now that we have the objective function, $f(\theta)=p(\textit{corpus};\theta)$, it’s just a matter of choosing the parameters $\theta$ that maximize $f$.&lt;a href=&quot;#he9&quot; class=&quot;footnoteRef&quot; id=&quot;fnhe9&quot;&gt;&lt;sup&gt;9&lt;/sup&gt;&lt;/a&gt;  Depending on how the probability distribution is parametrized by $\theta$, this optimization problem can be solved using neural networks. For this reason, this method is also called a &lt;a href=&quot;https://en.wikipedia.org/wiki/Language_model#Neural_language_models&quot;&gt;neural language model&lt;/a&gt; (NLM).&lt;/p&gt;
+
+&lt;p&gt;There are actually more layers of abstraction and bits of brilliance between theory and implementation. While I hope that I’ve managed to give you some understanding on where research is proceeding, the successes of the current word embedding methods are still rather mysterious. The intuition we’ve developed on the way is still, as Goldberg, et. al. wrote, “very hand-wavy” (Goldberg 2014).&lt;/p&gt;
+
+&lt;p&gt;Still, perhaps this can help you have some intuition for what’s going on behind all the math when reading the literature. A lot more has been written on this subject too; you can also take a look below where I list more resources I found useful.&lt;/p&gt;
+
+&lt;h2 id=&quot;resources&quot;&gt;Resources&lt;/h2&gt;
+&lt;p&gt;I focused mainly on word2vec while researching neural language models. However, do keep in mind that word2vec was just one of the earlier and possibly more famous models. To understand the theory, I quite liked all of the following. Approximately in order of increasing specificity,&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Radim Řehůřek’s introductory post on word2vec. He also wrote and optimized the word2vec algorithm for Python, which he notes sometimes exceeds the performance of the original C code.&lt;/li&gt;
+  &lt;li&gt;Chris McCormick’s word2vec tutorial series, which goes into much more depths on the actual word2vec algorithm. He writes very clearly, and he also provides a list of resources.&lt;/li&gt;
+  &lt;li&gt;Goldberg and Levy 2014, word2vec Explained, which helped me formulate my explanations above.&lt;/li&gt;
+  &lt;li&gt;Sebastian Ruder’s word embedding series. I found this series comprehensive but really accessible.&lt;/li&gt;
+  &lt;li&gt;Bojanowski 2016, Enriching word vectors with subword information. This paper actually is for Facebook’s fastText (which Mikolov is a part of), but it is based in part on word2vec. I found the explanation of word2vec’s model in Section 3.1 transparent and concise.&lt;/li&gt;
+  &lt;li&gt;Levy 2015, Improving distributional similarity with lessons learned from word embeddings points out that actually, the increased performance of word2vec over previous word embeddings models might be a result of “hyperparameter optimizations,” and not necessarily in the algorithm itself.
+Expand here to see the he references I cited above&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;references&quot;&gt;References&lt;/h2&gt;
+&lt;ul&gt;
+  &lt;li&gt;(Bengio 2003) Bengio, Yoshua, et al. “A neural probabilistic language model.” Journal of machine learning research 3.Feb (2003): 1137-1155.&lt;/li&gt;
+  &lt;li&gt;(Bojanowski 2016) Bojanowski, Piotr, et al. “Enriching word vectors with subword information.” arXiv preprint arXiv:1607.04606 (2016).&lt;/li&gt;
+  &lt;li&gt;(Goldberg 2014) Goldberg, Yoav, and Omer Levy. “word2vec Explained: deriving Mikolov et al.’s negative-sampling word-embedding method.” arXiv preprint arXiv:1402.3722 (2014).&lt;/li&gt;
+  &lt;li&gt;(Goodfellow 2016) Goodfellow, Ian, Yoshua Bengio, and Aaron Courville. Deep learning. MIT press, 2016.&lt;/li&gt;
+  &lt;li&gt;(Hamilton 2016) Hamilton, William L., et al. “Inducing domain-specific sentiment lexicons from unlabeled corpora.” arXiv preprint arXiv:1606.02820 (2016).&lt;/li&gt;
+  &lt;li&gt;(Kusner 2015) Kusner, Matt, et al. “From word embeddings to document distances.” International Conference on Machine Learning. 2015.&lt;/li&gt;
+  &lt;li&gt;(Levy 2015) Levy, Omer, Yoav Goldberg, and Ido Dagan. “Improving distributional similarity with lessons learned from word embeddings.” Transactions of the Association for Computational Linguistics 3 (2015): 211-225.&lt;/li&gt;
+  &lt;li&gt;(Mikolov 2013a) Mikolov, Tomas, Wen-tau Yih, and Geoffrey Zweig. “Linguistic regularities in continuous space word representations.” hlt-Naacl. Vol. 13. 2013.&lt;/li&gt;
+  &lt;li&gt;(Mikolov 2013b) Mikolov, Tomas, et al. “Efficient estimation of word representations in vector space.” arXiv preprint arXiv:1301.3781 (2013).&lt;/li&gt;
+  &lt;li&gt;(Mikolov 2013c) Mikolov, Tomas, et al. “Distributed representations of words and phrases and their compositionality.” Advances in neural information processing systems. 2013.&lt;/li&gt;
+  &lt;li&gt;(Mikolov 2013d) Mikolov, Tomas, Quoc V. Le, and Ilya Sutskever. “Exploiting similarities among languages for machine translation.” arXiv preprint arXiv:1309.4168 (2013).&lt;/li&gt;
+  &lt;li&gt;(Mnih 2012) Mnih, Andriy, and Yee Whye Teh. “A fast and simple algorithm for training neural probabilistic language models.” arXiv preprint arXiv:1206.6426 (2012).&lt;/li&gt;
+  &lt;li&gt;(Rong 2014) Rong, Xin. “word2vec parameter learning explained.” arXiv preprint arXiv:1411.2738 (2014).&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;foot-note&quot;&gt;Foot note&lt;/h2&gt;
+&lt;ol&gt;
+&lt;li id=&quot;he1&quot;&gt;And let's not get into any philosophical considerations of whether the computer really understands the word. Come to think of it, how do I even know you understand a word of what I'm saying? Maybe it's just a matter of serendipity that the string of words I write make sense to you. But here I am really talking about how to oil paint clouds, and you think that I'm talking about machine learning &lt;a href=&quot;#fnhe1&quot;&gt;↩&lt;/a&gt; &lt;/li&gt;
+&lt;li id=&quot;he2&quot;&gt;Consider a 20-word context. If we assume that the average English speaker's vocabulary is 25,000 words, then the increase of 1 word corresponds to an increase of about $7.2 e 84$ contexts, which is actually more than the number of atoms in the universe. Of course, most of those contexts wouldn't make any sense. &lt;a href=&quot;#fnhe2&quot;&gt;↩&lt;/a&gt;&lt;/li&gt;
+&lt;li id=&quot;he3&quot;&gt;The algorithm used by the Google researchers mentioned above assumes 300 features.&lt;a href=&quot;#fnhe3&quot;&gt;↩&lt;/a&gt;&lt;/li&gt;
+&lt;li id=&quot;he4&quot;&gt;The term distributed representation of words comes from this: we can now represent words by their features, which are shared (i.e. distributed) across all words. We can imagine the representation as a feature vector. For example, it might have a ‘noun bit' that would be set to 1 for nouns and 0 for everything else. This is, however, a bit simplified. Features can take on a spectrum of values, in particular, any real value. So, feature vectors are actually vectors in a real vector space. &lt;a href=&quot;#fnhe4&quot;&gt;↩&lt;/a&gt;&lt;/li&gt;
+&lt;li id=&quot;he5&quot;&gt;The distributed representations of words &quot;allows each training sentence to inform the model about an exponential number of semantically neighboring sentences,&quot; (Bengio 2003). &lt;a href=&quot;#fnhe5&quot;&gt;↩&lt;/a&gt;&lt;/li&gt;
+&lt;li id=&quot;he6&quot;&gt;This also means that there's probably not a ‘noun bit' in our representation, like in the figures above. There might not be any obvious meaning to each feature. &lt;a href=&quot;#fnhe6&quot;&gt;↩&lt;/a&gt;&lt;/li&gt;
+&lt;li id=&quot;he7&quot;&gt;The softmax function is often chosen as the ideal probability distribution. &lt;a href=&quot;#fnhe7&quot;&gt;↩&lt;/a&gt;&lt;/li&gt;
+&lt;li id=&quot;he8&quot;&gt;One can control the algorithm by specifying different hyperparameters: do we care about order of words? How many surrounding words do we consider? And on. &lt;a href=&quot;#fnhe8&quot;&gt;↩&lt;/a&gt;&lt;/li&gt;
+&lt;li id=&quot;he9&quot;&gt; &lt;a href=&quot;#fnhe9&quot;&gt;↩&lt;/a&gt;&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h2 id=&quot;remark&quot;&gt;Remark&lt;/h2&gt;
+
+&lt;p&gt;This blog content is requested by &lt;a href=&quot;https://www.linkedin.com/in/gautambay/&quot;&gt;Gautam Tambay&lt;/a&gt; and edited by Jun Lu.&lt;/p&gt;
+
+</description>
+                <link>/wordembedtheory</link>
+                <guid>/wordembedtheory</guid>
+                <pubDate>Fri, 15 Dec 2017 00:00:00 +0100</pubDate>
+        </item>
+
+        <item>
+                <title>An Introduction to Word Embeddings - Part 1: Applications</title>
+                <description>&lt;p&gt;If you already have a solid understanding of word embeddings and are well into your data science career, skip ahead to the &lt;a href=&quot;/wordembedtheory&quot;&gt;next part&lt;/a&gt;!&lt;/p&gt;
+
+&lt;p&gt;Human language is &lt;a href=&quot;https://en.wikipedia.org/wiki/The_Unreasonable_Effectiveness_of_Mathematics_in_the_Natural_Sciences&quot;&gt;unreasonably effective&lt;/a&gt; at describing how we relate to the world. With a few, short words, we can convey many ideas and actions with little ambiguity. Well, &lt;a href=&quot;http://mentalfloss.com/article/24445/10-amelia-bedelia-isms&quot;&gt;mostly&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;Because we’re capable of seeing and describing so much complexity, a lot of structure is implicitly encoded into our language. It is no easy task for a computer (or a human, for that matter) to learn natural language, for it entails understanding how we humans observe the world, if not understanding how to observe the world.&lt;/p&gt;
+
+&lt;p&gt;For the most part, computers can’t understand natural language. Our programs are still line-by-line instructions telling a computer what to do — they often miss nuance and context. How can you explain sarcasm to a machine?&lt;/p&gt;
+
+&lt;p&gt;There’s good news though. There’s been some important breakthroughs in natural language processing (NLP), the domain where researchers try to teach computers human language.&lt;/p&gt;
+
+&lt;p&gt;Famously, in 2013 Google researchers (Mikolov 2013) found a method that enabled a computer to learn relations between words such as:&lt;/p&gt;
+
+&lt;div class=&quot;language-python highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;king&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;man&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;+&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;woman&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;≈&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;queen&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;This method, called word embeddings, has a lot of promise; it might even be able to reveal hidden structure in the world we see. Consider one relation it &lt;a href=&quot;http://byterot.blogspot.ch/2015/06/five-crazy-abstractions-my-deep-learning-word2doc-model-just-did-NLP-gensim.html&quot;&gt;discovered&lt;/a&gt;:&lt;/p&gt;
+
+&lt;div class=&quot;language-python highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;president&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;power&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;≈&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;prime&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;minister&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Admittedly, this might be one of those specious relations.&lt;/p&gt;
+
+&lt;p&gt;Joking aside, it’s worth studying word embeddings for at least two reasons. First, there are a lot of applications made possible by word embeddings. Second, we can learn from the way researchers approached the problem of deciphering natural language for machines.&lt;/p&gt;
+
+&lt;p&gt;In Part 1 of this article series, let’s take a look at the first of these reasons.&lt;/p&gt;
+
+&lt;h2 id=&quot;uses-of-word-embeddings&quot;&gt;Uses of Word Embeddings&lt;/h2&gt;
+
+&lt;p&gt;There’s no obvious way to usefully compare two words unless we already know what they mean. The goal of word-embedding algorithms is, therefore, &lt;strong&gt;to embed words with meaning based on their similarity or relationship with other words&lt;/strong&gt;.&lt;/p&gt;
+
+&lt;p&gt;In practice, words are embedded into a real vector space, which comes with notions of distance and angle. We hope that these notions extend to the embedded words in meaningful ways, quantifying relations or similarity between different words. And empirically, they actually do!&lt;/p&gt;
+
+&lt;p&gt;For example, the Google algorithm I mentioned above discovered certain nouns are singular/plural or have gender (Mikolov 2013abc):&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/blog/wordembedapp/relations-Copy.png&quot; alt=&quot;img1&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;They also found a country-capital relationship:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/blog/wordembedapp/country-Copy.png&quot; alt=&quot;img2&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;And as further evidence that a word’s meaning can be implied from its relationships with other words, they actually found that the learned structure for one language often correlated to that of another language, perhaps suggesting the possibility for &lt;a href=&quot;https://en.wikipedia.org/wiki/Machine_translation&quot;&gt;machine translation&lt;/a&gt; through word embeddings (Mikolov 2013c):&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/blog/wordembedapp/mt-Copy.png&quot; alt=&quot;img3&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;They released their C code as the &lt;a href=&quot;https://code.google.com/archive/p/word2vec/&quot;&gt;word2vec&lt;/a&gt; package, and soon after, others adapted the algorithm for more programming languages. Notably, for &lt;a href=&quot;https://radimrehurek.com/gensim/index.html&quot;&gt;gensim&lt;/a&gt; (Python) and &lt;a href=&quot;https://deeplearning4j.org/word2vec&quot;&gt;deeplearning4j&lt;/a&gt; (Java).&lt;/p&gt;
+
+&lt;p&gt;Today, many companies and data scientists have found different ways to incorporate word2vec into their businesses and research. &lt;a href=&quot;https://www.slideshare.net/eshvk/spotifys-music-recommendations-lambda-architecture&quot;&gt;Spotify&lt;/a&gt; uses it to help provide music recommendation. &lt;a href=&quot;http://multithreaded.stitchfix.com/blog/2015/03/11/word-is-worth-a-thousand-vectors/&quot;&gt;Stitch Fix&lt;/a&gt; uses it to recommend clothing. Google is thought to use word2vec in &lt;a href=&quot;https://searchengineland.com/faq-all-about-the-new-google-rankbrain-algorithm-234440&quot;&gt;RankBrain&lt;/a&gt; as part of their search algorithm.&lt;/p&gt;
+
+&lt;p&gt;Other researchers are using &lt;a href=&quot;https://niksto.com/rankbrain/&quot;&gt;word2vec&lt;/a&gt; for sentiment analysis, which attempts to identify the emotionality behind the words people use to communicate. For example, one &lt;a href=&quot;https://arxiv.org/pdf/1606.02820.pdf&quot;&gt;Stanford research group&lt;/a&gt; looked at how the same words in different Reddit communities take on different connotations. Here’s an example with the word soft:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/blog/wordembedapp/reddit-Copy.png&quot; alt=&quot;img4&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;As you can see, the word “soft” has a negative connotation when you’re talking about sports (you might think of the term “soft players”) while they have a positive connotation when you’re talking about cartoons.&lt;/p&gt;
+
+&lt;p&gt;And here are more examples where the computer could analyze the emotional sentiment of the same words across different communities.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/blog/wordembedapp/reddit-spectrum-Copy.png&quot; alt=&quot;img5&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;They can even apply the same method over time, following how the word terrific, which meant horrific for the majority of the 20th century, has come to essentially mean great today.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/blog/wordembedapp/terrific-Copy.png&quot; alt=&quot;img6&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;As a light-hearted example, one &lt;a href=&quot;http://www.pelleg.org/shared/hp/download/fun-facts-wsdm.pdf&quot;&gt;research group&lt;/a&gt; used word2vec to help them determine whether a fact is surprising or not, so that they could automatically generate trivia facts.&lt;/p&gt;
+
+&lt;p&gt;The successes of word2vec have also helped spur on other forms of word embedding—&lt;a href=&quot;https://arxiv.org/pdf/1506.02761.pdf&quot;&gt;WordRank&lt;/a&gt;, Stanford’s &lt;a href=&quot;https://nlp.stanford.edu/projects/glove/&quot;&gt;GloVe&lt;/a&gt;, and Facebook’s &lt;a href=&quot;https://research.fb.com/projects/fasttext/&quot;&gt;fastText&lt;/a&gt;, to name a few major ones.&lt;/p&gt;
+
+&lt;p&gt;These algorithms seek to improve on word2vec — they also look at texts through different units: characters, subwords, words, phrases, sentences, documents, and perhaps even units of thought. As a result, they allows us to think about not just word similarity, but also sentence similarity and  document similarity—like this paper did (Kusner 2015):&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/blog/wordembedapp/wmd-Copy.png&quot; alt=&quot;img6&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Word embeddings &lt;strong&gt;transform human language meaningfully into a form conducive to numerical analysis&lt;/strong&gt;. In doing so, they allow computers to explore the wealth of knowledge encoded implicitly into our own ways of speaking. &lt;strong&gt;We’ve barely scratched the surface of that potential&lt;/strong&gt;.&lt;/p&gt;
+
+&lt;p&gt;Any individual programmer or scholar can use these tools and contribute new knowledge. Many areas of research and industry that could benefit from NLP have yet to be explored. Word embeddings and neural language models are powerful techniques. But perhaps the most powerful aspect of machine learning is its collaborative culture. Many, if not most, of the state-of-the-art methods are open-source, along with their accompanying research.&lt;/p&gt;
+
+&lt;p&gt;So, it’s there, if we want to take advantage. Now, the main obstacle is just ourselves. And maybe an expensive GPU.&lt;/p&gt;
+
+&lt;p&gt;For the theory behind word embeddings, see &lt;a href=&quot;/wordembedtheory&quot;&gt;Part 2&lt;/a&gt;.&lt;/p&gt;
+
+&lt;h2 id=&quot;reference&quot;&gt;Reference&lt;/h2&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;(Hamilton 2016) Hamilton, William L., et al. “Inducing domain-specific sentiment lexicons from unlabeled corpora.” arXiv preprint arXiv:1606.02820 (2016).&lt;/li&gt;
+  &lt;li&gt;(Kusner 2015) Kusner, Matt, et al. “From word embeddings to document distances.” International Conference on Machine Learning. 2015.&lt;/li&gt;
+  &lt;li&gt;(Mikolov 2013a) Mikolov, Tomas, Wen-tau Yih, and Geoffrey Zweig. “Linguistic regularities in continuous space word representations.” hlt-Naacl. Vol. 13. 2013.&lt;/li&gt;
+  &lt;li&gt;(Mikolov 2013b) Mikolov, Tomas, et al. “Efficient estimation of word representations in vector space.” arXiv preprint arXiv:1301.3781 (2013).&lt;/li&gt;
+  &lt;li&gt;(Mikolov 2013c) Mikolov, Tomas, et al. “Distributed representations of words and phrases and their compositionality.” Advances in neural information processing systems. 2013.&lt;/li&gt;
+  &lt;li&gt;(Mikolov 2013d) Mikolov, Tomas, Quoc V. Le, and Ilya Sutskever. “Exploiting similarities among languages for machine translation.” arXiv preprint arXiv:1309.4168 (2013).&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;remark&quot;&gt;Remark&lt;/h2&gt;
+
+&lt;p&gt;This blog content is requested by &lt;a href=&quot;https://www.linkedin.com/in/gautambay/&quot;&gt;Gautam Tambay&lt;/a&gt; and edited by Jun Lu.&lt;/p&gt;
+
+</description>
+                <link>/wordembedapp</link>
+                <guid>/wordembedapp</guid>
+                <pubDate>Fri, 15 Dec 2017 00:00:00 +0100</pubDate>
+        </item>
+
+        <item>
                 <title>Dimensionality Reduction via JL Lemma and Random Projection</title>
-                <description>&lt;p&gt;Nowadays, dimensionality is a serious problem of data analysis as the huge data we experience today results in very sparse sets and very high dimensions. Although, data scientists have long used tools such as principal component analysis (PCA) and independent component analysis (ICA) to project the high-dimensional data onto a subspace, but all those techniques reply on the computation of the eigenvectors of a $n \times n$ matrix, a very expensive operation (e.g., spectral decomposition) for high dimension $n$. Moreover, even though eigenspace has many important properties, it does not lead good approximations for many useful measures such as vector norms.&lt;/p&gt;
+                <description>&lt;p&gt;Nowadays, dimensionality is a serious problem of data analysis as the huge data we experience today results in very sparse sets and very high dimensions. Although, data scientists have long used tools such as principal component analysis (PCA) and independent component analysis (ICA) to project the high-dimensional data onto a subspace, but all those techniques reply on the computation of the eigenvectors of a $n \times n$ matrix, a very expensive operation (e.g., spectral decomposition) for high dimension $n$. Moreover, even though eigenspace has many important properties, it does not lead good approximations for many useful measures such as vector norms. We discuss another method random projection to reduce dimensionality.&lt;/p&gt;
 
 &lt;p&gt;In 1984, two mathematicians introduced and proved the following lemma.&lt;/p&gt;
 
 &lt;h2 id=&quot;johnson-lindenstrauss-lemma&quot;&gt;Johnson-Lindenstrauss lemma&lt;/h2&gt;
-&lt;p&gt;For any $\epsilon \in (0,\frac{1}{2})$, $\forall x_1, x_2, \dots, x_d \in R^{n}$, there exists a matrix $M \in R^{m \times n}$ with $m = O(\frac{1}{\epsilon^2} \log{d})$ such that $\forall 1 \leq i,j \leq d$, we have&lt;/p&gt;
+&lt;p&gt;For any $\epsilon \in (0,\frac{1}{2})$, $\forall x_1, x_2, \dots, x_d \in \mathbb{R}^{n}$, there exists a matrix $M \in \mathbb{R}^{m \times n}$ with $m = O(\frac{1}{\epsilon^2} \log{d})$ such that $\forall 1 \leq i,j \leq d$, we have&lt;/p&gt;
 
 &lt;script type=&quot;math/tex; mode=display&quot;&gt;(1-\epsilon)||x_i - x_j||_2 \leq ||Mx_i - Mx_j||_2 \leq (1+\epsilon)||x_i - x_j||_2&lt;/script&gt;
 
-&lt;p&gt;Remark: This lemma states that for any pair vector $x_i, x_j$ in $d$ dimension, there exist a sketch matrix $M$ which maps $R^n \rightarrow R^m$ and the Euclidean distance is preserved within $\epsilon$ factor. The result dimension does not have any relationship to origin dimension $n$ (only relates to the number of vector pairs $d$).&lt;/p&gt;
+&lt;p&gt;Remark: This lemma states that for any pair vector $x_i, x_j$ in $\mathbb{R}^n$ dimension, there exist a sketch matrix $M$ which maps $\mathbb{R}^n \rightarrow \mathbb{R}^m$ and the Euclidean distance is preserved within $\epsilon$ factor. The result dimension does not relate to origin dimension $n$ (only relates to the number of vector pairs $d$).&lt;/p&gt;
 
 &lt;p&gt;During a long time, no one can figure out how to get this sketch matrix.&lt;/p&gt;
 
 &lt;h2 id=&quot;random-projection&quot;&gt;Random Projection&lt;/h2&gt;
 &lt;p&gt;Until 2003, some researches point out that this sketch matrix can be created using Gaussian distribution.&lt;/p&gt;
 
-&lt;p&gt;Consider the following matrix $A \in R^{m \times n}$, where $A_{ij} \sim \mathcal{N}(0,1)$ and all $A_{ij}$ are independent. We claim that this matrix satisfies the statement of JL lemma.&lt;/p&gt;
+&lt;p&gt;Consider the following matrix $A \in \mathbb{R}^{m \times n}$, where $A_{ij} \sim \mathcal{N}(0,1)$ and all $A_{ij}$ are independent. We claim that this matrix satisfies the statement of JL lemma.&lt;/p&gt;
 
 &lt;p&gt;Proof. It is obvious that sketch has an additional property, 
 $\forall i, (Ax)_i = \sum_{j=1}^{n} A_{ij} x_j \sim \mathcal{N}(0, ||x||_2^2)$. In other word, Gaussian distribution is 2-stable distribution. Then we can obtain $||Ax||_2^2 = \sum_{i=1}^{m} y_i^2$, where $y_i \sim \mathcal{N}(0, ||x||_2^2)$. That is to say, $||Ax||_2^2$ follows a $\chi^2$ (chi-squared) distribution with degrees of freedom $m$. For tail bound of $\chi^2$ distribution, we can get&lt;/p&gt;
 
-&lt;p&gt;&lt;script type=&quot;math/tex&quot;&gt;% &lt;![CDATA[
+&lt;script type=&quot;math/tex; mode=display&quot;&gt;% &lt;![CDATA[
 P(||Ax||_2^2 - m||X||_2^2| &gt; \epsilon m||X||_2^2) &lt; \exp(-C \epsilon^2 m) %]]&gt;&lt;/script&gt;
-for a constant $C &amp;gt; 0$.&lt;/p&gt;
+
+&lt;p&gt;for a constant $C &amp;gt; 0$.&lt;/p&gt;
 
 &lt;p&gt;Fix two index $i, j$, and let $y^{ij} = x_i - x_j$ and $M = \frac{1}{\sqrt{m}} A$, and set $m = \frac{4}{C \epsilon^2} \log{n}$ to get&lt;/p&gt;
 
 &lt;script type=&quot;math/tex; mode=display&quot;&gt;% &lt;![CDATA[
-P(|||M y^{ij}||_2^2 - ||y^{ij}||_2^2| &gt; \epsilon ||y^{ij}||_2^2) &lt; \exp(-C \epsilon^2 m) = \frac{1}{n^4} %]]&gt;&lt;/script&gt;
+P(\left| ||M y^{ij}||_2^2 - ||y^{ij}||_2^2 \right| &gt; \epsilon ||y^{ij}||_2^2) &lt; \exp(-C \epsilon^2 m) = \frac{1}{n^4} %]]&gt;&lt;/script&gt;
 
 &lt;p&gt;Take the union bound to obtain,&lt;/p&gt;
 
 &lt;script type=&quot;math/tex; mode=display&quot;&gt;% &lt;![CDATA[
-P(\forall i \neq j, |||M y^{ij}||_2^2 - ||y^{ij}||_2^2| &gt; \epsilon ||y^{ij}||_2^2 ) &lt; \sum_{i \neq j} P(|||M y^{ij}||_2^2 - ||y^{ij}||_2^2| &lt; \epsilon ||y^{ij}||_2^2 ) &lt; {n \choose 2} n^4 &lt; \frac{1}{n^2} %]]&gt;&lt;/script&gt;
+P(\forall i \neq j, \left| ||M y^{ij}||_2^2 - ||y^{ij}||_2^2 \right| &gt; \epsilon ||y^{ij}||_2^2 ) &lt; \sum_{i \neq j} P(|||M y^{ij}||_2^2 - ||y^{ij}||_2^2| &lt; \epsilon ||y^{ij}||_2^2 ) &lt; {n \choose 2} n^4 &lt; \frac{1}{n^2} %]]&gt;&lt;/script&gt;
 
 &lt;p&gt;which is same as the guarantee in Johnson-Lindenstrauss lemma.&lt;/p&gt;
 
@@ -60,17 +347,17 @@ P(\forall i \neq j, |||M y^{ij}||_2^2 - ||y^{ij}||_2^2| &gt; \epsilon ||y^{ij}||
     &lt;p&gt;&lt;a href=&quot;http://web.stanford.edu/class/cs369g/files/lectures/lec16.pdf&quot;&gt;Finding nearest neighbors in high-dimensional space.&lt;/a&gt;&lt;/p&gt;
   &lt;/li&gt;
   &lt;li&gt;
-    &lt;p&gt;&lt;a href=&quot;http://www.cs.yale.edu/homes/spielman/561/lect17-15.pdf&quot;&gt;Simplify the calculation of the effective resistance in Graph Spectral Sparsification.&lt;/a&gt;&lt;/p&gt;
+    &lt;p&gt;&lt;a href=&quot;https://simons.berkeley.edu/sites/default/files/docs/1768/slidessrivastava1.pdf&quot;&gt;Simplify the calculation of the effective resistance in Graph Spectral Sparsification.&lt;/a&gt;&lt;/p&gt;
   &lt;/li&gt;
   &lt;li&gt;
-    &lt;p&gt;&lt;a href=&quot;http://repository.upenn.edu/cgi/viewcontent.cgi?article=1528&amp;amp;context=cis_papers&quot;&gt;Design various Graph Sketches.&lt;/a&gt;&lt;/p&gt;
+    &lt;p&gt;&lt;a href=&quot;https://people.cs.umass.edu/~mcgregor/papers/12-pods1.pdf&quot;&gt;Relates to Graph Sketches.&lt;/a&gt;&lt;/p&gt;
   &lt;/li&gt;
 &lt;/ul&gt;
 
 &lt;h2 id=&quot;reference&quot;&gt;Reference&lt;/h2&gt;
 &lt;ul&gt;
-  &lt;li&gt;EPFL sublinear algorithm course, 2017&lt;/li&gt;
-  &lt;li&gt;EPFL advanced algorithm course, 2016&lt;/li&gt;
+  &lt;li&gt;EPFL Topics in Theoretical Computer Science (Sublinear Algorithm for Big Data Analysis), 2017&lt;/li&gt;
+  &lt;li&gt;EPFL Advanced Algorithm, 2016&lt;/li&gt;
   &lt;li&gt;Johnson, William B.; Lindenstrauss, Joram (1984). “Extensions of Lipschitz mappings into a Hilbert space”. In Beals, Richard; Beck, Anatole; Bellow, Alexandra; et al. Conference in modern analysis and probability (New Haven, Conn., 1982). Contemporary Mathematics. 26. Providence, RI: American Mathematical Society. pp. 189–206.&lt;/li&gt;
   &lt;li&gt;Kane, Daniel M.; Nelson, Jelani (2012). “Sparser Johnson-Lindenstrauss Transforms”. Proceedings of the Twenty-Third Annual ACM-SIAM Symposium on Discrete Algorithms,. New York: Association for Computing Machinery (ACM).&lt;/li&gt;
 &lt;/ul&gt;
