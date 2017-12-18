@@ -101,6 +101,10 @@ For the theory behind word embeddings, see [Part 2](/wordembedtheory).
 
 ## Remark
 
-This blog content is requested by [Gautam Tambay](https://www.linkedin.com/in/gautambay/) and edited by Jun Lu.
+This blog content is requested by [Gautam Tambay](https://www.linkedin.com/in/gautambay/) and edited by [Jun Lu](https://github.com/junlulocky). You can also find this blog at [Springboard](https://www.springboard.com/blog/introduction-word-embeddings/). 
+
+
+{% include /othertrack.html %}
+
 
 
