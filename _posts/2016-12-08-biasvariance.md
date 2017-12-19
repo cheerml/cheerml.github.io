@@ -28,21 +28,25 @@ Where the tilde symbol means there is a constant 1 feature added to the raw data
 ## Expected Test Error
 Bias-variance comes directly out of the test error:
 
-\\[ \overline{teErr} = \mathbb{E}[(observation - prediction)^2] \qquad (2.1) \\]
+$$
+\begin{align*}
+ \overline{teErr} &= \mathbb{E}[(observation - prediction)^2] \qquad (2.1) \\
 
-\\[   =\mathbb{E}\_{D\_{tr},D\_{te}} [(y\_\ast − f\_{lse})^2] \qquad (2.2)\\]
+ & =\mathbb{E}_{D_{tr},D_{te}} [(y_\ast − f_{lse})^2] \qquad (2.2)\\
 
-\\[   = \mathbb{E}\_{y\_\ast,w\_{lse}} [(y\_\ast −f\_{lse} )^2] \qquad (2.3)\\]
+ &= \mathbb{E}_{y_\ast,w_{lse}} [(y_\ast −f_{lse} )^2] \qquad (2.3)\\
 
-\\[ = \mathbb{E}\_{y\_\ast, w\_{lse}} [(y\_\ast −f\_{true} + f\_{true} −f\_{lse})^2]  \qquad (2.4) \\]
+ &= \mathbb{E}_{y_\ast, w_{lse}} [(y_\ast −f_{true} + f_{true} −f_{lse})^2]  \qquad (2.4) \\
 
-\\[ = \mathbb{E}\_{y\_\ast}[(y\_{\ast}−f\_{true})^2] + \mathbb{E}\_{w\_{lse}} [(f\_{lse} − f\_{true})^2] \qquad (2.5)\\]
+ &= \mathbb{E}_{y_\ast}[(y_{\ast}−f_{true})^2] + \mathbb{E}_{w_{lse}} [(f_{lse} − f_{true})^2] \qquad (2.5)\\
 
-\\[ = \sigma^2 + \mathbb{E} w\_{lse} [(f\_{lse} − \mathbb{E} w\_{lse} [f\_{lse}] −f\_{true} + \mathbb{E}w\_{lse} [f\_{lse}])^2]  \qquad (2.6)\\]
+ &= \sigma^2 + \mathbb{E} w_{lse} [(f_{lse} − \mathbb{E} w_{lse} [f_{lse}] −f_{true} + \mathbb{E}w_{lse} [f_{lse}])^2]  \qquad (2.6)\\
 
-\\[ = \sigma^2 + \mathbb{E} w\_{lse} [(f\_{lse} − \mathbb{E} w\_{lse} [f\_{lse}])^2] +  [f\_{true} + \mathbb{E}w\_{lse} (f\_{lse})]^2  \qquad (2.7)\\]
+ &= \sigma^2 + \mathbb{E} w_{lse} [(f_{lse} − \mathbb{E} w_{lse} [f_{lse}])^2] +  [f_{true} + \mathbb{E}w_{lse} (f_{lse})]^2  \qquad (2.7)\\
+\end{align*}
+$$
 
-(I am sorry, I did not find the equation alignment in MathJax.) Where equation (2.2) is the expectation over training data and testing data; and the second term in equation (2.7) is called **predict variance**, and the third term of it is called the square of **predict bias**. Thus comes the name bias-variance decomposition.
+Where equation (2.2) is the expectation over training data and testing data; and the second term in equation (2.7) is called **predict variance**, and the third term of it is called the square of **predict bias**. Thus comes the name bias-variance decomposition.
 
 
 ## Where does the bias come from? model bias and estimation bias 

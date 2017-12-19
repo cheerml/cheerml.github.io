@@ -136,21 +136,24 @@
 <h2 id="expected-test-error">Expected Test Error</h2>
 <p>Bias-variance comes directly out of the test error:</p>
 
-<p>\[ \overline{teErr} = \mathbb{E}[(observation - prediction)^2] \qquad (2.1) \]</p>
+<script type="math/tex; mode=display">% <![CDATA[
+\begin{align*}
+ \overline{teErr} &= \mathbb{E}[(observation - prediction)^2] \qquad (2.1) \\
 
-<p>\[   =\mathbb{E}_{D_{tr},D_{te}} [(y_\ast − f_{lse})^2] \qquad (2.2)\]</p>
+ & =\mathbb{E}_{D_{tr},D_{te}} [(y_\ast − f_{lse})^2] \qquad (2.2)\\
 
-<p>\[   = \mathbb{E}_{y_\ast,w_{lse}} [(y_\ast −f_{lse} )^2] \qquad (2.3)\]</p>
+ &= \mathbb{E}_{y_\ast,w_{lse}} [(y_\ast −f_{lse} )^2] \qquad (2.3)\\
 
-<p>\[ = \mathbb{E}_{y_\ast, w_{lse}} [(y_\ast −f_{true} + f_{true} −f_{lse})^2]  \qquad (2.4) \]</p>
+ &= \mathbb{E}_{y_\ast, w_{lse}} [(y_\ast −f_{true} + f_{true} −f_{lse})^2]  \qquad (2.4) \\
 
-<p>\[ = \mathbb{E}_{y_\ast}[(y_{\ast}−f_{true})^2] + \mathbb{E}_{w_{lse}} [(f_{lse} − f_{true})^2] \qquad (2.5)\]</p>
+ &= \mathbb{E}_{y_\ast}[(y_{\ast}−f_{true})^2] + \mathbb{E}_{w_{lse}} [(f_{lse} − f_{true})^2] \qquad (2.5)\\
 
-<p>\[ = \sigma^2 + \mathbb{E} w_{lse} [(f_{lse} − \mathbb{E} w_{lse} [f_{lse}] −f_{true} + \mathbb{E}w_{lse} [f_{lse}])^2]  \qquad (2.6)\]</p>
+ &= \sigma^2 + \mathbb{E} w_{lse} [(f_{lse} − \mathbb{E} w_{lse} [f_{lse}] −f_{true} + \mathbb{E}w_{lse} [f_{lse}])^2]  \qquad (2.6)\\
 
-<p>\[ = \sigma^2 + \mathbb{E} w_{lse} [(f_{lse} − \mathbb{E} w_{lse} [f_{lse}])^2] +  [f_{true} + \mathbb{E}w_{lse} (f_{lse})]^2  \qquad (2.7)\]</p>
+ &= \sigma^2 + \mathbb{E} w_{lse} [(f_{lse} − \mathbb{E} w_{lse} [f_{lse}])^2] +  [f_{true} + \mathbb{E}w_{lse} (f_{lse})]^2  \qquad (2.7)\\
+\end{align*} %]]></script>
 
-<p>(I am sorry, I did not find the equation alignment in MathJax.) Where equation (2.2) is the expectation over training data and testing data; and the second term in equation (2.7) is called <strong>predict variance</strong>, and the third term of it is called the square of <strong>predict bias</strong>. Thus comes the name bias-variance decomposition.</p>
+<p>Where equation (2.2) is the expectation over training data and testing data; and the second term in equation (2.7) is called <strong>predict variance</strong>, and the third term of it is called the square of <strong>predict bias</strong>. Thus comes the name bias-variance decomposition.</p>
 
 <h2 id="where-does-the-bias-come-from-model-bias-and-estimation-bias">Where does the bias come from? model bias and estimation bias</h2>
 <p>As illustrated in the following figure, bias comes from model bias and estimation bias. Model bias comes from the model itself; and estimation bias comes from dataset (mainly). And bear in mind that ridge regression increases estimation bias while reducing variance(you may need to find other papers to get this idea)</p>
@@ -628,6 +631,7 @@ $(document).ready(function(){
     tex2jax: {
       inlineMath: [ ['$','$'], ["\\(","\\)"] ],
       displayMath: [ ['$$','$$'], ["\[","\]"], ["\\[","\\]"] ],
+      <!-- displayMath: [ ['$$','$$'] ], -->
       processEscapes: true
     },
     messageStyle: "none",
