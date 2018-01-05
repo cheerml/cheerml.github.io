@@ -52,6 +52,7 @@ P(\forall i \neq j, \left| ||M y^{ij}||_2^2 - ||y^{ij}||_2^2 \right| > \epsilon 
 $$
 
 Thus,
+
 $$
 P(\forall i \neq j, \left| ||M (x_i - x_j)||_2^2 - ||x_i - x_j||_2^2 \right| \leq \epsilon ||x_i - x_j||_2^2 ) > 1 - \frac{1}{n^2}
 $$
