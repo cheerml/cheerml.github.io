@@ -51,6 +51,11 @@ $$
 P(\forall i \neq j, \left| ||M y^{ij}||_2^2 - ||y^{ij}||_2^2 \right| > \epsilon ||y^{ij}||_2^2 ) < \sum_{i \neq j} P(|||M y^{ij}||_2^2 - ||y^{ij}||_2^2| < \epsilon ||y^{ij}||_2^2 ) < {n \choose 2} n^4 < \frac{1}{n^2}
 $$
 
+Thus,
+$$
+P(\forall i \neq j, \left| ||M (x_i - x_j)||_2^2 - ||x_i - x_j||_2^2 \right| \leq \epsilon ||x_i - x_j||_2^2 ) > 1 - \frac{1}{n^2}
+$$
+
 which is same as the guarantee in Johnson-Lindenstrauss lemma.
 
 ## Application
