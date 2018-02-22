@@ -23,7 +23,7 @@ Essentially, the sketch matrix maps any vector $x \in \mathbb{R}^n$ in the span 
 ## Matrix Multiplication via Subspace Embedding
 Consider a simple problem, given two matrix $A, B \in \mathbb{R}^{n \times d}$, what is the complexity to compute the  $C = A^{\top} B$? The simple algorithm takes $O(nd^2)$. Now we use subspace embedding to solve it. The result matrix is just $C' = (\Pi A)^{\top} (\Pi B)$. We can prove that with at least $1 - 3d^2 \epsilon$ probability, $\|C' - C\|_F \leq \epsilon \|A\|_F \|B\|_F $ holds. 
 
-## Least Squares Regression via Subspace embedding
+## Least Squares Regression via Subspace Embedding
 
 Before we introduce subspace embedding, consider a simple problem, least squares regression. The exact least squares regression is the following problem: Given $A \in \mathbb{R}^{n \times d}$ and $b \in \mathbb{R}^n$, solve that
 $$
