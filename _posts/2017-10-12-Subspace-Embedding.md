@@ -21,7 +21,7 @@ $$
 Essentially, the sketch matrix maps any vector $x \in \mathbb{R}^n$ in the span of the columns of $U$ to $\mathbb{R}^m$ and the $l_2$ norm is preserved with high probability.
 
 ## Matrix Multiplication via Subspace Embedding
-Consider a simple problem, given two matrix $A, B \in \mathbb{R}^{n \times d}$, what is the complexity to compute the  $C = A^{\top} B$? The simple algorithm takes $O(nd^2)$. Now we use subspace embedding to solve it. The result matrix is just $C' = (\Pi A)^{\top} (\Pi B)$. We can prove that with at least $1 - 3d^2 \epsilon$ probability, $\| C' - C \|_F \leq \epsilon \| A \|_F \| B \|_F $ holds. 
+Consider a simple problem, given two matrix $A, B \in \mathbb{R}^{n \times d}$, what is the complexity to compute the  $C = A^{\top} B$? The simple algorithm takes $O(nd^2)$. Now we use subspace embedding to solve it. The result matrix is just $C' = (\Pi A)^{\top} (\Pi B)$. We can prove that with at least $1 - 3d^2 \epsilon$ probability, $$\| C' - C \|_F \leq \epsilon \| A \|_F \| B \|_F $$ holds. 
 
 ## Least Squares Regression via Subspace Embedding
 
@@ -39,7 +39,7 @@ $$
 
 where $\Delta$ is a small constant number.
 
-Suppose there exist a $(d+1, \epsilon, \delta)$-subspace embedding matrix $\Pi$, can we solve the following problem instead.
+Suppose there exist a $(d+1, \epsilon, \delta)$-subspace embedding matrix $\Pi$, can we solve the following problem instead?
 
 $$
 x' = \arg \min_{x \in R^d } \| \Pi Ax - \Pi b  \|_2 \qquad (2)
