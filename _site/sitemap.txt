@@ -12,6 +12,7 @@
 
 /wordembedtheory
 /wordembedapp
+/subspace-embedding
 /random-projection
 /comparison-distributed-ml-platform
 /bias-variance

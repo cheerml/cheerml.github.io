@@ -5,8 +5,8 @@
         <description>Cheer ML - Jun Lu, Yixuan Hu</description>
         <link></link>
         <atom:link href="" rel="self" type="application/rss+xml" />
-        <lastBuildDate>Mon, 25 Dec 2017 14:45:01 +0100</lastBuildDate>
-        <pubDate>Mon, 25 Dec 2017 14:45:01 +0100</pubDate>
+        <lastBuildDate>Sat, 03 Mar 2018 17:43:08 +0800</lastBuildDate>
+        <pubDate>Sat, 03 Mar 2018 17:43:08 +0800</pubDate>
         <ttl>60</ttl>
 
 
@@ -190,7 +190,7 @@ Expand here to see the he references I cited above&lt;/li&gt;
 </description>
                 <link>/wordembedtheory</link>
                 <guid>/wordembedtheory</guid>
-                <pubDate>Thu, 14 Dec 2017 00:00:00 +0100</pubDate>
+                <pubDate>Thu, 14 Dec 2017 00:00:00 +0800</pubDate>
         </item>
 
         <item>
@@ -293,7 +293,158 @@ Expand here to see the he references I cited above&lt;/li&gt;
 </description>
                 <link>/wordembedapp</link>
                 <guid>/wordembedapp</guid>
-                <pubDate>Thu, 14 Dec 2017 00:00:00 +0100</pubDate>
+                <pubDate>Thu, 14 Dec 2017 00:00:00 +0800</pubDate>
+        </item>
+
+        <item>
+                <title>Subspace-Embedding</title>
+                <description>&lt;p&gt;Subspace embedding is a powerful tool to simplify the matrix calculation and analyze high dimensional data, especially for sparse matrix.&lt;/p&gt;
+
+&lt;h2 id=&quot;subspace-embedding&quot;&gt;Subspace Embedding&lt;/h2&gt;
+&lt;p&gt;A random matrix $\Pi \in \mathbb{R}^{m \times n}$ is a $(d, \epsilon, \delta)$-subspace embedding if for every $d$-dimensional subspace $U \subseteq \mathbb{R}^n$, $\forall x \in U$ has,&lt;/p&gt;
+
+&lt;script type=&quot;math/tex; mode=display&quot;&gt;\mathrm{P}(\left| ||\Pi x||_2 -  ||x||_2 \right| \leq \epsilon ||x||_2) \geq 1 - \delta&lt;/script&gt;
+
+&lt;p&gt;Essentially, the sketch matrix maps any vector $x \in \mathbb{R}^n$ in the span of the columns of $U$ to $\mathbb{R}^m$ and the $l_2$ norm is preserved with high probability.&lt;/p&gt;
+
+&lt;h2 id=&quot;matrix-multiplication-via-subspace-embedding&quot;&gt;Matrix Multiplication via Subspace Embedding&lt;/h2&gt;
+&lt;p&gt;Consider a simple problem, given two matrix $A, B \in \mathbb{R}^{n \times d}$, what is the complexity to compute the  $C = A^{\top} B$? The simple algorithm takes $O(nd^2)$. Now we use subspace embedding to solve it. The result matrix is just $C’ = (\Pi A)^{\top} (\Pi B)$. We can prove that with at least $1 - 3d^2 \epsilon$ probability, &lt;script type=&quot;math/tex&quot;&gt;\| C' - C \|_F \leq \epsilon \| A \|_F \| B \|_F&lt;/script&gt; holds.&lt;/p&gt;
+
+&lt;h2 id=&quot;least-squares-regression-via-subspace-embedding&quot;&gt;Least Squares Regression via Subspace Embedding&lt;/h2&gt;
+
+&lt;p&gt;Before we introduce subspace embedding, consider a simple problem, least squares regression. The exact least squares regression is the following problem: Given $A \in \mathbb{R}^{n \times d}$ and $b \in \mathbb{R}^n$, solve that&lt;/p&gt;
+
+&lt;script type=&quot;math/tex; mode=display&quot;&gt;x^{*} = \arg \min_{x \in R^d } \| Ax - b  \|_2 \qquad (1)&lt;/script&gt;
+
+&lt;p&gt;It is well-known that the solution is $(A^{\top}A)^{+} A^T b$, where $(A^{\top}A)^{+}$ is the Moore-Penrose pseudoinverse of $A^{\top}A$. It can be calculated via SVD computation, taking $O(n d^2)$ time. However, if we allow approximation, can we decrease the time complexity? We can formalize the question as below, instead of finding the exact solution $x^{*}$, we would like to find $x’ \in \mathbb{R}^d$ such that,&lt;/p&gt;
+
+&lt;script type=&quot;math/tex; mode=display&quot;&gt;\| Ax^{*} - b  \|_2 \leq  \| Ax' - b  \|_2  \leq (1 + \Delta) \| Ax^{*} - b  \|_2&lt;/script&gt;
+
+&lt;p&gt;where $\Delta$ is a small constant number.&lt;/p&gt;
+
+&lt;p&gt;Suppose there exist a $(d+1, \epsilon, \delta)$-subspace embedding matrix $\Pi$, can we solve the following problem instead?&lt;/p&gt;
+
+&lt;script type=&quot;math/tex; mode=display&quot;&gt;x' = \arg \min_{x \in R^d } \| \Pi Ax - \Pi b  \|_2 \qquad (2)&lt;/script&gt;
+
+&lt;p&gt;Proof: By the definition of $d+1$-subspace embedding matrix, the following equation holds with probability at least $1 - \delta$ for every arbitrary $x \in \mathbb{R}^d$&lt;/p&gt;
+
+&lt;script type=&quot;math/tex; mode=display&quot;&gt;\left| \| \Pi [A;b] \cdot [x^{\top}; -1] \|_2 - \| [A;b] \cdot [x^{\top}; -1] \|_2 \right| \leq \epsilon \| [A;b] \cdot [x^{\top}; -1] \|_2 \qquad (3)&lt;/script&gt;
+
+&lt;p&gt;For $x’$ is optimum in equation(2), we have&lt;/p&gt;
+
+&lt;script type=&quot;math/tex; mode=display&quot;&gt;\begin{align}
+\| \Pi Ax' - \Pi b \|_2 \leq \| \Pi Ax^{*} - \Pi b \|_2 
+\end{align} \qquad (4)&lt;/script&gt;
+
+&lt;p&gt;Replace $x^{\star}$ with $x$ in equation(3), we have&lt;/p&gt;
+
+&lt;script type=&quot;math/tex; mode=display&quot;&gt;\| \Pi Ax^{\star} - \Pi b  \|_2 \leq (1 + \epsilon) \|Ax^{\star} - b \|_2 \qquad (5)&lt;/script&gt;
+
+&lt;p&gt;Replace $x’$ with $x$ in equation(3), we have&lt;/p&gt;
+
+&lt;script type=&quot;math/tex; mode=display&quot;&gt;\| \Pi Ax' - \Pi b  \|_2 \geq (1 - \epsilon) \|Ax' - b \|_2 \qquad (6)&lt;/script&gt;
+
+&lt;p&gt;Combine equation(4, 5, 6) to get&lt;/p&gt;
+
+&lt;script type=&quot;math/tex; mode=display&quot;&gt;(1 - \epsilon) \|Ax' - b \|_2 \leq (1 + \epsilon) \|Ax^{\star} - b \|_2&lt;/script&gt;
+
+&lt;p&gt;Take $\Delta = \frac{2 \epsilon}{1 - \epsilon}$ to conclude that the solution in equation(2) satisfies the desired statement.&lt;/p&gt;
+
+&lt;script type=&quot;math/tex; mode=display&quot;&gt;\| Ax^{*} - b  \|_2 \leq  \| Ax' - b  \|_2  \leq (1 + \Delta) \| Ax^{*} - b  \|_2&lt;/script&gt;
+
+&lt;p&gt;Util now, we have seen how to solve approximate least regression problem by subspace embedding. However, one fundamental questions may arise, how to construct subspace embedding matrix? In the following section, we demonstrate that CountSketch is a subspace embedding.&lt;/p&gt;
+
+&lt;h2 id=&quot;subspace-embedding-via-countsketch&quot;&gt;Subspace Embedding Via CountSketch&lt;/h2&gt;
+&lt;p&gt;CountSketch matrix $S \in \mathbb{R}^{B \times n}$ is defined as follows, fix the number of buckets $B$, a hash function $h:[n] \rightarrow [B]$ and a sign function $\phi:[n] \rightarrow {-1, +1}$. For $r \in [B], a \in [n]$, let&lt;/p&gt;
+
+&lt;script type=&quot;math/tex; mode=display&quot;&gt;% &lt;![CDATA[
+S_{ra} = \begin{cases}
+				\phi(a) &amp; \text{if } h(a) = r \\
+				0 &amp; \text{otherwise}
+			\end{cases} %]]&gt;&lt;/script&gt;
+
+&lt;p&gt;CountSketch Example:&lt;/p&gt;
+
+&lt;script type=&quot;math/tex; mode=display&quot;&gt;% &lt;![CDATA[
+\left(
+\begin{matrix}
+0 &amp; -1 &amp; 0 &amp; 0 &amp; 0 &amp; 0 &amp; 0 &amp; 0 &amp; 0 &amp; 1 &amp; 0 \\
+1 &amp; 0 &amp; 0 &amp; 0 &amp; 0 &amp; -1 &amp; 0 &amp; 0 &amp; 0 &amp; 0 &amp; 0 \\
+0 &amp; 0 &amp; 0 &amp; 0 &amp; -1 &amp; 0 &amp; 0 &amp; 0 &amp; 1 &amp; 0 &amp; 1 \\
+0 &amp; 0 &amp; 0 &amp; 1 &amp; 0 &amp; 0 &amp; -1 &amp; 0 &amp; 0 &amp; 0 &amp; 0 \\
+0 &amp; 0 &amp; 1 &amp; 0 &amp; 0 &amp; 0 &amp; 0 &amp; -1 &amp; 0 &amp; 0 &amp; 0 \\
+\end{matrix}
+\right) %]]&gt;&lt;/script&gt;
+
+&lt;p&gt;We can show that for every subspace $U \in \mathbb{R}^{n \times d}$, then&lt;/p&gt;
+
+&lt;script type=&quot;math/tex; mode=display&quot;&gt;P(\left| ||\Pi x||_2 -  ||x||_2 \right| \leq \epsilon ||x||_2, \forall x \in \text{the column span of }U) &gt; 1 - \delta&lt;/script&gt;
+
+&lt;p&gt;Proof:&lt;/p&gt;
+
+&lt;p&gt;For $x$ is the the column span of $U$, then write $x$ as $Uy$ where $y \in \mathbb{R}^d$.&lt;/p&gt;
+
+&lt;script type=&quot;math/tex; mode=display&quot;&gt;(1 - \epsilon)||x||_2^2 \leq ||\Pi x||_2^2 \leq (1+\epsilon)||x||_2^2&lt;/script&gt;
+
+&lt;p&gt;equivalent to&lt;/p&gt;
+
+&lt;script type=&quot;math/tex; mode=display&quot;&gt;(1 - \epsilon) y^{\top} U^{\top} U y \leq y^{\top} U^{\top} \Pi^{\top} \Pi U y \leq (1+\epsilon) y^{\top} U^{\top} U y&lt;/script&gt;
+
+&lt;p&gt;For $U^{\top} U = I$,&lt;/p&gt;
+
+&lt;script type=&quot;math/tex; mode=display&quot;&gt;(1 - \epsilon) y^{\top} y \leq y^{\top} U^{\top} \Pi^{\top} \Pi U y \leq (1+\epsilon) y^{\top} y&lt;/script&gt;
+
+&lt;p&gt;equivalent to&lt;/p&gt;
+
+&lt;script type=&quot;math/tex; mode=display&quot;&gt;|| U^{\top} \Pi^{\top} \Pi U - I ||_2 \leq \epsilon&lt;/script&gt;
+
+&lt;p&gt;Since Frobenius norm upper bounds spectral norm, it suffices to show that&lt;/p&gt;
+
+&lt;script type=&quot;math/tex; mode=display&quot;&gt;|| U^{\top} \Pi^{\top} \Pi U - I ||_F \leq \epsilon&lt;/script&gt;
+
+&lt;p&gt;We can show that (the detailed proof is ignored)&lt;/p&gt;
+
+&lt;script type=&quot;math/tex; mode=display&quot;&gt;\mathbf{E}[ ||U^{\top} \Pi^{\top} \Pi U - I ||_F^2 ] \leq \frac{2 d^2}{B}&lt;/script&gt;
+
+&lt;p&gt;By the Markov’s inequality,&lt;/p&gt;
+
+&lt;script type=&quot;math/tex; mode=display&quot;&gt;\mathrm{P}( ||U^{\top} \Pi^{\top} \Pi U - I ||_F^2 
+\geq \epsilon^2) \leq \frac{2 d^2}{B \epsilon^2}&lt;/script&gt;
+
+&lt;p&gt;Then we can obtain
+&lt;script type=&quot;math/tex&quot;&gt;\mathrm{P}( ||U^{\top} \Pi^{\top} \Pi U - I ||_F 
+\geq \epsilon) \leq \frac{2 d^2}{B \epsilon^2}&lt;/script&gt;&lt;/p&gt;
+
+&lt;p&gt;Thus&lt;/p&gt;
+
+&lt;script type=&quot;math/tex; mode=display&quot;&gt;\mathrm{P} (\left| ||\Pi x||_2 -  ||x||_2 \right| \leq \epsilon ||x||_2) \geq 1 -  \frac{2 d^2}{B \epsilon^2}&lt;/script&gt;
+
+&lt;p&gt;which implies that CountSketch is a $(d, \epsilon, \frac{2 d^2}{B \epsilon^2})$-subspace embedding. Setting $B = \frac{C d^2}{\epsilon^2}$ for a large enough absolute constant $C$ gives a subspace embedding with large constant probability.&lt;/p&gt;
+
+&lt;h2 id=&quot;complexity-analysis&quot;&gt;Complexity Analysis&lt;/h2&gt;
+&lt;p&gt;The matrix $\Pi A$ is a $B \times d$ matrix, where $B = \frac{C d^2}{\epsilon^2}$. Thus using SVD to solve $||\Pi A x - \Pi b||$ takes $ploy(d, \frac{1}{\epsilon})$. How much time does it take to form the matrix $\Pi A$ and the vector $\Pi b$? Since every column of $\Pi$ has exactly one nonzero, the runtime of this is proportional to the number of nonzeros in the matrix $A$ and the vector $b$. The overall time is $O(nnz(A) + ploy(d, \frac{1}{\epsilon}))$. Note that if the matrix is sparse, this is very efficient.&lt;/p&gt;
+
+&lt;h2 id=&quot;experiment&quot;&gt;Experiment&lt;/h2&gt;
+
+&lt;h1 id=&quot;reference&quot;&gt;Reference&lt;/h1&gt;
+&lt;ul&gt;
+  &lt;li&gt;
+    &lt;p&gt;EPFL Topics in Theoretical Computer Science (Sublinear Algorithm for Big Data Analysis), 2017&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;Xiangrui Meng and Michael W. Mahoney. Low-distortion subspace embeddings in input-sparsity
+time and applications to robust linear regression, 2012.&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;Jelani Nelson and Huy L. Nguyen. Osnap: Faster numerical linear algebra algorithms via sparser
+subspace embeddings, 2012.&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+</description>
+                <link>/subspace-embedding</link>
+                <guid>/Subspace-Embedding</guid>
+                <pubDate>Tue, 10 Oct 2017 00:00:00 +0800</pubDate>
         </item>
 
         <item>
@@ -334,6 +485,10 @@ P(\left| ||M y^{ij}||_2^2 - ||y^{ij}||_2^2 \right| &gt; \epsilon ||y^{ij}||_2^2)
 &lt;script type=&quot;math/tex; mode=display&quot;&gt;% &lt;![CDATA[
 P(\forall i \neq j, \left| ||M y^{ij}||_2^2 - ||y^{ij}||_2^2 \right| &gt; \epsilon ||y^{ij}||_2^2 ) &lt; \sum_{i \neq j} P(|||M y^{ij}||_2^2 - ||y^{ij}||_2^2| &lt; \epsilon ||y^{ij}||_2^2 ) &lt; {n \choose 2} n^4 &lt; \frac{1}{n^2} %]]&gt;&lt;/script&gt;
 
+&lt;p&gt;Thus,&lt;/p&gt;
+
+&lt;script type=&quot;math/tex; mode=display&quot;&gt;P(\forall i \neq j, \left| ||M (x_i - x_j)||_2^2 - ||x_i - x_j||_2^2 \right| \leq \epsilon ||x_i - x_j||_2^2 ) &gt; 1 - \frac{1}{n^2}&lt;/script&gt;
+
 &lt;p&gt;which is same as the guarantee in Johnson-Lindenstrauss lemma.&lt;/p&gt;
 
 &lt;h2 id=&quot;application&quot;&gt;Application&lt;/h2&gt;
@@ -367,7 +522,7 @@ P(\forall i \neq j, \left| ||M y^{ij}||_2^2 - ||y^{ij}||_2^2 \right| &gt; \epsil
 </description>
                 <link>/random-projection</link>
                 <guid>/Dimensionality-Reduction-via-JL-Lemma-and-Random-Projection</guid>
-                <pubDate>Tue, 10 Oct 2017 00:00:00 +0200</pubDate>
+                <pubDate>Tue, 10 Oct 2017 00:00:00 +0800</pubDate>
         </item>
 
         <item>
@@ -518,7 +673,7 @@ The post is used for study purpose only.&lt;/li&gt;
 </description>
                 <link>/comparison-distributed-ml-platform</link>
                 <guid>/a-comparison-of-distributed-machine-learning-platform</guid>
-                <pubDate>Thu, 07 Sep 2017 00:00:00 +0200</pubDate>
+                <pubDate>Thu, 07 Sep 2017 00:00:00 +0800</pubDate>
         </item>
 
         <item>
@@ -577,7 +732,7 @@ The post is used for study purpose only.&lt;/li&gt;
 </description>
                 <link>/bias-variance</link>
                 <guid>/biasvariance</guid>
-                <pubDate>Thu, 08 Dec 2016 00:00:00 +0100</pubDate>
+                <pubDate>Thu, 08 Dec 2016 00:00:00 +0800</pubDate>
         </item>
 
         <item>
@@ -675,7 +830,7 @@ The post is used for study purpose only.&lt;/li&gt;
 </description>
                 <link>/saddle-points</link>
                 <guid>/SaddlePoints</guid>
-                <pubDate>Wed, 07 Sep 2016 00:00:00 +0200</pubDate>
+                <pubDate>Wed, 07 Sep 2016 00:00:00 +0800</pubDate>
         </item>
 
         <item>
@@ -841,7 +996,7 @@ governing permissions and limitations under the License.
 </description>
                 <link>/normalizations-in-neural-networks</link>
                 <guid>/Normalizations-in-neural-networks</guid>
-                <pubDate>Wed, 03 Aug 2016 00:00:00 +0200</pubDate>
+                <pubDate>Wed, 03 Aug 2016 00:00:00 +0800</pubDate>
         </item>
 
         <item>
@@ -880,6 +1035,9 @@ governing permissions and limitations under the License.
 
 &lt;p&gt;In this sense, we need to make \(\nabla L(x^k)^T(x^{k+1}-x^{k})\leq 0\) so as to make the objective function decrease. In gradient descent \(\Delta x\) is chosen to be \(-\nabla L(x^k)\). However, there are many other descent method, such as &lt;strong&gt;steepest descend&lt;/strong&gt;, &lt;strong&gt;normalized steepest descent&lt;/strong&gt;, &lt;strong&gt;newton step&lt;/strong&gt; and so on. The main idea of these methods is to make \(\nabla L(x^k)^T(x^{k+1}-x^{k})= \nabla L^T \Delta x \leq 0\).&lt;/p&gt;
 
+&lt;h2 id=&quot;further-reading&quot;&gt;Further reading&lt;/h2&gt;
+&lt;p&gt;For further reading of the gradient descent method, please refer to the Chapter 8 of (Beck, 2017).&lt;/p&gt;
+
 &lt;h2 id=&quot;acknowledgement&quot;&gt;Acknowledgement&lt;/h2&gt;
 &lt;p&gt;We would like to thank &lt;a href=&quot;https://github.com/Marvinmw&quot;&gt;Wei Ma&lt;/a&gt; and &lt;a href=&quot;https://github.com/yeephycho&quot;&gt;Yixuan Hu&lt;/a&gt; for checking the details of this blog.&lt;/p&gt;
 
@@ -887,6 +1045,7 @@ governing permissions and limitations under the License.
 &lt;ul&gt;
   &lt;li&gt;Michael A. Nielsen, &lt;em&gt;Neural Networks and Deep Learning&lt;/em&gt;, Determination Press, 2015&lt;/li&gt;
   &lt;li&gt;Stephen Boyd, and Lieven Vandenberghe. &lt;em&gt;Convex optimization&lt;/em&gt;. Cambridge university press, 2004.&lt;/li&gt;
+  &lt;li&gt;Beck, Amir. &lt;em&gt;First-Order Methods in Optimization&lt;/em&gt;. Vol. 25. SIAM, 2017.&lt;/li&gt;
 &lt;/ul&gt;
 
 &lt;h2 id=&quot;remarks&quot;&gt;Remarks&lt;/h2&gt;
@@ -895,7 +1054,7 @@ governing permissions and limitations under the License.
 </description>
                 <link>/mathGD</link>
                 <guid>/gradientdescentmath</guid>
-                <pubDate>Fri, 03 Jun 2016 00:00:00 +0200</pubDate>
+                <pubDate>Fri, 03 Jun 2016 00:00:00 +0800</pubDate>
         </item>
 
         <item>
@@ -1001,7 +1160,7 @@ underscores with a backslash like so &lt;code class=&quot;highlighter-rouge&quot
 </description>
                 <link>/contributing</link>
                 <guid>/contribute</guid>
-                <pubDate>Fri, 01 Jan 2010 00:00:00 +0100</pubDate>
+                <pubDate>Fri, 01 Jan 2010 00:00:00 +0800</pubDate>
         </item>
 
 

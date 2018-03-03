@@ -41,12 +41,16 @@ Now, I will consider the gradient descent in a convex problem, because we usuall
 
 In this sense, we need to make \\(\nabla L(x^k)^T(x^{k+1}-x^{k})\leq 0\\) so as to make the objective function decrease. In gradient descent \\(\Delta x\\) is chosen to be \\(-\nabla L(x^k)\\). However, there are many other descent method, such as **steepest descend**, **normalized steepest descent**, **newton step** and so on. The main idea of these methods is to make \\(\nabla L(x^k)^T(x^{k+1}-x^{k})= \nabla L^T \Delta x \leq 0\\).
 
+## Further reading
+For further reading of the gradient descent method, please refer to the Chapter 8 of (Beck, 2017).
+
 ## Acknowledgement
 We would like to thank [Wei Ma](https://github.com/Marvinmw) and [Yixuan Hu](https://github.com/yeephycho) for checking the details of this blog.
 
 ## References
 - Michael A. Nielsen, *Neural Networks and Deep Learning*, Determination Press, 2015
 - Stephen Boyd, and Lieven Vandenberghe. *Convex optimization*. Cambridge university press, 2004.
+- Beck, Amir. *First-Order Methods in Optimization*. Vol. 25. SIAM, 2017.
 
 ## Remarks
 Last updated on June 14, 2016
